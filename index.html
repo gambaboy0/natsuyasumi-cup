@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>50日前の自分へ 夏休みの軌跡CUP</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{overflow-x:hidden;}
+body{font-family:"Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;background:#8a7a6a;
+  overflow-x:hidden;width:100%;}
+img{max-width:100%;display:block;}
+.wrap{max-width:480px;margin:0 auto;position:relative;width:100%;}
+
+/* ============================================================
+   オープニングページ（この1画面だけで完結する）
+   3:4 の画像を、画面いっぱいになるまで等倍で拡大し、上下左右中央ぞろえ。
+   はみ出した左右は切り落とす（延長・引き伸ばしは使わない）
+   ============================================================ */
+.hero{
+  height:100svh; position:relative; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  background:#8a7a6a;
+}
+.opening{position:relative; flex:0 0 auto;
+  /* 画面の高さを埋める幅（画像の縦横比 747:1024 ＝ 0.7295）。
+     横に足りない場合は画面幅いっぱいにする */
+  width:max(100%, calc(100svh * .7295));}
+.opening img{display:block;width:100%;}
+
+/* 優勝カップの上に重ねる、透明なリンク領域（位置は画像から実測） */
+.hit{position:absolute;display:block;border-radius:14px;z-index:3;
+  transition:background .16s ease, box-shadow .16s ease;}
+.hit-u8{left:8.3%;  width:30.5%; top:60.5%; height:38.3%;}
+.hit-u9{left:56.8%; width:34.9%; top:60.5%; height:38.3%;}
+.hit:hover{background:rgba(255,246,214,.16);box-shadow:0 0 26px rgba(255,232,150,.4);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- オープニング：カップをタップすると各カテゴリーのページへ -->
+  <section class="hero" id="top">
+    <div class="opening">
+      <img src="assets/opening.jpg" alt="50日前の自分へ 夏休みの軌跡CUP">
+      <a class="hit hit-u8" href="u8.html" aria-label="U8 の部の大会HPへ"></a>
+      <a class="hit hit-u9" href="u9.html" aria-label="U9 の部の大会HPへ"></a>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

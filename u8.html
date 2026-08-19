@@ -1,0 +1,940 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>U8 の部｜50日前の自分へ 夏休みの軌跡CUP</title>
+<style>
+:root{
+  /* ▼ 見出し画像から実測した色 */
+  --gold:#c7ba8e;        /* 「夏休みの軌跡」の文字色 */
+  --gold-lt:#ede4bd;     /* 明るいゴールド（文字用） */
+  --gold-dk:#8b8161;     /* 沈んだゴールド（罫線用） */
+  --bg:#17291a;          /* 見出し画像の深緑（ページ全体の地色） */
+  --bg-2:#12200f;
+  --panel:#20351f;       /* ボタン・パネルの面 */
+  --cream:#ece5cd;       /* 本文の文字色 */
+  /* セクション見出しの色帯（深緑の上でも見えるよう明るめに） */
+  --c-sche:#d8b23f; --c-grp:#6fae72; --c-brk:#d0574f; --c-res:#e8c65a;
+  --c-out:#f0921f; --c-acc:#e0435c; --c-info:#a98ce8;
+  --c-u8:#3aa65c; --c-u9:#4a90e2;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:"Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;
+  color:var(--cream); overflow-x:hidden; width:100%;
+  /* 見出し画像の深緑をページ全体に延長 */
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,.05), rgba(255,255,255,0) 60%),
+    linear-gradient(180deg,var(--bg) 0%, var(--bg) 40%, var(--bg-2) 100%);
+  background-attachment:fixed;}
+.wrap{max-width:480px;margin:0 auto;position:relative;width:100%;}
+img{max-width:100%;display:block;}
+
+/* ============================================================
+   ① 最上部の見出し画像
+   ============================================================ */
+.pagehead{width:100%;background:var(--bg);}
+.pagehead img{width:100%;}
+
+/* ============================================================
+   ② メインメニュー（結婚式サイトの8ボタンと同じ作り／色はゴールド）
+   ============================================================ */
+.menu-stage{padding:20px 16px 30px;}
+.menu-title{text-align:center;margin-bottom:15px;}
+.menu-title b{display:block;font-size:11px;letter-spacing:.34em;color:var(--gold);font-weight:800;}
+.menu-title i{display:block;font-style:normal;font-size:10px;letter-spacing:.2em;
+  color:rgba(236,229,205,.55);margin-top:3px;}
+
+.navgrid{display:grid;gap:.5rem;grid-template-columns:repeat(4,minmax(0,1fr));}
+.navgrid + .navgrid{margin-top:.5rem;}
+
+/* ボタン本体（結婚式サイト .nav-square と同じ構造） */
+.navsq{
+  appearance:none; aspect-ratio:1; min-width:0; min-height:0; overflow:hidden;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:.25rem;
+  background:linear-gradient(165deg,#27401f,#1b3018 60%,#16281a);
+  border:2px solid var(--gold);
+  border-radius:12px;
+  box-shadow:3px 3px 0 rgba(0,0,0,.38);
+  text-decoration:none; font:inherit; padding:.3rem; cursor:pointer;
+  width:100%;
+  container-type:inline-size;   /* 中の文字をマスの幅基準(cqw)で決める */
+}
+.navsq:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(0,0,0,.35);}
+.navsq:hover{border-color:var(--gold-lt);
+  background:linear-gradient(165deg,#2e4a24,#20381c 60%,#1a2e1e);}
+.navsq .en{color:var(--gold);font-size:.7rem;font-size:15cqw;
+  line-height:1.1;text-align:center;letter-spacing:.05em;font-weight:800;}
+.navsq .jp{color:var(--gold-lt);font-weight:800;font-size:.55rem;font-size:12cqw;
+  line-height:1.25;text-align:center;letter-spacing:.01em;white-space:nowrap;}
+
+/* ============================================================
+   ③ 詳細（背景は同じ深緑のまま）
+   ============================================================ */
+.detail{padding-bottom:60px;}
+.sec{padding:30px 18px 6px;scroll-margin-top:70px;}
+/* セクションの見出し＝メインメニューのボタンと完全に同じ表示。
+   ボタンの文字はマスの幅基準（英字15cqw／日本語12cqw）なので、
+   同じ計算をして文字の大きさ・字間・行間・間隔をそろえる。
+   cqw の基準はマスの「内側」の幅なので、枠線(2px×2)と内余白(.3rem×2)を引く。
+   マスの外形 ＝（本文幅 − 左右の余白32px − マス間の隙間24px）÷ 4 */
+.sec{--btnw:calc((min(480px, 100vw) - 56px) / 4 - 4px - .6rem);}
+.sec h2{text-align:center;font-size:calc(var(--btnw) * .15);
+  letter-spacing:.05em;font-weight:800;color:var(--gold);line-height:1.1;}
+.sec h3{text-align:center;font-size:calc(var(--btnw) * .12);
+  letter-spacing:.01em;font-weight:800;color:var(--gold-lt);line-height:1.25;
+  margin:.25rem 0 12px;}
+.rows{border:1px solid rgba(199,186,142,.3);border-radius:13px;overflow:hidden;
+  background:rgba(255,255,255,.04);}
+.row{display:flex;border-bottom:1px solid rgba(199,186,142,.18);}
+.row:last-child{border-bottom:none;}
+.row dt{flex:0 0 33%;background:rgba(255,255,255,.05);padding:12px;font-size:12.5px;
+  font-weight:900;color:var(--gold-lt);}
+.row dd{flex:1;padding:12px;font-size:12.5px;color:var(--cream);line-height:1.6;}
+.ph{margin-top:11px;border:2px dashed rgba(199,186,142,.4);border-radius:13px;padding:24px 12px;
+  text-align:center;color:rgba(236,229,205,.6);font-size:12px;line-height:1.85;
+  background:rgba(255,255,255,.03);}
+.note{font-size:11.5px;color:rgba(236,229,205,.6);margin-top:9px;line-height:1.7;}
+/* U8 / U9 で出し分け（body の class で切り替わる） */
+body.day-u8 .only-u9{display:none;} body.day-u9 .only-u8{display:none;}
+
+/* 参加チーム＝ピンバッジ風 */
+.pins{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px;min-width:0;}
+.pin{position:relative;aspect-ratio:1;border-radius:14px;display:flex;align-items:center;
+  justify-content:center;text-align:center;padding:5px;min-width:0;
+  background:linear-gradient(160deg,#27401f,#16281a);
+  border:2px solid rgba(199,186,142,.42);
+  box-shadow:0 3px 0 rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.10);}
+.pin span{font-size:9.5px;font-weight:900;color:var(--cream);line-height:1.25;}
+.pin.host{border-color:var(--gold);
+  background:linear-gradient(160deg,#3a5c2a,#1d3419);}
+.pin.tbd span{color:var(--gold);}
+
+/* ============================================================
+   ライブ表示（スプレッドシートから30秒ごとに読み取る部分）
+   ============================================================ */
+/* 仮の組み合わせであることの表示（本番前に削除する） */
+.provisional{margin:0 16px;padding:9px 12px;border-radius:10px;
+  background:rgba(190,60,50,.16);border:1px solid rgba(224,120,110,.55);
+  color:#f4dcd8;font-size:11.5px;font-weight:700;line-height:1.7;text-align:center;}
+.provisional b{color:#ffb4aa;}
+
+.updated{font-size:10.5px;color:rgba(236,229,205,.45);text-align:right;margin-top:7px;letter-spacing:.04em;}
+.live-wait{font-size:11.5px;color:rgba(236,229,205,.5);text-align:center;padding:18px 8px;line-height:1.8;}
+
+/* 順位表 */
+.phase{margin:20px 0 2px;text-align:center;font-size:11px;font-weight:900;
+  letter-spacing:.2em;color:var(--gold);
+  border-top:1px solid rgba(199,186,142,.28);padding-top:12px;}
+.phase:first-child{border-top:none;margin-top:6px;padding-top:0;}
+.gblock{margin-top:16px;}
+.gblock h4{font-size:12px;font-weight:900;letter-spacing:.14em;color:var(--gold);
+  text-align:center;margin-bottom:7px;}
+.tscroll{overflow-x:auto;border:1px solid rgba(199,186,142,.3);border-radius:12px;
+  background:rgba(255,255,255,.04);}
+.stbl{width:100%;border-collapse:collapse;font-size:11.5px;white-space:nowrap;}
+.stbl th{background:rgba(255,255,255,.07);color:var(--gold-lt);padding:7px 5px;
+  font-weight:800;border-bottom:1px solid rgba(199,186,142,.28);}
+.stbl td{padding:7px 5px;text-align:center;color:var(--cream);
+  border-bottom:1px solid rgba(199,186,142,.12);}
+.stbl tr:last-child td{border-bottom:none;}
+.stbl td.tname{text-align:left;font-weight:700;}
+.rank-badge{display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;border-radius:50%;font-weight:900;font-size:10.5px;color:#16281a;
+  background:rgba(199,186,142,.45);}
+.rank-1{background:#e8c65a;} .rank-2{background:#cfd3d6;} .rank-3{background:#c98d52;}
+
+/* 試合スケジュール表（横＝コート／縦＝時間。V CUPと同じ形） */
+.schedwrap{overflow-x:auto;border:1px solid rgba(199,186,142,.3);border-radius:12px;
+  background:rgba(255,255,255,.04);-webkit-overflow-scrolling:touch;}
+.sched{border-collapse:collapse;min-width:620px;width:100%;table-layout:fixed;}
+.sched th{background:#233a22;color:var(--gold-lt);font-weight:900;font-size:10.5px;
+  padding:7px 3px;border-bottom:1px solid rgba(199,186,142,.32);letter-spacing:.04em;}
+.sched th.tcol,.sched td.tcol{width:54px;}
+.sched th.tcol{position:sticky;left:0;z-index:2;}
+.sched td{border-top:1px solid rgba(199,186,142,.14);
+  border-left:1px solid rgba(199,186,142,.14);padding:5px 3px;vertical-align:middle;}
+.sched td.tcol{position:sticky;left:0;z-index:1;background:#1b3020;
+  text-align:center;font-weight:900;color:var(--gold);font-size:11px;white-space:nowrap;}
+.cell .cg{font-size:8.5px;color:var(--gold);font-weight:900;text-align:center;letter-spacing:.04em;}
+.cell .ct{font-size:9.5px;color:var(--cream);text-align:center;line-height:1.3;font-weight:700;}
+.cell .cs{font-size:11px;font-weight:900;color:rgba(236,229,205,.4);text-align:center;margin:1px 0;}
+.cell .cs.on{color:var(--gold-lt);}
+.sched td.empty{background:rgba(0,0,0,.12);}
+.scrollhint{font-size:10px;color:rgba(236,229,205,.45);text-align:center;margin-top:6px;}
+
+/* 試合カード */
+.mcard{display:flex;align-items:center;gap:8px;margin-top:7px;padding:9px 10px;
+  border:1px solid rgba(199,186,142,.25);border-radius:10px;background:rgba(255,255,255,.04);}
+.mcard .no{flex:0 0 auto;font-size:10px;font-weight:900;color:var(--gold);
+  min-width:34px;text-align:center;line-height:1.3;}
+.mcard .tm{flex:1;font-size:12px;font-weight:700;text-align:center;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;}
+.mcard .sc{flex:0 0 auto;font-size:13px;font-weight:900;color:rgba(236,229,205,.45);
+  min-width:56px;text-align:center;}
+.mcard .sc.on{color:var(--gold-lt);}
+.mcard .meta{flex:0 0 auto;font-size:9.5px;color:rgba(236,229,205,.45);
+  min-width:52px;text-align:right;line-height:1.35;}
+.bgroup{margin-top:16px;}
+.bgroup h4{font-size:12px;font-weight:900;letter-spacing:.14em;color:var(--gold);
+  text-align:center;margin-bottom:4px;}
+.bgroup h4 i{display:block;font-style:normal;font-size:9.5px;font-weight:700;
+  letter-spacing:.04em;color:rgba(236,229,205,.55);margin-top:1px;}
+
+/* トーナメント表（線でつないだ図） */
+.bwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:2px 0 4px;}
+.bracket{display:flex;align-items:stretch;min-width:376px;}
+.bcol{display:flex;flex-direction:column;justify-content:space-around;
+  flex:1 1 0;min-width:112px;position:relative;}
+.bcol:not(:last-child){padding-right:18px;}
+.bpair{display:flex;flex-direction:column;justify-content:space-around;
+  flex:1;position:relative;}
+.bm{position:relative;margin:5px 0;border:1px solid rgba(199,186,142,.4);
+  border-radius:7px;overflow:hidden;background:rgba(255,255,255,.05);}
+/* 各試合から右へ出る線 */
+.bcol:not(:last-child) .bm::after{content:"";position:absolute;top:50%;left:100%;
+  width:9px;height:2px;background:var(--gold-dk);}
+/* ペアを結ぶ縦線 → 次の試合へ */
+.bcol:not(:last-child) .bpair::after{content:"";position:absolute;right:-9px;
+  top:25%;bottom:25%;width:2px;background:var(--gold-dk);}
+.bcol:not(:last-child) .bpair::before{content:"";position:absolute;right:-18px;
+  top:50%;width:9px;height:2px;background:var(--gold-dk);}
+.brow{display:flex;align-items:center;gap:4px;padding:4px 5px;font-size:9.5px;line-height:1.25;}
+.brow + .brow{border-top:1px solid rgba(199,186,142,.22);}
+.brow .bn{flex:1;min-width:0;color:var(--cream);font-weight:700;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.brow .bs{flex:0 0 auto;font-weight:900;color:rgba(236,229,205,.45);min-width:12px;text-align:right;}
+.brow .bs small{font-size:8px;font-weight:700;opacity:.85;margin-left:1px;}
+.brow.win{background:rgba(199,186,142,.16);}
+.brow.win .bn{color:var(--gold-lt);font-weight:900;}
+.brow.win .bs{color:var(--gold-lt);}
+.bhead{display:flex;margin-bottom:3px;}
+.bhead span{flex:1 1 0;min-width:112px;text-align:center;font-size:9px;font-weight:900;
+  letter-spacing:.1em;color:rgba(236,229,205,.5);}
+.bhead span:not(:last-child){padding-right:18px;}
+.bm.champ{border-color:var(--gold);box-shadow:0 0 0 1px rgba(199,186,142,.35);}
+.bthird{margin-top:10px;}
+.bthird .lbl{font-size:9.5px;font-weight:900;color:rgba(236,229,205,.55);
+  letter-spacing:.08em;margin-bottom:3px;}
+.bthird .bm{max-width:190px;}
+
+/* ============================================================
+   右上：ハンバーガー ／ 左上：戻る
+   形は結婚式サイトと同じ（丸・2.6rem・3pxの縁取り）。色は深緑＋ゴールド
+   ============================================================ */
+.idx-toggle,.back-toggle{
+  position:fixed; top:1rem; z-index:40;
+  width:2.6rem; height:2.6rem; border-radius:50%;
+  background:rgba(23,41,26,.92);
+  border:3px solid var(--gold);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; appearance:none;
+  backdrop-filter:blur(3px);
+  box-shadow:0 2px 9px rgba(0,0,0,.4);}
+.idx-toggle{right:max(1rem, calc(50vw - 240px + 1rem)); flex-direction:column; gap:4px;}
+.idx-toggle span{width:1.15rem;height:2px;border-radius:1px;background:var(--gold-lt);}
+.back-toggle{left:max(1rem, calc(50vw - 240px + 1rem));
+  color:var(--gold-lt); font-size:1.35rem; font-weight:700; line-height:1; text-decoration:none;}
+.idx-toggle:hover,.back-toggle:hover{border-color:var(--gold-lt);background:rgba(23,41,26,.99);}
+
+/* スライドインする INDEX パネル */
+.idx-panel{position:fixed;inset:0;z-index:60;display:none;}
+.idx-panel.is-open{display:block;}
+.idx-backdrop{position:absolute;inset:0;background:rgba(8,16,9,.55);}
+.idx-sheet{position:absolute;top:0;right:0;bottom:0;width:78%;max-width:320px;
+  background:linear-gradient(180deg,#1c3221,#12200f);
+  border-left:2px solid var(--gold);
+  padding:4.4rem 1.7rem 2rem; overflow-y:auto;
+  animation:slideInRight .22s ease;}
+@keyframes slideInRight{from{transform:translateX(16px);opacity:0}to{transform:translateX(0);opacity:1}}
+.idx-close{position:absolute;top:.9rem;right:1.1rem;appearance:none;border:none;background:none;
+  font-size:1.4rem;line-height:1;color:var(--gold);cursor:pointer;}
+.idx-title{letter-spacing:.28em;color:var(--gold);font-size:1rem;font-weight:900;margin:0 0 1.2rem;}
+.idx-list{list-style:none;margin:0;padding:0;}
+.idx-list li{border-bottom:1px solid rgba(199,186,142,.35);}
+.idx-list a{display:flex;align-items:baseline;gap:.8rem;padding:1rem .15rem;
+  text-decoration:none;color:var(--cream);width:100%;}
+.idx-list a:hover{background:rgba(199,186,142,.08);}
+.idx-list .en{color:var(--gold);font-size:.9rem;letter-spacing:.08em;font-weight:800;line-height:1.3;}
+.idx-list .jp{font-weight:700;font-size:.78rem;color:var(--cream);margin-left:auto;}
+</style>
+</head>
+<body class="day-u8">
+<div class="wrap">
+
+  <!-- 左上：戻る ／ 右上：INDEX -->
+  <a class="back-toggle" href="index.html" aria-label="トップへ戻る">&larr;</a>
+  <button type="button" class="idx-toggle" id="idxToggle" aria-label="INDEX">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="idx-panel" id="idxPanel">
+    <div class="idx-backdrop" data-close></div>
+    <nav class="idx-sheet">
+      <button type="button" class="idx-close" data-close aria-label="閉じる">×</button>
+      <p class="idx-title">INDEX</p>
+      <ol class="idx-list">
+        <li><a href="#schedule"><span class="en">SCHEDULE</span><span class="jp">スケジュール</span></a></li>
+        <li><a href="#group"><span class="en">GROUP</span><span class="jp">グループリーグ</span></a></li>
+        <li><a href="#bracket"><span class="en">FINAL</span><span class="jp">トーナメント</span></a></li>
+        <li><a href="#result"><span class="en">RESULT</span><span class="jp">最終順位</span></a></li>
+        <li><a href="#outline"><span class="en">OUTLINE</span><span class="jp">大会要項</span></a></li>
+        <li><a href="#access"><span class="en">ACCESS</span><span class="jp">会場アクセス</span></a></li>
+        <li><a href="#teams"><span class="en">TEAMS</span><span class="jp">参加チーム</span></a></li>
+        <li><a href="#info"><span class="en">INFO</span><span class="jp">お知らせ</span></a></li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- ① 見出し画像 -->
+  <div class="pagehead">
+    <img src="assets/head_u8.jpg" alt="50日前の自分へ 夏休みの軌跡CUP U8">
+  </div>
+
+  <!-- 仮表示の注意書き（本番の組み合わせが決まったら削除する） -->
+  <p class="provisional">
+    ⚠ この画面は<b>仮の組み合わせ</b>で表示しています。<br>
+    チーム名の「（仮）」が取れたものが本番です。抽選後に差し替えます。<br>
+    <b>順位の決め方（勝点→得失点差→…）は主催者に確認中</b>です。
+  </p>
+
+  <!-- ② メインメニュー -->
+  <section class="menu-stage">
+    <div class="menu-title"><b>MAIN MENU</b><i>メインメニュー</i></div>
+
+    <div class="navgrid">
+      <a class="navsq" href="#schedule"><span class="en">SCHEDULE</span><span class="jp">スケジュール</span></a>
+      <a class="navsq" href="#group"><span class="en">GROUP</span><span class="jp">グループリーグ</span></a>
+      <a class="navsq" href="#bracket"><span class="en">FINAL</span><span class="jp">トーナメント</span></a>
+      <a class="navsq" href="#result"><span class="en">RESULT</span><span class="jp">最終順位</span></a>
+    </div>
+
+    <div class="navgrid">
+      <a class="navsq" href="#outline"><span class="en">OUTLINE</span><span class="jp">大会要項</span></a>
+      <a class="navsq" href="#access"><span class="en">ACCESS</span><span class="jp">会場アクセス</span></a>
+      <a class="navsq" href="#teams"><span class="en">TEAMS</span><span class="jp">参加チーム</span></a>
+      <a class="navsq" href="#info"><span class="en">INFO</span><span class="jp">お知らせ</span></a>
+    </div>
+  </section>
+
+  <!-- ③ 詳細 -->
+  <div class="detail">
+    <section class="sec" id="schedule">
+      <h2>SCHEDULE</h2><h3>スケジュール</h3>
+      <div id="live-schedule">
+        <p class="live-wait">試合結果の読み込み中…<br>（スプレッドシートの設定が済むと、ここに全試合が並びます）</p>
+      </div>
+      <p class="updated" id="upd-schedule"></p>
+    </section>
+
+    <section class="sec" id="group">
+      <h2>GROUP</h2><h3>グループリーグ</h3>
+      <div id="live-standings">
+        <p class="live-wait">順位表の読み込み中…<br>（スコアが入力されると自動で並び替わります）</p>
+      </div>
+      <p class="updated" id="upd-standings"></p>
+      <p class="note only-u8">※ リーグ戦は3段階あります。<br>
+        <b>予選リーグ</b>（3チーム × 6ブロック）→ 各ブロックの1・2位が<b>上位リーグ</b>（3チーム × 4ブロック）、
+        3位が<b>下位リーグ</b>（3チーム × 2ブロック）へ進みます。</p>
+      <p class="note only-u9">※ 4グループ × 4チームの総当たり（各チーム3試合・全24試合）。<br>
+        各組の1位が1位トーナメント、2位が2位トーナメント、3位が3位トーナメント、4位が4位トーナメントに進みます。</p>
+    </section>
+
+    <section class="sec" id="bracket">
+      <h2>FINAL</h2><h3>トーナメント</h3>
+      <div id="live-bracket">
+        <p class="live-wait">トーナメントの読み込み中…<br>（グループリーグの結果に連動して対戦カードが埋まります）</p>
+      </div>
+      <p class="updated" id="upd-bracket"></p>
+      <p class="note only-u8">※ 上位リーグの各組1位が<b>1位トーナメント（1-4位決定戦）</b>、
+        2位が<b>2位トーナメント（5-8位決定戦）</b>、3位が<b>3位トーナメント（9-12位決定戦）</b>へ。<br>
+        下位リーグは1位同士・2位同士・3位同士で対戦し、<b>13-18位</b>が決まります。<br>
+        <b>上位リーグ進出チームは6試合、下位リーグ進出チームは5試合。18位まですべて決まります。</b></p>
+      <p class="note only-u9">※ <b>順位別に4つのトーナメント</b>を行います。
+        1位トーナメントで1〜4位、2位トーナメントで5〜8位、
+        3位トーナメントで9〜12位、4位トーナメントで13〜16位が決まります。<br>
+        各トーナメントは4チームで、準決勝2試合 → 決勝・3位決定戦（計4試合）。<br>
+        <b>全チームが5試合（予選3＋トーナメント2）を戦い、16位まですべて決まります。</b></p>
+    </section>
+
+    <section class="sec" id="result">
+      <h2>RESULT</h2><h3>最終順位</h3>
+      <div id="live-final">
+        <p class="live-wait">最終順位の読み込み中…<br>（決勝トーナメント終了後に確定します）</p>
+      </div>
+      <p class="updated" id="upd-final"></p>
+    </section>
+
+    <section class="sec" id="outline">
+      <h2>OUTLINE</h2><h3>大会要項</h3>
+      <div class="rows">
+        <div class="row"><dt>大会名</dt><dd>50日前の自分へ　夏休みの軌跡CUP</dd></div>
+        <div class="row"><dt>形式</dt><dd>1 DAY CUP</dd></div>
+        <div class="row only-u8"><dt>カテゴリー</dt><dd>U8</dd></div>
+        <div class="row only-u9"><dt>カテゴリー</dt><dd>U9</dd></div>
+        <div class="row only-u8"><dt>開催日</dt><dd>9月5日(土)<br>第1試合 9:00 キックオフ</dd></div>
+        <div class="row only-u9"><dt>開催日</dt><dd>9月6日(日) 午前<br>第1試合 8:30 キックオフ</dd></div>
+        <div class="row"><dt>会場</dt><dd>富山県立大学　天然芝グラウンド</dd></div>
+        <div class="row only-u8"><dt>参加チーム</dt><dd>18チーム</dd></div>
+        <div class="row only-u8"><dt>大会方式</dt><dd>予選リーグ（3チーム × 6ブロック）<br>
+          → 上位リーグ（3チーム × 4ブロック）／下位リーグ（3チーム × 2ブロック）<br>
+          → 順位別トーナメント・順位決定戦<br>
+          （上位進出6試合・下位進出5試合／18位まで決定）</dd></div>
+        <div class="row only-u9"><dt>参加チーム</dt><dd>16チーム</dd></div>
+        <div class="row only-u9"><dt>大会方式</dt><dd>4グループ × 4チームの総当たり<br>順位別に4つのトーナメント<br>（全チーム5試合・16位まで決定）</dd></div>
+        <div class="row only-u8"><dt>試合時間</dt><dd>8分 − 1分 − 8分</dd></div>
+        <div class="row only-u9"><dt>試合時間</dt><dd>10分 − 2分 − 10分</dd></div>
+        <div class="row only-u8"><dt>コート</dt><dd>6人制／40m × 30m　（5コート同時進行）</dd></div>
+        <div class="row only-u9"><dt>コート</dt><dd>6人制／50m × 40m　（5コート同時進行）</dd></div>
+        <div class="row"><dt>主催</dt><dd>ヴァリエンテ富山</dd></div>
+      </div>
+    </section>
+
+    <section class="sec" id="access">
+      <h2>ACCESS</h2><h3>会場アクセス</h3>
+      <div class="rows"><div class="row"><dt>会場</dt><dd>富山県立大学　天然芝グラウンド</dd></div></div>
+      <div class="ph">地図・駐車場案内・会場配置図</div>
+      <p class="note">県外からお越しのチームもあるため、地図は大きめに置く想定です。</p>
+    </section>
+
+    <section class="sec" id="teams">
+      <h2>TEAMS</h2><h3>参加チーム</h3>
+
+      <div class="pins only-u8">
+        <div class="pin host"><span>ヴァリエンテ<br>富山</span></div>
+        <div class="pin"><span>TOLL</span></div>
+        <div class="pin"><span>みなみFC</span></div>
+        <div class="pin"><span>蜷川</span></div>
+        <div class="pin"><span>石動大谷</span></div>
+        <div class="pin"><span>鵜坂</span></div>
+        <div class="pin"><span>スフィーダ</span></div>
+        <div class="pin"><span>EST小杉</span></div>
+        <div class="pin"><span>富山中央FC</span></div>
+        <div class="pin"><span>プリマ<br>ヴェーラ入善</span></div>
+        <div class="pin"><span>BEZERRO</span></div>
+        <div class="pin"><span>大久保少年<br>サッカー<br>クラブ</span></div>
+        <div class="pin"><span>FC滑川</span></div>
+        <div class="pin"><span>ALVA</span></div>
+        <div class="pin tbd"><span>リオペードラ<br>加賀 *</span></div>
+        <div class="pin tbd"><span>テイヘンズ *</span></div>
+        <div class="pin tbd"><span>デランテロ *</span></div>
+        <div class="pin tbd"><span>JK KIDS *</span></div>
+      </div>
+
+      <div class="pins only-u9">
+        <div class="pin host"><span>ヴァリエンテ<br>富山<br>（仮）</span></div>
+        <div class="pin"><span>石動大谷<br>（仮）</span></div>
+        <div class="pin"><span>みなみFC<br>（仮）</span></div>
+        <div class="pin tbd"><span>旭丘 *<br>（仮）</span></div>
+        <div class="pin"><span>婦中西部<br>（仮）</span></div>
+        <div class="pin tbd"><span>南星 *<br>（仮）</span></div>
+        <div class="pin"><span>BLUE SOX<br>（仮）</span></div>
+        <div class="pin"><span>氷見FC<br>（仮）</span></div>
+        <div class="pin"><span>富山中央<br>FCA（仮）</span></div>
+        <div class="pin"><span>富山中央<br>FCB（仮）</span></div>
+        <div class="pin"><span>プリマヴェーラ<br>入善（仮）</span></div>
+        <div class="pin"><span>CAMPIONE<br>FUKUOKA<br>（仮）</span></div>
+        <div class="pin"><span>ALVA<br>（仮）</span></div>
+        <div class="pin"><span>CAVALLO<br>（仮）</span></div>
+        <div class="pin tbd"><span>エスポワール<br>白山 *<br>（仮）</span></div>
+        <div class="pin tbd"><span>JK KIDS *<br>（仮）</span></div>
+      </div>
+
+      <p class="note">* が付いたチームは、正式な表記を主催者に確認中です。<br>
+      各チームのエンブレム画像をいただければ、文字の代わりに差し替えられます。</p>
+    </section>
+
+    <section class="sec" id="info">
+      <h2>INFO</h2><h3>お知らせ</h3>
+      <div class="ph">集合時刻・競技規則・持ち物・雨天時の対応など</div>
+    </section>
+  </div>
+</div>
+
+<script>
+/* このページは U8 版。U9 版は u9.html（body の class が day-u9） */
+
+/* 右上のハンバーガー → INDEX パネルの開閉 */
+var idxPanel=document.getElementById('idxPanel');
+document.getElementById('idxToggle').addEventListener('click',function(){
+  idxPanel.classList.add('is-open');
+});
+idxPanel.addEventListener('click',function(e){
+  if(e.target.hasAttribute('data-close') || e.target.closest('a')){
+    idxPanel.classList.remove('is-open');
+  }
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){ idxPanel.classList.remove('is-open'); }
+});
+
+/* ============================================================================
+   ライブ更新（V CUP と同じ仕組み）
+   スマホ(admin)→GAS→スプレッドシート に書き込まれた結果を、
+   公開CSV（gviz）で REFRESH 秒ごとに読み直して画面を作り替える。
+   ★ 変更が必要なのは下の LIVE だけ。それ以外は触らなくてよい。
+   ============================================================================ */
+var LIVE = {
+  /* 大会のスプレッドシートID（URLの /d/ と /edit の間の文字列）
+     空のあいだは下の「仮の組み合わせ」を表示する。
+     IDを入れた瞬間から、スプレッドシートの実データに切り替わる。 */
+  sheetId: "",
+
+  /* シート名（GASが作る名前に合わせる） */
+  resultSheet: "U8試合結果",          // 全試合。上からグループリーグ→決勝トーナメント
+
+  /* 順位表は「段階」ごとにまとめる。U8は 予選 → 上位／下位リーグ の2段階 */
+  standingPhases: [
+    { label:"予選リーグ",
+      sheets:["U8予選A順位表","U8予選B順位表","U8予選C順位表",
+              "U8予選D順位表","U8予選E順位表","U8予選F順位表"],
+      labels:["A組","B組","C組","D組","E組","F組"] },
+    { label:"上位リーグ",
+      sheets:["U8上位1組順位表","U8上位2組順位表","U8上位3組順位表","U8上位4組順位表"],
+      labels:["上位1組","上位2組","上位3組","上位4組"] },
+    { label:"下位リーグ",
+      sheets:["U8下位1組順位表","U8下位2組順位表"],
+      labels:["下位1組","下位2組"] }
+  ],
+  finalSheet:     "U8最終順位表",
+
+  /* リーグ戦の試合数（ここから下の行がトーナメント）
+     U8 ＝ 予選18 ＋ 上位リーグ12 ＋ 下位リーグ6 ＝ 36試合 */
+  glCount: 36,
+  refreshSec: 30      // 読み直す間隔（秒）
+};
+
+/* 試合結果シートの列（0始まり）
+   [0]試合番号 [1]試合名 [2]時刻 [3]コート
+   [4]ホーム [5]ホームスコア [6]ホームPK [7]アウェイPK [8]アウェイスコア [9]アウェイ */
+var C = { no:0, name:1, time:2, court:3, home:4, hs:5, hpk:6, apk:7, as:8, away:9 };
+/* 順位表シートの列
+   [0]チーム [1]試合 [2]勝 [3]分 [4]負 [5]得点 [6]失点 [7]得失差 [8]勝点 [9]順位 */
+var S = { team:0, gp:1, w:2, d:3, l:4, gf:5, ga:6, gd:7, pts:8, rank:9 };
+
+function csvParse(text){
+  return text.trim().split('\n').map(function(line){
+    var cells=[],inQ=false,cur='';
+    for(var i=0;i<line.length;i++){
+      var c=line[i];
+      if(c==='"'){ inQ=!inQ; }
+      else if(c===',' && !inQ){ cells.push(cur.replace(/^"|"$/g,'').trim()); cur=''; }
+      else { cur+=c; }
+    }
+    cells.push(cur.replace(/^"|"$/g,'').trim());
+    return cells;
+  });
+}
+function loadSheet(name,cb){
+  if(!LIVE.sheetId){ cb(null); return; }   // まだスプレッドシートが無い
+  var url='https://docs.google.com/spreadsheets/d/'+LIVE.sheetId+
+          '/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent(name);
+  fetch(url).then(function(r){ if(!r.ok) throw 0; return r.text(); })
+            .then(function(t){ cb(csvParse(t).slice(1)); })   // 1行目は見出しなので捨てる
+            .catch(function(){ cb(null); });
+}
+function stamp(){
+  var n=new Date();
+  return '最終更新 '+n.getHours()+':'+String(n.getMinutes()).padStart(2,'0')+
+         ':'+String(n.getSeconds()).padStart(2,'0');
+}
+function esc(s){ return String(s==null?'':s).replace(/[&<>]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
+
+/* --- 試合カード1枚分のHTML --- */
+function matchCard(r){
+  if(!r) return '';
+  var hasScore = r[C.hs]!=='' && r[C.as]!=='';
+  var sc = hasScore ? (r[C.hs]+' - '+r[C.as]) : 'vs';
+  if(hasScore && r[C.hpk]!=='' && r[C.apk]!=='') sc += '<br><span style="font-size:9.5px">PK '+r[C.hpk]+'-'+r[C.apk]+'</span>';
+  var meta = [r[C.time], r[C.court]].filter(function(v){return v;}).join('<br>');
+  return '<div class="mcard">'+
+           '<span class="no">'+esc(r[C.no]||'')+'</span>'+
+           '<span class="tm">'+esc(r[C.home]||'—')+'</span>'+
+           '<span class="sc'+(hasScore?' on':'')+'">'+sc+'</span>'+
+           '<span class="tm">'+esc(r[C.away]||'—')+'</span>'+
+           '<span class="meta">'+meta+'</span>'+
+         '</div>';
+}
+
+/* --- ① 試合スケジュール　横＝コート／縦＝時間の表（V CUPと同じ形） --- */
+function toMin(t){
+  var m=String(t||'').match(/(\d{1,2})\s*[:：]\s*(\d{1,2})/);
+  return m ? (parseInt(m[1],10)*60+parseInt(m[2],10)) : -1;
+}
+function courtNo(c){
+  var m=String(c||'').match(/(\d+)/);
+  return m ? parseInt(m[1],10) : 0;
+}
+function renderSchedule(rows){
+  var box=document.getElementById('live-schedule');
+  if(!box) return;
+  if(!rows||!rows.length) return;      // 読めなければ待機表示のまま
+
+  /* 時刻とコートが入っている試合だけを表に載せる */
+  var list=rows.filter(function(r){ return toMin(r[C.time])>=0 && courtNo(r[C.court])>0; });
+  if(!list.length) return;
+
+  var times=[], courts=[];
+  list.forEach(function(r){
+    var t=toMin(r[C.time]), c=courtNo(r[C.court]);
+    if(times.indexOf(t)<0) times.push(t);
+    if(courts.indexOf(c)<0) courts.push(c);
+  });
+  times.sort(function(a,b){return a-b;});
+  courts.sort(function(a,b){return a-b;});
+
+  /* 時刻×コート の位置に試合を置く */
+  var at={};
+  list.forEach(function(r){ at[toMin(r[C.time])+'_'+courtNo(r[C.court])]=r; });
+
+  function hhmm(m){ return Math.floor(m/60)+':'+String(m%60).padStart(2,'0'); }
+  function cellHtml(r){
+    if(!r) return '';
+    var has = r[C.hs]!=='' && r[C.as]!=='';
+    var sc  = has ? (r[C.hs]+' - '+r[C.as]) : 'vs';
+    return '<div class="cell">'+
+             (r[C.name]?'<div class="cg">'+esc(r[C.name])+'</div>':'')+
+             '<div class="ct">'+esc(r[C.home]||'—')+'</div>'+
+             '<div class="cs'+(has?' on':'')+'">'+sc+'</div>'+
+             '<div class="ct">'+esc(r[C.away]||'—')+'</div>'+
+           '</div>';
+  }
+
+  var html='<div class="schedwrap"><table class="sched"><thead><tr>'+
+           '<th class="tcol">時刻</th>'+
+           courts.map(function(c){ return '<th>第'+c+'<br>コート</th>'; }).join('')+
+           '</tr></thead><tbody>';
+  times.forEach(function(t){
+    html+='<tr><td class="tcol">'+hhmm(t)+'</td>'+
+      courts.map(function(c){
+        var r=at[t+'_'+c];
+        return r ? '<td>'+cellHtml(r)+'</td>' : '<td class="empty"></td>';
+      }).join('')+'</tr>';
+  });
+  html+='</tbody></table></div>'+
+        '<p class="scrollhint">← 横にスクロールできます →</p>';
+  box.innerHTML=html;
+  document.getElementById('upd-schedule').textContent=stamp();
+}
+
+/* --- ② 順位表　段階（予選リーグ／上位リーグ…）ごとに並べる --- */
+function oneStanding(label,rows){
+  var sorted=rows.filter(function(r){return r[S.team];}).slice().sort(function(a,b){
+    var d=(parseFloat(b[S.pts])||0)-(parseFloat(a[S.pts])||0); if(d) return d;
+    d=(parseFloat(b[S.gd])||0)-(parseFloat(a[S.gd])||0);       if(d) return d;
+    return (parseFloat(b[S.gf])||0)-(parseFloat(a[S.gf])||0);
+  });
+  return '<div class="gblock"><h4>'+esc(label)+'</h4>'+
+    '<div class="tscroll"><table class="stbl">'+
+    '<thead><tr><th>順</th><th>チーム</th><th>点</th><th>差</th>'+
+    '<th>試</th><th>勝</th><th>分</th><th>負</th><th>得</th><th>失</th></tr></thead><tbody>'+
+    sorted.map(function(r,i){
+      var rv=(r[S.rank]!==undefined&&r[S.rank]!=='')?r[S.rank]:(i+1);
+      var rc=rv==1?'rank-1':rv==2?'rank-2':rv==3?'rank-3':'';
+      return '<tr><td><span class="rank-badge '+rc+'">'+esc(rv)+'</span></td>'+
+             '<td class="tname">'+esc(r[S.team])+'</td>'+
+             [S.pts,S.gd,S.gp,S.w,S.d,S.l,S.gf,S.ga].map(function(ci){
+               return '<td>'+esc(r[ci]!==''&&r[ci]!==undefined?r[ci]:'—')+'</td>';
+             }).join('')+'</tr>';
+    }).join('')+
+    '</tbody></table></div></div>';
+}
+/* all = 段階の配列。各段階は [{label, rows}, ...] */
+function renderStandings(all){
+  var box=document.getElementById('live-standings');
+  if(!box||!all) return;
+  var html='', any=false;
+  all.forEach(function(phase,pi){
+    if(!phase || !phase.blocks) return;
+    var inner='';
+    phase.blocks.forEach(function(b){
+      if(!b.rows||!b.rows.length) return;
+      any=true;
+      inner+=oneStanding(b.label,b.rows);
+    });
+    if(!inner) return;
+    html+=(LIVE.standingPhases.length>1 && phase.label
+            ? '<p class="phase">'+esc(phase.label)+'</p>' : '')+inner;
+  });
+  if(!any) return;
+  box.innerHTML=html;
+  document.getElementById('upd-standings').textContent=stamp();
+}
+
+/* --- ③ 決勝トーナメント　線でつないだトーナメント表 --- */
+
+/* 試合名から「どのトーナメントの・どの回戦か」を読み取る
+   例）「1位トーナメント　準決勝」「3位トーナメント　3位決定戦」
+   ※先にトーナメント名を取り除いてから回戦を判定する。
+     そうしないと「3位トーナメント 準決勝」が3位決定戦と誤判定される */
+var BRE=/([0-9０-９]+位トーナメント|上位トーナメント|下位トーナメント|決勝トーナメント)/;
+function bracketOf(name){
+  var m=String(name||'').match(BRE);
+  if(m) return m[1];
+  return String(name||'').split(/[　\s]/)[0] || '決勝トーナメント';
+}
+function roundOf(name){
+  var s=String(name||'').replace(BRE,'');
+  if(s.indexOf('3位')>=0 || s.indexOf('三位')>=0) return 'third';
+  if(s.indexOf('準々決勝')>=0) return 'qf';
+  if(s.indexOf('準決勝')>=0)   return 'sf';
+  if(s.indexOf('決勝')>=0)     return 'final';
+  return 'other';
+}
+/* 「2位トーナメント」→「5-8位決定戦」 */
+function placeRange(b){
+  var m=String(b).match(/^([0-9０-９]+)位トーナメント/);
+  if(!m) return '';
+  var n=parseInt(m[1].replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-65248);}),10);
+  if(!n) return '';
+  return (n*4-3)+'-'+(n*4)+'位決定戦';
+}
+/* 1試合分の箱。勝った側を光らせる */
+function bMatch(r,extra){
+  if(!r) return '<div class="bm'+(extra||'')+'">'+
+                '<div class="brow"><span class="bn">—</span><span class="bs"></span></div>'+
+                '<div class="brow"><span class="bn">—</span><span class="bs"></span></div></div>';
+  var hs=r[C.hs], as=r[C.as], hw=false, aw=false;
+  if(hs!=='' && as!==''){
+    var h=parseFloat(hs), a=parseFloat(as);
+    if(h>a) hw=true; else if(a>h) aw=true;
+    else if(r[C.hpk]!=='' && r[C.apk]!==''){
+      if(parseFloat(r[C.hpk])>parseFloat(r[C.apk])) hw=true; else aw=true;
+    }
+  }
+  function row(name,sc,pk,win){
+    return '<div class="brow'+(win?' win':'')+'">'+
+             '<span class="bn">'+esc(name||'—')+'</span>'+
+             '<span class="bs">'+esc(sc==='' ? '' : sc)+(pk!==''&&pk!==undefined?'<small>('+esc(pk)+')</small>':'')+'</span>'+
+           '</div>';
+  }
+  return '<div class="bm'+(extra||'')+'">'+
+           row(r[C.home],hs,r[C.hpk],hw)+
+           row(r[C.away],as,r[C.apk],aw)+
+         '</div>';
+}
+function renderBracket(rows){
+  var box=document.getElementById('live-bracket');
+  if(!box) return;
+  if(!rows||rows.length<=LIVE.glCount) return;
+  var t=rows.slice(LIVE.glCount);
+
+  /* トーナメントごとに、回戦別に仕分ける */
+  var order=[], map={};
+  t.forEach(function(r){
+    var b=bracketOf(r[C.name]);
+    if(!map[b]){ map[b]={qf:[],sf:[],final:[],third:[],other:[]}; order.push(b); }
+    map[b][roundOf(r[C.name])].push(r);
+  });
+
+  box.innerHTML = order.map(function(b){
+    var m=map[b], pr=placeRange(b);
+    var html='<div class="bgroup"><h4>'+esc(b)+
+             (pr?'<i>'+esc(pr)+'</i>':'')+'</h4>';
+
+    if(m.qf.length===4 && m.sf.length===2 && m.final.length===1){
+      /* 8チームのトーナメント表 */
+      html+='<div class="bwrap">'+
+              '<div class="bhead"><span>準々決勝</span><span>準決勝</span><span>決勝</span></div>'+
+              '<div class="bracket">'+
+                '<div class="bcol">'+
+                  '<div class="bpair">'+bMatch(m.qf[0])+bMatch(m.qf[1])+'</div>'+
+                  '<div class="bpair">'+bMatch(m.qf[2])+bMatch(m.qf[3])+'</div>'+
+                '</div>'+
+                '<div class="bcol">'+
+                  '<div class="bpair">'+bMatch(m.sf[0])+bMatch(m.sf[1])+'</div>'+
+                '</div>'+
+                '<div class="bcol">'+bMatch(m.final[0],' champ')+'</div>'+
+              '</div>'+
+            '</div>';
+    } else if(m.sf.length===2 && m.final.length===1){
+      /* 4チームのトーナメント表 */
+      html+='<div class="bwrap">'+
+              '<div class="bhead"><span>準決勝</span><span>決勝</span></div>'+
+              '<div class="bracket" style="min-width:250px">'+
+                '<div class="bcol"><div class="bpair">'+bMatch(m.sf[0])+bMatch(m.sf[1])+'</div></div>'+
+                '<div class="bcol">'+bMatch(m.final[0],' champ')+'</div>'+
+              '</div>'+
+            '</div>';
+    } else {
+      /* 形が読み取れないときは、これまでどおりカードで並べる */
+      html+=[].concat(m.qf,m.sf,m.final,m.other).map(matchCard).join('');
+    }
+
+    if(m.third.length){
+      html+='<div class="bthird"><div class="lbl">3位決定戦</div>'+
+            m.third.map(function(r){ return bMatch(r); }).join('')+'</div>';
+    }
+    return html+'</div>';
+  }).join('');
+
+  document.getElementById('upd-bracket').textContent=stamp();
+}
+
+/* --- ④ 最終順位 --- */
+function renderFinal(rows){
+  var box=document.getElementById('live-final');
+  if(!box||!rows||!rows.length) return;
+  var list=rows.filter(function(r){return r[S.team];});
+  if(!list.length) return;
+  box.innerHTML='<div class="tscroll"><table class="stbl">'+
+    '<thead><tr><th>順位</th><th>チーム</th></tr></thead><tbody>'+
+    list.map(function(r,i){
+      var rv=(r[S.rank]!==undefined&&r[S.rank]!=='')?r[S.rank]:(i+1);
+      var rc=rv==1?'rank-1':rv==2?'rank-2':rv==3?'rank-3':'';
+      return '<tr><td><span class="rank-badge '+rc+'">'+esc(rv)+'</span></td>'+
+             '<td class="tname">'+esc(r[S.team])+'</td></tr>';
+    }).join('')+'</tbody></table></div>';
+  document.getElementById('upd-final').textContent=stamp();
+}
+
+function loadAll(){
+  loadSheet(LIVE.resultSheet,function(rows){
+    renderSchedule(rows);
+    renderBracket(rows);
+  });
+  var need=0, done=0, out=LIVE.standingPhases.map(function(p){
+    need+=p.sheets.length;
+    return { label:p.label, blocks:p.sheets.map(function(s,i){
+      return { label:(p.labels&&p.labels[i])||s, rows:null }; }) };
+  });
+  LIVE.standingPhases.forEach(function(p,pi){
+    p.sheets.forEach(function(name,i){
+      loadSheet(name,function(rows){
+        out[pi].blocks[i].rows=rows; done++;
+        if(done===need) renderStandings(out);
+      });
+    });
+  });
+  loadSheet(LIVE.finalSheet,renderFinal);
+}
+/* ============================================================================
+   ▼▼▼ 仮の組み合わせ（動作確認用）。抽選が終わったら丸ごと削除する ▼▼▼
+   LIVE.sheetId にIDを入れると、こちらは使われずスプレッドシートの実データになる。
+   ============================================================================ */
+var DEMO = {
+  slotMin: 20, courts: 5, startH: 9, startM: 0,
+  /* 予選 6ブロック × 3チーム */
+  groups: [
+    ["ヴァリエンテ富山（仮）","EST小杉（仮）","リオペードラ加賀（仮）"],
+    ["TOLL（仮）","富山中央FC（仮）","テイヘンズ（仮）"],
+    ["みなみFC（仮）","プリマヴェーラ入善（仮）","デランテロ（仮）"],
+    ["蜷川（仮）","BEZERRO（仮）","JK KIDS（仮）"],
+    ["石動大谷（仮）","大久保少年サッカークラブ（仮）","FC滑川（仮）"],
+    ["鵜坂（仮）","スフィーダ（仮）","ALVA（仮）"]
+  ],
+  /* 上位リーグ 4ブロック × 3チーム（予選の1・2位＝12チーム）
+     同じ予選ブロックのチームが再び当たらないように振り分ける */
+  upper: [
+    { label:"上位1組", teams:["A組1位","B組2位","D組1位"] },
+    { label:"上位2組", teams:["B組1位","C組2位","E組1位"] },
+    { label:"上位3組", teams:["C組1位","D組2位","F組1位"] },
+    { label:"上位4組", teams:["E組2位","F組2位","A組2位"] }
+  ],
+  /* 下位リーグ 2ブロック × 3チーム（予選の3位＝6チーム） */
+  lower: [
+    { label:"下位1組", teams:["A組3位","C組3位","E組3位"] },
+    { label:"下位2組", teams:["B組3位","D組3位","F組3位"] }
+  ]
+};
+function demoTime(slot){
+  var t=DEMO.startH*60+DEMO.startM+slot*DEMO.slotMin;
+  return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');
+}
+/* 3チームの総当たり＝3試合（1-2 / 1-3 / 2-3）。同じ組の試合は同時にできない */
+var RR3=[[0,1],[0,2],[1,2]];
+/* ブロック群のリーグ戦をつくる。試合を「ラウンド順」に並べてから
+   5コートずつ詰めると、同じ組が同じ時間帯に重ならない */
+function leagueRows(blocks, teamsOf, startSlot, startNo, nameOf){
+  var seq=[];
+  for(var r=0;r<3;r++){
+    for(var b=0;b<blocks.length;b++){ seq.push({b:b,r:r}); }
+  }
+  var rows=[], no=startNo;
+  seq.forEach(function(x,i){
+    var slot=startSlot+Math.floor(i/DEMO.courts);
+    var court=(i%DEMO.courts)+1;
+    var t=teamsOf(x.b), p=RR3[x.r];
+    rows.push([ String(no++), nameOf(x.b), demoTime(slot), '第'+court+'コート',
+                t[p[0]], '', '', '', '', t[p[1]] ]);
+  });
+  return { rows:rows, nextSlot:startSlot+Math.ceil(seq.length/DEMO.courts), nextNo:no };
+}
+function demoGL(){
+  /* 予選リーグ 18試合（スロット0〜3） */
+  var q=leagueRows(DEMO.groups,
+        function(b){ return DEMO.groups[b]; }, 0, 1,
+        function(b){ return '予選'+String.fromCharCode(65+b)+'組'; });
+  /* 上位リーグ12＋下位リーグ6 ＝ 18試合（スロット4〜7）。まとめて詰める */
+  var both=DEMO.upper.concat(DEMO.lower);
+  var u=leagueRows(both,
+        function(b){ return both[b].teams.map(function(s){return s+'（仮）';}); },
+        q.nextSlot, q.nextNo,
+        function(b){ return both[b].label; });
+  DEMO._nextSlot=u.nextSlot; DEMO._nextNo=u.nextNo;
+  return q.rows.concat(u.rows);
+}
+function demoTourn(){
+  /* 上位リーグの各組1位→1位T、2位→2位T、3位→3位T（各4チーム・4試合）
+     下位リーグは 1位同士・2位同士・3位同士の順位決定戦（3試合） */
+  var rows=[], no=DEMO._nextNo, s0=DEMO._nextSlot;
+  function push(name,i,base,h,a){
+    var slot=base+Math.floor(i/DEMO.courts), court=(i%DEMO.courts)+1;
+    rows.push([String(no++),name,demoTime(slot),'第'+court+'コート',h,'','','','',a]);
+  }
+  /* 準決勝 6試合 ＋ 下位の順位決定戦 3試合 ＝ 9試合 */
+  var i=0;
+  [1,2,3].forEach(function(n){
+    push(n+'位トーナメント　準決勝', i++, s0, '上位1組'+n+'位（仮）','上位2組'+n+'位（仮）');
+    push(n+'位トーナメント　準決勝', i++, s0, '上位3組'+n+'位（仮）','上位4組'+n+'位（仮）');
+  });
+  [['13-14位決定戦','1位'],['15-16位決定戦','2位'],['17-18位決定戦','3位']]
+    .forEach(function(x){
+      push('下位リーグ　'+x[0], i++, s0, '下位1組'+x[1]+'（仮）','下位2組'+x[1]+'（仮）');
+    });
+  var s1=s0+Math.ceil(i/DEMO.courts);
+  /* 決勝・3位決定戦 6試合 */
+  i=0;
+  [1,2,3].forEach(function(n){
+    push(n+'位トーナメント　決勝',     i++, s1, '準決勝① 勝者','準決勝② 勝者');
+    push(n+'位トーナメント　3位決定戦', i++, s1, '準決勝① 敗者','準決勝② 敗者');
+  });
+  return rows;
+}
+function zeroRows(teams){
+  return teams.map(function(t){ return [t,'0','0','0','0','0','0','0','0','']; });
+}
+function demoStandings(){
+  return [
+    { label:"予選リーグ", blocks: DEMO.groups.map(function(teams,i){
+        return { label:String.fromCharCode(65+i)+'組', rows:zeroRows(teams) }; }) },
+    { label:"上位リーグ", blocks: DEMO.upper.map(function(b){
+        return { label:b.label, rows:zeroRows(b.teams.map(function(s){return s+'（仮）';})) }; }) },
+    { label:"下位リーグ", blocks: DEMO.lower.map(function(b){
+        return { label:b.label, rows:zeroRows(b.teams.map(function(s){return s+'（仮）';})) }; }) }
+  ];
+}
+function showDemo(){
+  var rows=demoGL().concat(demoTourn());
+  renderSchedule(rows);
+  renderBracket(rows);
+  renderStandings(demoStandings());
+  var f=document.getElementById('live-final');
+  if(f) f.innerHTML='<p class="live-wait">トーナメント・順位決定戦が終わると、'+
+                    '1位から18位までの最終順位がここに出ます。</p>';
+  ['upd-schedule','upd-standings','upd-bracket'].forEach(function(id){
+    var e=document.getElementById(id); if(e) e.textContent='仮の組み合わせを表示中';
+  });
+}
+/* ▲▲▲ ここまでが仮の組み合わせ ▲▲▲ */
+
+if(!LIVE.sheetId){ showDemo(); }
+loadAll();
+setInterval(loadAll, LIVE.refreshSec*1000);
+</script>
+</body>
+</html>
