@@ -15,7 +15,7 @@ img{max-width:100%;display:block;}
 
 /* ============================================================
    オープニングページ（この1画面だけで完結する）
-   3:4 の画像を、画面いっぱいになるまで等倍で拡大し、上下左右中央ぞろえ。
+   縦長の背景画像を、画面いっぱいになるまで等倍で拡大し、上下左右中央ぞろえ。
    はみ出した左右は切り落とす（延長・引き伸ばしは使わない）
    ============================================================ */
 .hero{
@@ -24,29 +24,71 @@ img{max-width:100%;display:block;}
   background:#8a7a6a;
 }
 .opening{position:relative; flex:0 0 auto;
-  /* 画面の高さを埋める幅（画像の縦横比 747:1024 ＝ 0.7295）。
-     横に足りない場合は画面幅いっぱいにする */
-  width:max(100%, calc(100svh * .7295));}
+  /* 画面の高さを埋める幅（画像の縦横比 1206:2160 ＝ 0.5583）。
+     横に足りない場合は画面幅いっぱいにする
+     2026-08-21 背景をメタリックエンブレム（背景ハーフ）に差し替え
+     2026-08-21 大会名が入った版（夏休みカップロゴ.pptx 8枚目）に再差し替え */
+  width:max(100%, calc(100svh * .5583));}
 .opening img{display:block;width:100%;}
 
-/* 優勝カップの上に重ねる、透明なリンク領域（位置は画像から実測） */
-.hit{position:absolute;display:block;border-radius:14px;z-index:3;
-  transition:background .16s ease, box-shadow .16s ease;}
-.hit-u8{left:8.3%;  width:30.5%; top:60.5%; height:38.3%;}
-.hit-u9{left:56.8%; width:34.9%; top:60.5%; height:38.3%;}
-.hit:hover{background:rgba(255,246,214,.16);box-shadow:0 0 26px rgba(255,232,150,.4);}
+/* ============================================================
+   U8／U9のロゴボタン（2026-08-21 設置）
+   画面の下寄せ・左右2つ並び。左＝U8（黄）／右＝U9（緑）。
+   ★背景画像の中ではなく「画面」を基準に置いている。
+     背景は縦長のため、細い画面では左右が切り落とされる。
+     画像の中に置くとボタンまで切れてしまうので、画面基準にしている。
+   ============================================================ */
+/* 大会名は 2026-08-21 に背景画像へ取り込まれたため、
+   HTML側の見出し（.cat-title）は廃止した。
+   戻したい場合は _バックアップ_2026-08-21\ を参照。 */
+
+.cat-nav{position:absolute; left:0; right:0; bottom:4.5%; z-index:4;
+  padding:0 3.5%;}
+
+/* 上段：U8／U9 の2つ並び。大きさは 2026-08-21 の状態で固定 */
+.cat-row{display:flex; align-items:center; justify-content:center; gap:3.5%;}
+.cat-row .cat-btn{flex:1 1 0;}
+
+/* 下段：駐車場ボタン。行の全幅なので、左端がU8の左端・右端がU9の右端にそろう。
+   margin-top の % は「親の“幅”」が基準になるため、上段の隙間(3.5%)と同じ間隔になる。
+   この段が増えたぶん、上段のU8／U9は自動で上へ持ち上がる（下端ぞろえのため）。 */
+.cat-btn-wide{margin-top:3.5%;}
+
+/* 2026-08-21 角丸をやめて直角に。画像側は黒フチの外に白い余白を含めて切り抜いてある */
+.cat-btn{display:block; border-radius:0; overflow:hidden;
+  box-shadow:0 3px 10px rgba(0,0,0,.45);
+  transition:transform .16s ease, box-shadow .16s ease;
+  -webkit-tap-highlight-color:transparent;}
+.cat-btn img{width:100%; height:auto;}
+.cat-btn:hover{transform:translateY(-2px); box-shadow:0 7px 18px rgba(0,0,0,.55);}
+.cat-btn:active{transform:translateY(1px); box-shadow:0 2px 6px rgba(0,0,0,.45);}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <!-- オープニング：カップをタップすると各カテゴリーのページへ -->
+  <!-- オープニング：下のロゴボタンをタップすると各カテゴリーのページへ -->
   <section class="hero" id="top">
+    <!-- 背景（素材: 夏休みカップロゴ.pptx の8枚目。大会名が入った版） -->
     <div class="opening">
-      <img src="assets/opening.jpg" alt="50日前の自分へ 夏休みの軌跡CUP">
-      <a class="hit hit-u8" href="u8.html" aria-label="U8 の部の大会HPへ"></a>
-      <a class="hit hit-u9" href="u9.html" aria-label="U9 の部の大会HPへ"></a>
+      <img src="assets/opening_bg.jpg" alt="-50日前の自分へ- 夏休みの軌跡カップ">
     </div>
+
+    <!-- ボタン（素材: 素材\HP使用\夏休みカップロゴ.pptx
+         2枚目=U8 ／ 5枚目=U9 ／ 7枚目=駐車場） -->
+    <nav class="cat-nav">
+      <div class="cat-row">
+        <a class="cat-btn" href="u8.html">
+          <img src="assets/logo_u8.png" alt="U8 の部の大会HPへ">
+        </a>
+        <a class="cat-btn" href="u9.html">
+          <img src="assets/logo_u9.png" alt="U9 の部の大会HPへ">
+        </a>
+      </div>
+      <a class="cat-btn cat-btn-wide" href="parking.html">
+        <img src="assets/logo_parking.png" alt="駐車場の利用に関するお願い">
+      </a>
+    </nav>
   </section>
 
 </div>

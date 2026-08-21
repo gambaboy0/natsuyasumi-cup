@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -7,10 +7,13 @@
 <title>U9 の部｜50日前の自分へ 夏休みの軌跡CUP</title>
 <style>
 :root{
-  /* ▼ 見出し画像から実測した色 */
-  --gold:#c7ba8e;        /* 「夏休みの軌跡」の文字色 */
-  --gold-lt:#ede4bd;     /* 明るいゴールド（文字用） */
-  --gold-dk:#8b8161;     /* 沈んだゴールド（罫線用） */
+  /* ▼ 2026-08-21 U9ページの差し色を、オープニングページの黄色に統一した。
+        （旧: 見出し画像のゴールド #c7ba8e / #ede4bd / #8b8161）
+        黄色は assets\opening_bg.jpg のエンブレム左半分から採色。
+        U9ページは緑のままにして、カテゴリーを色で見分けられるようにしている。 */
+  --gold:#cfaa15;        /* オープニングの黄色（実測値） */
+  --gold-lt:#f0cf45;     /* 明るい黄色（文字用） */
+  --gold-dk:#8a7210;     /* 沈んだ黄色（罫線用） */
   --bg:#17291a;          /* 見出し画像の深緑（ページ全体の地色） */
   --bg-2:#12200f;
   --panel:#20351f;       /* ボタン・パネルの面 */
@@ -33,68 +36,65 @@ body{font-family:"Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;
 img{max-width:100%;display:block;}
 
 /* ============================================================
-   ① 最上部の見出し画像
+   ① 最上部のカテゴリーバー（2026-08-21 新設）
+   Jリーグの大会選択バー（J1・J2・J3・ルヴァン…）と同じ作り。
+   ・画面の一番上に固定され、スクロールしても残る
+   ・7つのタブが横1列。狭い画面では文字が自動で小さくなる
+     （それでも入りきらない場合は横スクロールできる）
+   ・いま見ているセクションのタブが黄色く光る（下のJSが付け替える）
    ============================================================ */
-.pagehead{width:100%;background:var(--bg);}
-.pagehead img{width:100%;}
+.catbar{position:sticky; top:0; z-index:50;
+  background:rgba(12,26,14,.96);
+  border-bottom:2px solid var(--gold);
+  box-shadow:0 2px 10px rgba(0,0,0,.45);}
+@supports (backdrop-filter:blur(6px)){ .catbar{backdrop-filter:blur(6px);} }
+.catbar-inner{display:flex; overflow-x:auto; scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;}
+.catbar-inner::-webkit-scrollbar{display:none;}
+.cattab{flex:1 0 auto;
+  display:flex; align-items:center; justify-content:center;
+  padding:.66rem .25rem .5rem;
+  font-size:clamp(9px, 2.8vw, 12px);
+  font-weight:900; letter-spacing:.01em; white-space:nowrap;
+  color:rgba(236,229,205,.6); text-decoration:none;
+  border-bottom:3px solid transparent;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .15s ease, border-color .15s ease, background .15s ease;}
+.cattab:hover{color:var(--gold-lt); background:rgba(207,170,21,.10);}
+.cattab.is-active{color:var(--gold-lt); background:rgba(207,170,21,.17);
+  border-bottom-color:var(--gold);}
 
-/* ============================================================
-   ② メインメニュー（結婚式サイトの8ボタンと同じ作り／色はゴールド）
-   ============================================================ */
-.menu-stage{padding:20px 16px 30px;}
-.menu-title{text-align:center;margin-bottom:15px;}
-.menu-title b{display:block;font-size:11px;letter-spacing:.34em;color:var(--gold);font-weight:800;}
-.menu-title i{display:block;font-style:normal;font-size:10px;letter-spacing:.2em;
-  color:rgba(236,229,205,.55);margin-top:3px;}
-
-.navgrid{display:grid;gap:.5rem;grid-template-columns:repeat(4,minmax(0,1fr));}
-.navgrid + .navgrid{margin-top:.5rem;}
-
-/* ボタン本体（結婚式サイト .nav-square と同じ構造） */
-.navsq{
-  appearance:none; aspect-ratio:1; min-width:0; min-height:0; overflow:hidden;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:.25rem;
-  background:linear-gradient(165deg,#27401f,#1b3018 60%,#16281a);
-  border:2px solid var(--gold);
-  border-radius:12px;
-  box-shadow:3px 3px 0 rgba(0,0,0,.38);
-  text-decoration:none; font:inherit; padding:.3rem; cursor:pointer;
-  width:100%;
-  container-type:inline-size;   /* 中の文字をマスの幅基準(cqw)で決める */
-}
-.navsq:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(0,0,0,.35);}
-.navsq:hover{border-color:var(--gold-lt);
-  background:linear-gradient(165deg,#2e4a24,#20381c 60%,#1a2e1e);}
-.navsq .en{color:var(--gold);font-size:.7rem;font-size:15cqw;
-  line-height:1.1;text-align:center;letter-spacing:.05em;font-weight:800;}
-.navsq .jp{color:var(--gold-lt);font-weight:800;font-size:.55rem;font-size:12cqw;
-  line-height:1.25;text-align:center;letter-spacing:.01em;white-space:nowrap;}
+/* ② 見出し画像（.pagehead）は 2026-08-21 に削除 */
 
 /* ============================================================
    ③ 詳細（背景は同じ深緑のまま）
+   2026-08-21 メインメニュー（.menu-stage / .navgrid / .navsq）は廃止。
+   上のカテゴリーバーが代わりになった。復元は _バックアップ_2026-08-21\ から。
    ============================================================ */
 .detail{padding-bottom:60px;}
-.sec{padding:30px 18px 6px;scroll-margin-top:70px;}
-/* セクションの見出し＝メインメニューのボタンと完全に同じ表示。
-   ボタンの文字はマスの幅基準（英字15cqw／日本語12cqw）なので、
-   同じ計算をして文字の大きさ・字間・行間・間隔をそろえる。
-   cqw の基準はマスの「内側」の幅なので、枠線(2px×2)と内余白(.3rem×2)を引く。
-   マスの外形 ＝（本文幅 − 左右の余白32px − マス間の隙間24px）÷ 4 */
+/* scroll-margin-top はカテゴリーバー（約38px）の下に見出しが来るようにする値 */
+.sec{padding:30px 18px 6px;scroll-margin-top:52px;}
+/* 2026-08-21 見出し画像を削除したので、最初のセクションだけ上を広げる。
+   戻る／INDEXの丸ボタン（上から3.2rem・高さ2.6rem＝下端5.8rem）に
+   見出しがかからないようにするため。 */
+.detail > .sec:first-child{padding-top:4.6rem;}
+/* セクションの見出しの文字寸法。
+   もとはメインメニューのボタンと完全に同じ大きさにそろえていた名残で、
+   ボタンのマス幅（--btnw）を基準に計算している。メニュー廃止後もこの寸法を継続。 */
 .sec{--btnw:calc((min(480px, 100vw) - 56px) / 4 - 4px - .6rem);}
 .sec h2{text-align:center;font-size:calc(var(--btnw) * .15);
   letter-spacing:.05em;font-weight:800;color:var(--gold);line-height:1.1;}
 .sec h3{text-align:center;font-size:calc(var(--btnw) * .12);
   letter-spacing:.01em;font-weight:800;color:var(--gold-lt);line-height:1.25;
   margin:.25rem 0 12px;}
-.rows{border:1px solid rgba(199,186,142,.3);border-radius:13px;overflow:hidden;
+.rows{border:1px solid rgba(214,180,60,.3);border-radius:13px;overflow:hidden;
   background:rgba(255,255,255,.04);}
-.row{display:flex;border-bottom:1px solid rgba(199,186,142,.18);}
+.row{display:flex;border-bottom:1px solid rgba(214,180,60,.18);}
 .row:last-child{border-bottom:none;}
 .row dt{flex:0 0 33%;background:rgba(255,255,255,.05);padding:12px;font-size:12.5px;
   font-weight:900;color:var(--gold-lt);}
 .row dd{flex:1;padding:12px;font-size:12.5px;color:var(--cream);line-height:1.6;}
-.ph{margin-top:11px;border:2px dashed rgba(199,186,142,.4);border-radius:13px;padding:24px 12px;
+.ph{margin-top:11px;border:2px dashed rgba(214,180,60,.4);border-radius:13px;padding:24px 12px;
   text-align:center;color:rgba(236,229,205,.6);font-size:12px;line-height:1.85;
   background:rgba(255,255,255,.03);}
 .note{font-size:11.5px;color:rgba(236,229,205,.6);margin-top:9px;line-height:1.7;}
@@ -106,7 +106,7 @@ body.day-u8 .only-u9{display:none;} body.day-u9 .only-u8{display:none;}
 .pin{position:relative;aspect-ratio:1;border-radius:14px;display:flex;align-items:center;
   justify-content:center;text-align:center;padding:5px;min-width:0;
   background:linear-gradient(160deg,#27401f,#16281a);
-  border:2px solid rgba(199,186,142,.42);
+  border:2px solid rgba(214,180,60,.42);
   box-shadow:0 3px 0 rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.10);}
 .pin span{font-size:9.5px;font-weight:900;color:var(--cream);line-height:1.25;}
 .pin.host{border-color:var(--gold);
@@ -116,11 +116,7 @@ body.day-u8 .only-u9{display:none;} body.day-u9 .only-u8{display:none;}
 /* ============================================================
    ライブ表示（スプレッドシートから30秒ごとに読み取る部分）
    ============================================================ */
-/* 仮の組み合わせであることの表示（本番前に削除する） */
-.provisional{margin:0 16px;padding:9px 12px;border-radius:10px;
-  background:rgba(190,60,50,.16);border:1px solid rgba(224,120,110,.55);
-  color:#f4dcd8;font-size:11.5px;font-weight:700;line-height:1.7;text-align:center;}
-.provisional b{color:#ffb4aa;}
+/* 仮の組み合わせであることの表示（.provisional）は 2026-08-21 に削除 */
 
 .updated{font-size:10.5px;color:rgba(236,229,205,.45);text-align:right;margin-top:7px;letter-spacing:.04em;}
 .live-wait{font-size:11.5px;color:rgba(236,229,205,.5);text-align:center;padding:18px 8px;line-height:1.8;}
@@ -128,35 +124,35 @@ body.day-u8 .only-u9{display:none;} body.day-u9 .only-u8{display:none;}
 /* 順位表 */
 .phase{margin:20px 0 2px;text-align:center;font-size:11px;font-weight:900;
   letter-spacing:.2em;color:var(--gold);
-  border-top:1px solid rgba(199,186,142,.28);padding-top:12px;}
+  border-top:1px solid rgba(214,180,60,.28);padding-top:12px;}
 .phase:first-child{border-top:none;margin-top:6px;padding-top:0;}
 .gblock{margin-top:16px;}
 .gblock h4{font-size:12px;font-weight:900;letter-spacing:.14em;color:var(--gold);
   text-align:center;margin-bottom:7px;}
-.tscroll{overflow-x:auto;border:1px solid rgba(199,186,142,.3);border-radius:12px;
+.tscroll{overflow-x:auto;border:1px solid rgba(214,180,60,.3);border-radius:12px;
   background:rgba(255,255,255,.04);}
 .stbl{width:100%;border-collapse:collapse;font-size:11.5px;white-space:nowrap;}
 .stbl th{background:rgba(255,255,255,.07);color:var(--gold-lt);padding:7px 5px;
-  font-weight:800;border-bottom:1px solid rgba(199,186,142,.28);}
+  font-weight:800;border-bottom:1px solid rgba(214,180,60,.28);}
 .stbl td{padding:7px 5px;text-align:center;color:var(--cream);
-  border-bottom:1px solid rgba(199,186,142,.12);}
+  border-bottom:1px solid rgba(214,180,60,.12);}
 .stbl tr:last-child td{border-bottom:none;}
 .stbl td.tname{text-align:left;font-weight:700;}
 .rank-badge{display:inline-flex;align-items:center;justify-content:center;
   width:20px;height:20px;border-radius:50%;font-weight:900;font-size:10.5px;color:#16281a;
-  background:rgba(199,186,142,.45);}
+  background:rgba(214,180,60,.45);}
 .rank-1{background:#e8c65a;} .rank-2{background:#cfd3d6;} .rank-3{background:#c98d52;}
 
 /* 試合スケジュール表（横＝コート／縦＝時間。V CUPと同じ形） */
-.schedwrap{overflow-x:auto;border:1px solid rgba(199,186,142,.3);border-radius:12px;
+.schedwrap{overflow-x:auto;border:1px solid rgba(214,180,60,.3);border-radius:12px;
   background:rgba(255,255,255,.04);-webkit-overflow-scrolling:touch;}
 .sched{border-collapse:collapse;min-width:620px;width:100%;table-layout:fixed;}
 .sched th{background:#233a22;color:var(--gold-lt);font-weight:900;font-size:10.5px;
-  padding:7px 3px;border-bottom:1px solid rgba(199,186,142,.32);letter-spacing:.04em;}
+  padding:7px 3px;border-bottom:1px solid rgba(214,180,60,.32);letter-spacing:.04em;}
 .sched th.tcol,.sched td.tcol{width:54px;}
 .sched th.tcol{position:sticky;left:0;z-index:2;}
-.sched td{border-top:1px solid rgba(199,186,142,.14);
-  border-left:1px solid rgba(199,186,142,.14);padding:5px 3px;vertical-align:middle;}
+.sched td{border-top:1px solid rgba(214,180,60,.14);
+  border-left:1px solid rgba(214,180,60,.14);padding:5px 3px;vertical-align:middle;}
 .sched td.tcol{position:sticky;left:0;z-index:1;background:#1b3020;
   text-align:center;font-weight:900;color:var(--gold);font-size:11px;white-space:nowrap;}
 .cell .cg{font-size:8.5px;color:var(--gold);font-weight:900;text-align:center;letter-spacing:.04em;}
@@ -168,7 +164,7 @@ body.day-u8 .only-u9{display:none;} body.day-u9 .only-u8{display:none;}
 
 /* 試合カード */
 .mcard{display:flex;align-items:center;gap:8px;margin-top:7px;padding:9px 10px;
-  border:1px solid rgba(199,186,142,.25);border-radius:10px;background:rgba(255,255,255,.04);}
+  border:1px solid rgba(214,180,60,.25);border-radius:10px;background:rgba(255,255,255,.04);}
 .mcard .no{flex:0 0 auto;font-size:10px;font-weight:900;color:var(--gold);
   min-width:34px;text-align:center;line-height:1.3;}
 .mcard .tm{flex:1;font-size:12px;font-weight:700;text-align:center;min-width:0;
@@ -192,7 +188,7 @@ body.day-u8 .only-u9{display:none;} body.day-u9 .only-u8{display:none;}
 .bcol:not(:last-child){padding-right:18px;}
 .bpair{display:flex;flex-direction:column;justify-content:space-around;
   flex:1;position:relative;}
-.bm{position:relative;margin:5px 0;border:1px solid rgba(199,186,142,.4);
+.bm{position:relative;margin:5px 0;border:1px solid rgba(214,180,60,.4);
   border-radius:7px;overflow:hidden;background:rgba(255,255,255,.05);}
 /* 各試合から右へ出る線 */
 .bcol:not(:last-child) .bm::after{content:"";position:absolute;top:50%;left:100%;
@@ -203,19 +199,19 @@ body.day-u8 .only-u9{display:none;} body.day-u9 .only-u8{display:none;}
 .bcol:not(:last-child) .bpair::before{content:"";position:absolute;right:-18px;
   top:50%;width:9px;height:2px;background:var(--gold-dk);}
 .brow{display:flex;align-items:center;gap:4px;padding:4px 5px;font-size:9.5px;line-height:1.25;}
-.brow + .brow{border-top:1px solid rgba(199,186,142,.22);}
+.brow + .brow{border-top:1px solid rgba(214,180,60,.22);}
 .brow .bn{flex:1;min-width:0;color:var(--cream);font-weight:700;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .brow .bs{flex:0 0 auto;font-weight:900;color:rgba(236,229,205,.45);min-width:12px;text-align:right;}
 .brow .bs small{font-size:8px;font-weight:700;opacity:.85;margin-left:1px;}
-.brow.win{background:rgba(199,186,142,.16);}
+.brow.win{background:rgba(214,180,60,.16);}
 .brow.win .bn{color:var(--gold-lt);font-weight:900;}
 .brow.win .bs{color:var(--gold-lt);}
 .bhead{display:flex;margin-bottom:3px;}
 .bhead span{flex:1 1 0;min-width:112px;text-align:center;font-size:9px;font-weight:900;
   letter-spacing:.1em;color:rgba(236,229,205,.5);}
 .bhead span:not(:last-child){padding-right:18px;}
-.bm.champ{border-color:var(--gold);box-shadow:0 0 0 1px rgba(199,186,142,.35);}
+.bm.champ{border-color:var(--gold);box-shadow:0 0 0 1px rgba(214,180,60,.35);}
 .bthird{margin-top:10px;}
 .bthird .lbl{font-size:9.5px;font-weight:900;color:rgba(236,229,205,.55);
   letter-spacing:.08em;margin-bottom:3px;}
@@ -225,8 +221,9 @@ body.day-u8 .only-u9{display:none;} body.day-u9 .only-u8{display:none;}
    右上：ハンバーガー ／ 左上：戻る
    形は結婚式サイトと同じ（丸・2.6rem・3pxの縁取り）。色は深緑＋ゴールド
    ============================================================ */
+/* 2026-08-21 カテゴリーバーを最上部に置いたので、その下へ下ろした（1rem → 3.2rem） */
 .idx-toggle,.back-toggle{
-  position:fixed; top:1rem; z-index:40;
+  position:fixed; top:3.2rem; z-index:40;
   width:2.6rem; height:2.6rem; border-radius:50%;
   background:rgba(23,41,26,.92);
   border:3px solid var(--gold);
@@ -254,16 +251,375 @@ body.day-u8 .only-u9{display:none;} body.day-u9 .only-u8{display:none;}
   font-size:1.4rem;line-height:1;color:var(--gold);cursor:pointer;}
 .idx-title{letter-spacing:.28em;color:var(--gold);font-size:1rem;font-weight:900;margin:0 0 1.2rem;}
 .idx-list{list-style:none;margin:0;padding:0;}
-.idx-list li{border-bottom:1px solid rgba(199,186,142,.35);}
+.idx-list li{border-bottom:1px solid rgba(214,180,60,.35);}
 .idx-list a{display:flex;align-items:baseline;gap:.8rem;padding:1rem .15rem;
   text-decoration:none;color:var(--cream);width:100%;}
-.idx-list a:hover{background:rgba(199,186,142,.08);}
+.idx-list a:hover{background:rgba(214,180,60,.08);}
 .idx-list .en{color:var(--gold);font-size:.9rem;letter-spacing:.08em;font-weight:800;line-height:1.3;}
 .idx-list .jp{font-weight:700;font-size:.78rem;color:var(--cream);margin-left:auto;}
+
+/* ============================================================================
+   ★ 2026-08-21 配色の切り替え（ここが最後なので、上の指定を上書きする）
+     ・ページ全体の地色を黄色に
+     ・最上部のバーを黒地に白文字。日程だけ光る表示はやめ、8つとも同じ見た目に
+     ・戻る／INDEXの丸ボタンを黒地・白フチ・白アイコンに
+     ・表やカードは濃い緑の面のままにして、中の文字はこれまでどおり
+   このブロックごと削除すれば、元の深緑の配色に戻る。
+   ============================================================================ */
+:root{
+  --yellow:#cfaa15;    /* オープニングページの黄色（assets\opening_bg.jpg から実測） */
+  --ink:#17291a;       /* 黄色の上に置く文字色（深緑の濃色） */
+  --panel-dk:#1b3020;  /* 表・カードの地 */
+}
+
+/* ---- ページ全体 ---- */
+body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
+
+/* ---- 最上部のカテゴリーバー：黒地に白文字 ---- */
+/* 2026-08-21 四隅を丸角に。上下左右に少し余白を取って、
+   黄色の地の上に黒い帯が浮いて見えるようにした。
+   スクロール中も画面の上から8pxのところに貼り付く。 */
+.catbar{background:#000; border-bottom:none;
+  top:8px; margin:8px 12px 0;
+  border-radius:14px; overflow:hidden;
+  box-shadow:0 3px 10px rgba(23,41,26,.35);}
+.cattab{color:#fff;
+  font-size:clamp(9px, 2.6vw, 11.5px);}
+.cattab:hover{color:#fff; background:rgba(255,255,255,.16);}
+/* 「いま見ているタブを光らせる」表示は取りやめ（8つとも同じ見た目）。
+   JS側は .is-active を付け続けるが、色は変えない。
+   バーが横スクロールしたときに現在地のタブを見える位置へ寄せる働きは残る。 */
+.cattab.is-active{color:#fff; background:transparent; border-bottom-color:transparent;}
+
+/* ---- 戻る／INDEX の丸ボタン：黒地・白フチ・白アイコン ---- */
+.idx-toggle,.back-toggle{background:#000; border-color:#fff;}
+.idx-toggle span{background:#fff;}
+.back-toggle{color:#fff;}
+.idx-toggle:hover,.back-toggle:hover{background:#000; border-color:#fff;}
+
+/* ---- 黄色の地に直接のる文字 ---- */
+.sec h2{color:var(--ink);}
+.sec h3{color:rgba(23,41,26,.78);}
+.note,.updated,.live-wait,.scrollhint,
+.phase,.gblock h4,.bgroup h4,.bhead span,.bthird .lbl{color:rgba(23,41,26,.75);}
+.bgroup h4 i{color:rgba(23,41,26,.62);}
+.phase{border-top-color:rgba(23,41,26,.32);}
+
+/* ============================================================================
+   ★ 2026-08-21 すべての項目を「白い角丸パネル＋濃い緑の縁取り」に統一
+   　 （それまでは表やカードが濃い緑の面だった）
+   ============================================================================ */
+:root{
+  --panel:#fff;                    /* パネルの地 */
+  --edge:#17291a;                  /* 縁取り＝濃い緑 */
+  --hair:rgba(23,41,26,.22);       /* パネルの中の細い罫線 */
+  --fill:rgba(23,41,26,.07);       /* 表の見出し行などの薄い塗り */
+}
+
+/* ---- 項目（セクション）そのものを白い角丸パネルにする ---- */
+.sec{background:var(--panel);
+  border:2px solid var(--edge);
+  border-radius:14px;
+  margin:14px 12px;
+  padding:18px 14px 16px;
+  box-shadow:0 2px 0 rgba(23,41,26,.18);}
+.detail{padding-bottom:40px;}
+.detail > .sec:first-child{padding-top:18px;}
+
+/* ---- パネルの中の表・カードも白。二重の箱に見えないよう罫線は細く ---- */
+.rows,.tscroll,.schedwrap,.mcard,.bm,.ph{background:var(--panel);}
+.rows,.tscroll,.schedwrap{border-color:var(--hair);}
+.mcard,.bm{border-color:var(--hair);}
+.row{border-bottom-color:var(--hair);}
+.row dt{background:var(--fill); color:var(--edge);}
+.row dd{color:var(--edge);}
+.ph{border-color:var(--hair); color:rgba(23,41,26,.55);}
+
+/* ---- 順位表 ---- */
+.stbl th{background:var(--fill); color:var(--edge); border-bottom-color:var(--hair);}
+.stbl td{color:var(--edge); border-bottom-color:var(--hair);}
+
+/* ---- GL／CL／FR は別々の表にして、角丸の枠を3つ並べる（2026-08-21） ---- */
+.schedwrap + .schedwrap{margin-top:14px;}
+/* 左上の GL／CL／FR は少し大きめに */
+.sched thead th.tcol{font-size:13px; letter-spacing:.06em;}
+
+/* ---- 試合スケジュール表（濃い緑だった部分をすべて白に） ---- */
+.sched th{background:var(--fill); color:var(--edge); border-bottom-color:var(--hair);}
+.sched td{border-top-color:var(--hair); border-left-color:var(--hair);}
+/* 左端の時刻列は横スクロール中も貼り付いたままなので、
+   半透明だと後ろの試合が透けてしまう。--fill を白に重ねた色を不透明で指定する */
+.sched th.tcol,.sched td.tcol{background:#eff0ef; color:var(--edge);}
+.sched td.empty{background:rgba(23,41,26,.05);}
+.cell .cg{color:rgba(23,41,26,.62);}
+.cell .ct{color:var(--edge);}
+.cell .cs{color:rgba(23,41,26,.4);}
+.cell .cs.on{color:var(--edge);}
+
+/* ---- 試合カード ---- */
+.mcard .no{color:rgba(23,41,26,.62);}
+.mcard .tm{color:var(--edge);}
+.mcard .sc{color:rgba(23,41,26,.4);}
+.mcard .sc.on{color:var(--edge);}
+.mcard .meta{color:rgba(23,41,26,.5);}
+
+/* ---- トーナメント表 ---- */
+.brow .bn{color:var(--edge);}
+.brow .bs{color:rgba(23,41,26,.4);}
+.brow + .brow{border-top-color:var(--hair);}
+/* 勝ち上がりは黄色の帯で示す（白地なので文字は濃いまま） */
+.brow.win{background:rgba(207,170,21,.3);}
+.brow.win .bn,.brow.win .bs{color:var(--edge);}
+.bm.champ{border-color:var(--edge); box-shadow:0 0 0 1px rgba(23,41,26,.3);}
+/* つなぎ線はパネルの白地の上に引かれる */
+.bcol:not(:last-child) .bm::after,
+.bcol:not(:last-child) .bpair::after,
+.bcol:not(:last-child) .bpair::before{background:rgba(23,41,26,.45);}
+
+/* ---- 参加チーム一覧にも同じパネルを（マスの外側に白い角丸の地） ---- */
+/* .pins は .sec の中なので、パネルは .sec 側で付いている。
+   マスとパネルのふちが近すぎないよう、上下に少し余白を入れる */
+.pins{margin:2px 0 4px;}
+
+/* ---- トーナメント表をつなぐ線は、黄色の地の上に引かれるので濃色に ---- */
+.bcol:not(:last-child) .bm::after,
+.bcol:not(:last-child) .bpair::after,
+.bcol:not(:last-child) .bpair::before{background:rgba(23,41,26,.6);}
+
+/* ============================================================================
+   ★ 2026-08-21 参加チーム一覧の並べ方（最上部バーの直下に移動）
+   配置の見本: 素材\HP使用\夏休みカップロゴ.pptx の4枚目
+
+   見本を実測した値（1920pxの版）
+     マス     … 幅210 × 高さ205（ほぼ正方形）
+     横の隙間 … 51px  ＝ マス幅の 24.3%
+     縦の隙間 … 7.5px ＝ マス幅の 3.6%   ★横に比べてかなり詰まっている
+     1行目の左2マスぶんが「PARTICIPATING 18 TEAMS／U8」のバナー
+
+   4列ぶんの幅 ＝ マス×4 ＋ 隙間×3 ＝ マス×(4 + 3×0.243) ＝ マス×4.729
+   ここから逆算してマス1つの幅を出し、隙間をその比率で決めている。
+   ============================================================================ */
+.pins{
+  /* セクションの中身の幅。2026-08-21 セクションを白いパネルにしたので
+     外の余白12px×2 ＋ 枠線2px×2 ＋ 内側の余白14px×2 ＝ 56px を引く */
+  --gw:calc(min(480px, 100vw) - 56px);
+  --box:calc(var(--gw) / 4.729);         /* 見本と同じ比率になるマス1つの幅 */
+  display:grid; grid-template-columns:repeat(4, 1fr);
+  column-gap:calc(var(--box) * .243);
+  row-gap:calc(var(--box) * .036);
+  margin-top:0;}
+
+/* 1行目の左2マスぶんを使う見出しバナー */
+.pin-head{grid-column:span 2; display:flex; align-items:center; min-width:0;}
+.pin-head img{width:100%; height:auto;}
+/* U9の見出しバナー（2026-08-22）
+   16チームは4×4にきれいに収まるので、バナーはマス目の【外】に出して上に置く。
+   幅は「マス2つ＋隙間1つ」ぶん ＝ 全幅の 47.431%
+   （マス1つ ＝ 全幅 ÷ 4.729 ／ 隙間 ＝ マス幅 × 0.243）
+   中央ぞろえなので、ちょうど2列目と3列目（ALVA・石動大谷）の真上に来る。 */
+.pins-head4{display:flex; justify-content:center; margin-bottom:0.76%;}
+.pins-head4 img{width:47.431%; height:auto; display:block;}
+
+/* ============================================================================
+   ★ 2026-08-21 順位表を「星取表」の形にした
+   ============================================================================ */
+.xtbl{border-collapse:separate; border-spacing:0;}
+.xtbl th,.xtbl td{border-bottom:1px solid var(--hair);}
+
+/* チーム名の列は左に貼り付けて、横スクロールしても見えるようにする */
+.xtbl .c-name{position:sticky; left:0; z-index:2;
+  text-align:left; min-width:112px; max-width:132px;
+  white-space:normal; word-break:break-word; line-height:1.25;
+  border-right:2px solid var(--edge);}
+.xtbl thead .c-name{background:#eff0ef;}
+.xtbl tbody .c-name{background:#fff;}
+.xtbl tbody .c-name b{color:var(--edge);}
+
+/* 対戦結果のマス */
+.xtbl .c-h2h{min-width:46px; padding:4px 3px; border-left:1px solid var(--hair);}
+.xtbl .c-h2h .mk{display:block; font-size:13px; font-weight:900; line-height:1.15;}
+.xtbl .c-h2h .sc{display:block; font-size:9.5px; line-height:1.25; opacity:.7;}
+.xtbl .c-h2h .pk{display:block; font-size:8px; line-height:1.2; opacity:.6;}
+.xtbl .c-h2h .yet{opacity:.35;}
+.xtbl .m-w{color:#1a7f37;}   /* ○ 勝ち */
+.xtbl .m-d{color:#8a6d0b;}   /* △ 引き分け */
+.xtbl .m-l{color:#b3261e;}   /* × 負け */
+
+/* 自分どうしのマスは斜線を引いて使わないことを示す */
+.xtbl .c-h2h.self{
+  background:
+    linear-gradient(to bottom right,
+      transparent calc(50% - 1px), rgba(23,41,26,.35) calc(50% - 1px),
+      rgba(23,41,26,.35) calc(50% + 1px), transparent calc(50% + 1px)),
+    rgba(23,41,26,.05);}
+
+/* 右側の集計欄は少し詰める */
+.xtbl thead th{font-size:10.5px; padding:6px 4px;}
+.xtbl tbody td{font-size:11px; padding:5px 4px;}
+
+/* ============================================================================
+   ★ 2026-08-21 U8の大会ロゴ と チームのマスの見た目
+   ============================================================================ */
+
+/* ページの地色を、いただいたロゴの黄色に合わせる（#cfaa15 → #facd10）。
+   こうするとロゴの四角い地が背景に溶けて、継ぎ目が見えなくなる。 */
+:root{ --yellow:#014218; }
+
+/* 大会ロゴ：画面の横幅いっぱい。
+   2026-08-21 メニューバーとの間の余白をなくし、バーの真下から始めるようにした。
+   戻る／INDEXの丸ボタン（上から3.2rem）はロゴに重なるが、
+   ちょうどエンブレムの上の部分と同じ高さに来て、文字にはかからない。 */
+.pagelogo{padding-top:0;}
+.pagelogo img{width:100%; height:auto; display:block;}
+/* ロゴが上の余白を持つようになったので、最初のセクションの余白は元に戻す */
+.detail > .sec:first-child{padding-top:14px;}
+
+/* チームのマス：黒枠・白地・角のある四角・黒文字。
+
+   ▼ 枠の太さについて（2026-08-21 調整）
+   計算上は「18 TEAMS」バナーと同じ太さ（マス幅×0.0167 ＝ 約1.6px）になるが、
+   1.6px のような半端な太さはブラウザが薄いグレーににじませて描くため、
+   くっきり黒く出るバナーの線より細く見えてしまう。
+   そこで太さを手で決めている。2026-08-21 のご指定により 2.5px。 */
+.pin{background:#fff;
+  border:2.5px solid #000;
+  border-radius:0;
+  box-shadow:none;}
+.pin span{color:#000;}
+.pin.host{background:#fff; border-color:#000;}
+.pin.tbd span{color:#000;}
+/* エンブレム画像を入れたマス（2026-08-21）。マスいっぱいに、縦横比を保って収める */
+.pin img{width:100%; height:100%; object-fit:contain; display:block;}
+
+/* ============================================================================
+   ★ 2026-08-21 大会方式の図
+   主催者作成の図（夏休みカップロゴ.pptx 11枚目）をHPの見た目に合わせて作り直し。
+   ・枠は角ばった黒緑の線（チーム一覧のマスと同じテイスト）
+   ・グループリーグと上位リーグは黄色、下位リーグは濃い緑で塗り分け
+   ============================================================================ */
+.fmt{margin-top:16px;}
+.fmt-head{text-align:center; margin-bottom:7px; line-height:1.35;}
+.fmt-head b{display:block; font-size:11px; letter-spacing:.16em;
+  color:var(--edge); font-weight:900;}
+.fmt-head span{display:block; font-size:10px; font-weight:700;
+  color:rgba(23,41,26,.7);}
+.fmt-grid{display:grid; gap:5px;}
+.fmt-grid.g6{grid-template-columns:repeat(6, 1fr);}
+.fmt-grid.g3{grid-template-columns:repeat(3, 1fr);}
+.fmt-grid.g4{grid-template-columns:repeat(4, 1fr);}
+.fmt-grid.g2{grid-template-columns:repeat(2, 1fr);}
+
+.chip{display:flex; align-items:center; justify-content:center; min-width:0;
+  padding:8px 2px; border:2px solid var(--edge); border-radius:0;
+  font-size:clamp(8.5px, 2.5vw, 10.5px); font-weight:900;
+  text-align:center; line-height:1.25;}
+.chip.gl,.chip.up{background:#facd10; color:var(--edge);}
+.chip.lo{background:var(--edge); color:#fff;}
+
+.fmt-arrow{text-align:center; margin:10px 0; line-height:1.6;
+  font-size:clamp(9px, 2.6vw, 11px); font-weight:700; color:rgba(23,41,26,.8);}
+.fmt-arrow b{color:var(--edge);}
+
+.fcard{border:2px solid var(--edge); background:#fff;
+  padding:7px 4px; text-align:center; min-width:0;}
+.fcard b{display:block; font-size:clamp(10px, 3vw, 13px); font-weight:900; line-height:1.15;}
+.fcard i{display:block; font-style:normal; font-weight:700; line-height:1.2;
+  font-size:clamp(8px, 2.2vw, 9.5px); color:rgba(23,41,26,.7); margin-bottom:5px;}
+.fcard em{display:block; font-style:normal; font-weight:700; line-height:1.35;
+  font-size:clamp(8.5px, 2.4vw, 10px);
+  border-top:1px solid var(--hair); padding-top:5px;}
+.fcard.lo b{color:var(--edge);}
+.fcard.lo{background:rgba(23,41,26,.06);}
+
+/* 図版（会場配置図など）2026-08-21 */
+.figcap{font-size:11.5px; font-weight:900; letter-spacing:.06em;
+  color:var(--edge); text-align:center; margin:14px 0 7px;}
+.figbox{display:block; border:2px solid var(--edge); overflow:hidden;
+  -webkit-tap-highlight-color:transparent;}
+.figbox img{width:100%; height:auto; display:block;}
+.figbox:active{opacity:.85;}
+.fighint{font-size:10.5px; line-height:1.7; text-align:center; margin-top:6px;
+  color:rgba(23,41,26,.7);}
+
+/* Googleマップの埋め込み（2026-08-21） */
+.mapembed{position:relative; border:2px solid var(--edge);
+  aspect-ratio:4 / 3; background:rgba(23,41,26,.06);}
+.mapembed iframe{position:absolute; inset:0; width:100%; height:100%;
+  border:0; display:block;}
+.maplink{display:block; text-align:center; margin-top:8px;
+  padding:11px 8px; border:2px solid var(--edge); background:#fff;
+  color:var(--edge); text-decoration:none;
+  font-size:11.5px; font-weight:900; letter-spacing:.04em;
+  box-shadow:0 2px 0 rgba(23,41,26,.18);
+  -webkit-tap-highlight-color:transparent;}
+.maplink:active{transform:translateY(1px); box-shadow:none;}
+
+/* 順位・勝者の決め方（2026-08-21 主催者より受領） */
+.rulebox{margin-top:16px; border:2px solid var(--edge);
+  background:rgba(23,41,26,.05); padding:11px 12px;}
+.rulebox h4{font-size:11.5px; font-weight:900; letter-spacing:.06em;
+  color:var(--edge); margin:0 0 6px;}
+.rulebox h4 ~ h4{margin-top:13px;}
+.rulebox p{font-size:11.5px; line-height:1.75; margin:0;}
+.rulebox b{font-weight:900;}
+
+/* 勝点の3つ並び */
+.ptrow{display:grid; grid-template-columns:repeat(3,1fr); gap:5px;}
+.pt{border:2px solid var(--edge); background:#fff; padding:6px 2px;
+  text-align:center; font-size:clamp(9px,2.5vw,11px); font-weight:900; line-height:1.35;}
+.pt b{display:block; font-size:clamp(8.5px,2.3vw,10px); font-weight:700;
+  color:rgba(23,41,26,.7);}
+
+/* 順位の決め方（①→②→③…） */
+.steps{list-style:none; margin:7px 0 0; padding:0;
+  display:flex; flex-wrap:wrap; align-items:center; gap:5px;}
+.steps li{counter-increment:step; display:flex; align-items:center;
+  border:2px solid var(--edge); background:#fff; padding:5px 7px;
+  font-size:clamp(9px,2.4vw,11px); font-weight:900; line-height:1.2;}
+.steps li::before{content:counter(step); display:inline-flex;
+  align-items:center; justify-content:center;
+  width:15px; height:15px; margin-right:5px; flex:0 0 auto;
+  background:var(--edge); color:#fff; font-size:9px; font-weight:900;}
+.steps li:not(:last-child)::after{content:"›"; margin-left:5px; margin-right:-2px;
+  color:rgba(23,41,26,.5); font-weight:900;}
+.rulebox{counter-reset:step;}
+
+/* ============================================================================
+   ★ 2026-08-22 U9のINDEXパネル（右上のハンバーガーから出る画面）の配色を反転
+   　 これまで … 濃い緑の地 ＋ 黄色の文字
+   　 これから … 黄色の地　 ＋ 濃い緑の文字
+   U9のページ本体が濃い緑なので、パネルを黄色にすると手前に出ていることが
+   はっきり分かる。U8ページは逆（本体が黄色・パネルが濃い緑）のまま。
+   ============================================================================ */
+.idx-backdrop{background:rgba(1,66,24,.6);}
+.idx-sheet{background:linear-gradient(180deg,#facd10,#e6bb0c);
+  border-left:2px solid var(--edge);}
+.idx-close{color:var(--edge);}
+.idx-title{color:var(--edge);}
+.idx-list li{border-bottom:1px solid rgba(23,41,26,.35);}
+.idx-list a{color:var(--edge);}
+.idx-list a:hover{background:rgba(23,41,26,.10);}
+.idx-list .en{color:var(--edge);}
+.idx-list .jp{color:rgba(23,41,26,.78);}
 </style>
 </head>
 <body class="day-u9">
 <div class="wrap">
+
+  <!-- ① 最上部のカテゴリーバー（Jリーグの大会選択バーと同じ作り） -->
+  <nav class="catbar">
+    <div class="catbar-inner" id="catbar">
+      <a class="cattab" href="#teams">チーム</a>
+      <a class="cattab" href="#schedule">日程</a>
+      <!-- U9はクラスリーグが無いので CL タブは置かない -->
+      <a class="cattab" href="#group">GL</a>
+      <a class="cattab" href="#bracket">決勝T</a>
+      <a class="cattab" href="#result">最終順位</a>
+      <a class="cattab" href="#outline">要項</a>
+      <a class="cattab" href="#access">会場</a>
+      <a class="cattab" href="#info">お知らせ</a>
+    </div>
+  </nav>
 
   <!-- 左上：戻る ／ 右上：INDEX -->
   <a class="back-toggle" href="index.html" aria-label="トップへ戻る">&larr;</a>
@@ -278,8 +634,8 @@ body.day-u8 .only-u9{display:none;} body.day-u9 .only-u8{display:none;}
       <p class="idx-title">INDEX</p>
       <ol class="idx-list">
         <li><a href="#schedule"><span class="en">SCHEDULE</span><span class="jp">スケジュール</span></a></li>
-        <li><a href="#group"><span class="en">GROUP</span><span class="jp">グループリーグ</span></a></li>
-        <li><a href="#bracket"><span class="en">FINAL</span><span class="jp">トーナメント</span></a></li>
+        <li><a href="#group"><span class="en">GROUP LEAGUE</span><span class="jp">グループリーグ</span></a></li>
+        <li><a href="#bracket"><span class="en">FINAL ROUND</span><span class="jp">トーナメント</span></a></li>
         <li><a href="#result"><span class="en">RESULT</span><span class="jp">最終順位</span></a></li>
         <li><a href="#outline"><span class="en">OUTLINE</span><span class="jp">大会要項</span></a></li>
         <li><a href="#access"><span class="en">ACCESS</span><span class="jp">会場アクセス</span></a></li>
@@ -289,38 +645,60 @@ body.day-u8 .only-u9{display:none;} body.day-u9 .only-u8{display:none;}
     </nav>
   </div>
 
-  <!-- ① 見出し画像 -->
-  <div class="pagehead">
-    <img src="assets/head_u9.jpg" alt="50日前の自分へ 夏休みの軌跡CUP U9">
+  <!-- ① 見出し画像（head_u8.jpg）は 2026-08-21 に削除。
+       ② 仮の組み合わせの注意書き（.provisional）も同時に削除。
+       どちらも _バックアップ_2026-08-21\u8.html_見出し画像と注意書き削除前.html に残してある。
+       ※データはまだ仮のままなので、公開前に注意書きを戻すか要検討。 -->
+
+  <!-- ② メインメニューは 2026-08-21 に廃止（最上部のカテゴリーバーが代わり）。
+       復元は _バックアップ_2026-08-21\u8.html_メインメニュー版_深緑.html から。
+       ※「参加チーム(#teams)」はタブに出していない。右上のINDEXからは行ける。 -->
+
+  <!-- ②-2 U8の大会ロゴ（素材: 夏休みカップロゴ.pptx の9枚目。文字部分だけを切り出したもの）
+       画面の横幅いっぱいに広げる。地の黄色はページの背景色と同じ #facd10 なので継ぎ目は出ない。 -->
+  <div class="pagelogo">
+    <img src="assets/logo_u9_title.png" alt="-50日前の自分へ- 夏休みの軌跡カップ U9">
   </div>
-
-  <!-- 仮表示の注意書き（本番の組み合わせが決まったら削除する） -->
-  <p class="provisional">
-    ⚠ この画面は<b>仮の組み合わせ</b>で表示しています。<br>
-    チーム名の「（仮）」が取れたものが本番です。抽選後に差し替えます。
-  </p>
-
-  <!-- ② メインメニュー -->
-  <section class="menu-stage">
-    <div class="menu-title"><b>MAIN MENU</b><i>メインメニュー</i></div>
-
-    <div class="navgrid">
-      <a class="navsq" href="#schedule"><span class="en">SCHEDULE</span><span class="jp">スケジュール</span></a>
-      <a class="navsq" href="#group"><span class="en">GROUP</span><span class="jp">グループリーグ</span></a>
-      <a class="navsq" href="#bracket"><span class="en">FINAL</span><span class="jp">トーナメント</span></a>
-      <a class="navsq" href="#result"><span class="en">RESULT</span><span class="jp">最終順位</span></a>
-    </div>
-
-    <div class="navgrid">
-      <a class="navsq" href="#outline"><span class="en">OUTLINE</span><span class="jp">大会要項</span></a>
-      <a class="navsq" href="#access"><span class="en">ACCESS</span><span class="jp">会場アクセス</span></a>
-      <a class="navsq" href="#teams"><span class="en">TEAMS</span><span class="jp">参加チーム</span></a>
-      <a class="navsq" href="#info"><span class="en">INFO</span><span class="jp">お知らせ</span></a>
-    </div>
-  </section>
 
   <!-- ③ 詳細 -->
   <div class="detail">
+    <section class="sec" id="teams">
+      <!-- 見出しバナー（PARTICIPATING 16 TEAMS／U9）2026-08-22
+           マス目の外に出して、その上に置く。幅は「マス2つ＋隙間1つ」ぶん。
+           中央ぞろえなので、ちょうど ALVA と 石動大谷 の真上に来る。 -->
+      <div class="pins-head4">
+        <img src="assets/teams_head_u9.png" alt="PARTICIPATING 16 TEAMS U9">
+      </div>
+
+      <div class="pins only-u9-list">
+        <!-- U9 16チーム。あいうえお順（左上から右へ）。16チームちょうどなので4×4に収まる。
+             ★読みが未確認のチーム（旭丘／南星／CAMPIONE FUKUOKA／CAVALLO）は
+             　推定の読みで並べている。正しい読みが分かり次第、並べ直すこと。 -->
+        <div class="pin tbd"><span>旭丘 *</span></div>
+        <div class="pin"><span>ALVA</span></div>
+        <div class="pin"><span>石動大谷</span></div>
+        <div class="pin host"><img src="assets/emblem_valiente.png" alt="ヴァリエンテ富山"></div>
+
+        <div class="pin tbd"><span>エスポ<br>ワール白山 *</span></div>
+        <div class="pin"><span>CAVALLO</span></div>
+        <div class="pin"><span>CAMPIONE<br>FUKUOKA</span></div>
+        <div class="pin tbd"><span>JK KIDS *</span></div>
+
+        <div class="pin"><span>富山中央<br>FCA</span></div>
+        <div class="pin"><span>富山中央<br>FCB</span></div>
+        <div class="pin tbd"><span>南星 *</span></div>
+        <div class="pin"><span>氷見FC</span></div>
+
+        <div class="pin"><span>婦中西部</span></div>
+        <div class="pin"><span>BLUE SOX</span></div>
+        <div class="pin"><span>プリマ<br>ヴェーラ入善</span></div>
+        <div class="pin"><span>みなみFC</span></div>
+      </div>
+
+      <p class="note">* が付いたチームは、正式な表記を主催者に確認中です。<br>
+      各チームのエンブレム画像をいただければ、文字の代わりに差し替えられます。</p>
+    </section>
+
     <section class="sec" id="schedule">
       <h2>SCHEDULE</h2><h3>スケジュール</h3>
       <div id="live-schedule">
@@ -330,23 +708,40 @@ body.day-u8 .only-u9{display:none;} body.day-u9 .only-u8{display:none;}
     </section>
 
     <section class="sec" id="group">
-      <h2>GROUP</h2><h3>グループリーグ</h3>
+      <h2>GROUP LEAGUE</h2><h3>グループリーグ</h3>
       <div id="live-standings">
         <p class="live-wait">順位表の読み込み中…<br>（スコアが入力されると自動で並び替わります）</p>
       </div>
       <p class="updated" id="upd-standings"></p>
-      <p class="note only-u8">※ U8は18チーム。大会方式が決まり次第、ここに反映します。</p>
+      <p class="note only-u8">※ 3チーム × 6ブロックの総当たり（各チーム2試合・全18試合）。<br>
+        各ブロックの<b>1・2位はクラスリーグの上位リーグ</b>へ、<b>3位は下位リーグ</b>へ進みます。</p>
       <p class="note only-u9">※ 4グループ × 4チームの総当たり（各チーム3試合・全24試合）。<br>
         各組の1位が1位トーナメント、2位が2位トーナメント、3位が3位トーナメント、4位が4位トーナメントに進みます。</p>
     </section>
 
+    <!-- クラスリーグ（旧: グループリーグの中にあった上位リーグ・下位リーグ）2026-08-21 分離 -->
+    <section class="sec only-u8" id="class">
+      <h2>CLASS LEAGUE</h2><h3>クラスリーグ</h3>
+      <div id="live-standings-cl">
+        <p class="live-wait">順位表の読み込み中…<br>（グループリーグの結果が出そろうと対戦相手が決まります）</p>
+      </div>
+      <p class="updated" id="upd-standings-cl"></p>
+      <p class="note">※ グループリーグの成績で2つのクラスに分かれます。<br>
+        <b>上位リーグ</b>（3チーム × 4ブロック）… 各ブロックの1・2位＝12チーム<br>
+        <b>下位リーグ</b>（3チーム × 2ブロック）… 各ブロックの3位＝6チーム<br>
+        ここでの順位が、決勝トーナメント・順位決定戦の組み合わせになります。</p>
+    </section>
+
     <section class="sec" id="bracket">
-      <h2>FINAL</h2><h3>トーナメント</h3>
+      <h2>FINAL ROUND</h2><h3>決勝トーナメント・順位決定戦</h3>
       <div id="live-bracket">
         <p class="live-wait">トーナメントの読み込み中…<br>（グループリーグの結果に連動して対戦カードが埋まります）</p>
       </div>
       <p class="updated" id="upd-bracket"></p>
-      <p class="note only-u8">※ 大会方式が決まり次第、ここに反映します。</p>
+      <p class="note only-u8">※ 上位リーグの各組1位が<b>1位トーナメント（1-4位決定戦）</b>、
+        2位が<b>2位トーナメント（5-8位決定戦）</b>、3位が<b>3位トーナメント（9-12位決定戦）</b>へ。<br>
+        下位リーグは1位同士・2位同士・3位同士で対戦し、<b>13-18位</b>が決まります。<br>
+        <b>上位リーグ進出チームは6試合、下位リーグ進出チームは5試合。18位まですべて決まります。</b></p>
       <p class="note only-u9">※ <b>順位別に4つのトーナメント</b>を行います。
         1位トーナメントで1〜4位、2位トーナメントで5〜8位、
         3位トーナメントで9〜12位、4位トーナメントで13〜16位が決まります。<br>
@@ -364,78 +759,178 @@ body.day-u8 .only-u9{display:none;} body.day-u9 .only-u8{display:none;}
 
     <section class="sec" id="outline">
       <h2>OUTLINE</h2><h3>大会要項</h3>
+      <!-- 2026-08-21 ご指定の順に並べ替え
+           主催 → 大会名 → 形式 → 開催日 → カテゴリー → 参加チーム
+           → 会場 → 競技のフィールド → 競技者数 → 試合時間 → 大会方式
+           ※旧「コート」の行を「競技のフィールド」と「競技者数」に分けた。
+           ※試合時間は独立した行に戻し、大会方式の中からは削除（2026-08-21）。 -->
       <div class="rows">
+        <div class="row"><dt>主催</dt><dd>ヴァリエンテ富山</dd></div>
         <div class="row"><dt>大会名</dt><dd>50日前の自分へ　夏休みの軌跡CUP</dd></div>
         <div class="row"><dt>形式</dt><dd>1 DAY CUP</dd></div>
+        <div class="row only-u8"><dt>開催日</dt><dd>2026年9月5日(土)</dd></div>
+        <div class="row only-u9"><dt>開催日</dt><dd>2026年9月6日(日)</dd></div>
         <div class="row only-u8"><dt>カテゴリー</dt><dd>U8</dd></div>
         <div class="row only-u9"><dt>カテゴリー</dt><dd>U9</dd></div>
-        <div class="row only-u8"><dt>開催日</dt><dd>9月5日(土)<br>第1試合 9:00 キックオフ</dd></div>
-        <div class="row only-u9"><dt>開催日</dt><dd>9月6日(日) 午前<br>第1試合 8:30 キックオフ</dd></div>
-        <div class="row"><dt>会場</dt><dd>富山県立大学　天然芝グラウンド</dd></div>
         <div class="row only-u8"><dt>参加チーム</dt><dd>18チーム</dd></div>
         <div class="row only-u9"><dt>参加チーム</dt><dd>16チーム</dd></div>
-        <div class="row only-u9"><dt>大会方式</dt><dd>4グループ × 4チームの総当たり<br>順位別に4つのトーナメント<br>（全チーム5試合・16位まで決定）</dd></div>
+        <div class="row"><dt>会場</dt><dd>富山県立大学　天然芝グラウンド</dd></div>
+        <div class="row only-u8"><dt>競技のフィールド</dt><dd>40m × 30m</dd></div>
+        <div class="row only-u9"><dt>競技のフィールド</dt><dd>50m × 40m</dd></div>
+        <div class="row"><dt>競技者数</dt><dd>6人制</dd></div>
         <div class="row only-u8"><dt>試合時間</dt><dd>8分 − 1分 − 8分</dd></div>
         <div class="row only-u9"><dt>試合時間</dt><dd>10分 − 2分 − 10分</dd></div>
-        <div class="row only-u8"><dt>コート</dt><dd>6人制／40m × 30m　（5コート同時進行）</dd></div>
-        <div class="row only-u9"><dt>コート</dt><dd>6人制／50m × 40m　（5コート同時進行）</dd></div>
-        <div class="row"><dt>主催</dt><dd>ヴァリエンテ富山</dd></div>
+        <div class="row only-u8"><dt>大会方式</dt><dd>下記図のとおり</dd></div>
+        <div class="row only-u9"><dt>大会方式</dt><dd>4グループ × 4チームの総当たり<br>
+          → 順位別に4つのトーナメント<br>
+          （全チーム5試合／16位まで決定）</dd></div>
+      </div>
+
+      <!-- 大会方式の図（2026-08-21）
+           主催者作成の図（夏休みカップロゴ.pptx 11枚目）をもとに、
+           HPの配色・角ばった枠のテイストに合わせて作り直したもの。 -->
+      <div class="fmt only-u8">
+
+        <div class="fmt-stage">
+          <p class="fmt-head"><b>GROUP LEAGUE</b><span>グループリーグ　3チーム × 6ブロック</span></p>
+          <div class="fmt-grid g6">
+            <span class="chip gl">A組</span><span class="chip gl">B組</span><span class="chip gl">C組</span>
+            <span class="chip gl">D組</span><span class="chip gl">E組</span><span class="chip gl">F組</span>
+          </div>
+        </div>
+
+        <p class="fmt-arrow">▼<br>各ブロックの<b>1・2位</b>が上位リーグ／<b>3位</b>が下位リーグへ</p>
+
+        <div class="fmt-stage">
+          <p class="fmt-head"><b>CLASS LEAGUE</b><span>クラスリーグ　3チーム × 6ブロック</span></p>
+          <div class="fmt-grid g6">
+            <span class="chip up">上位<br>1組</span><span class="chip up">上位<br>2組</span>
+            <span class="chip up">上位<br>3組</span><span class="chip up">上位<br>4組</span>
+            <span class="chip lo">下位<br>1組</span><span class="chip lo">下位<br>2組</span>
+          </div>
+        </div>
+
+        <!-- リーグ戦の決め方（グループリーグ・クラスリーグ 共通）2026-08-21 -->
+        <div class="rulebox">
+          <h4>リーグ戦の勝点</h4>
+          <div class="ptrow">
+            <span class="pt"><b>勝ち</b>勝点 3</span>
+            <span class="pt"><b>引き分け</b>勝点 1</span>
+            <span class="pt"><b>負け</b>勝点 0</span>
+          </div>
+
+          <h4>リーグ戦の順位の決め方</h4>
+          <p>上から順に見ていき、決まった時点でその順位になります。</p>
+          <ol class="steps">
+            <li>勝点</li>
+            <li>直接対決の結果</li>
+            <li>得失点差</li>
+            <li>総得点</li>
+            <li>抽選</li>
+          </ol>
+        </div>
+
+        <p class="fmt-arrow">▼<br>クラスリーグの順位で進み先が決まります</p>
+
+        <div class="fmt-stage">
+          <p class="fmt-head"><b>FINAL ROUND</b><span>決勝トーナメント・順位決定戦</span></p>
+          <div class="fmt-grid g3">
+            <div class="fcard"><b>1-4位</b><i>決定トーナメント</i><em>上位1〜4組の<br>各1位</em></div>
+            <div class="fcard"><b>5-8位</b><i>決定トーナメント</i><em>上位1〜4組の<br>各2位</em></div>
+            <div class="fcard"><b>9-12位</b><i>決定トーナメント</i><em>上位1〜4組の<br>各3位</em></div>
+            <div class="fcard lo"><b>13-14位</b><i>決定戦</i><em>下位1・2組の<br>各1位</em></div>
+            <div class="fcard lo"><b>15-16位</b><i>決定戦</i><em>下位1・2組の<br>各2位</em></div>
+            <div class="fcard lo"><b>17-18位</b><i>決定戦</i><em>下位1・2組の<br>各3位</em></div>
+          </div>
+        </div>
+
+        <!-- トーナメントの勝者の決め方（2026-08-21 主催者より受領） -->
+        <div class="rulebox">
+          <h4>トーナメント・順位決定戦の勝者の決め方</h4>
+          <p>引き分けの場合は<b>サドンデスPK</b>で勝者を決めます。</p>
+        </div>
+
+      </div>
+
+      <!-- 大会方式の図（U9版）2026-08-21
+           U9はクラスリーグが無く、グループリーグ → 順位別トーナメント の2段階。 -->
+      <div class="fmt only-u9">
+
+        <div class="fmt-stage">
+          <p class="fmt-head"><b>GROUP LEAGUE</b><span>グループリーグ　4チーム × 4組</span></p>
+          <div class="fmt-grid g4">
+            <span class="chip gl">A組</span><span class="chip gl">B組</span>
+            <span class="chip gl">C組</span><span class="chip gl">D組</span>
+          </div>
+        </div>
+
+        <!-- リーグ戦の決め方（U8と同じルール） -->
+        <div class="rulebox">
+          <h4>リーグ戦の勝点</h4>
+          <div class="ptrow">
+            <span class="pt"><b>勝ち</b>勝点 3</span>
+            <span class="pt"><b>引き分け</b>勝点 1</span>
+            <span class="pt"><b>負け</b>勝点 0</span>
+          </div>
+
+          <h4>リーグ戦の順位の決め方</h4>
+          <p>上から順に見ていき、決まった時点でその順位になります。</p>
+          <ol class="steps">
+            <li>勝点</li>
+            <li>直接対決の結果</li>
+            <li>得失点差</li>
+            <li>総得点</li>
+            <li>抽選</li>
+          </ol>
+        </div>
+
+        <p class="fmt-arrow">▼<br>各組の順位で進み先が決まります</p>
+
+        <div class="fmt-stage">
+          <p class="fmt-head"><b>FINAL ROUND</b><span>決勝トーナメント・順位決定戦</span></p>
+          <div class="fmt-grid g2">
+            <div class="fcard"><b>1-4位</b><i>決定トーナメント</i><em>A〜D組の<br>各1位</em></div>
+            <div class="fcard"><b>5-8位</b><i>決定トーナメント</i><em>A〜D組の<br>各2位</em></div>
+            <div class="fcard"><b>9-12位</b><i>決定トーナメント</i><em>A〜D組の<br>各3位</em></div>
+            <div class="fcard"><b>13-16位</b><i>決定トーナメント</i><em>A〜D組の<br>各4位</em></div>
+          </div>
+        </div>
+
+        <div class="rulebox">
+          <h4>トーナメントの勝者の決め方</h4>
+          <p>引き分けの場合は<b>サドンデスPK</b>で勝者を決めます。</p>
+        </div>
+
       </div>
     </section>
 
     <section class="sec" id="access">
       <h2>ACCESS</h2><h3>会場アクセス</h3>
       <div class="rows"><div class="row"><dt>会場</dt><dd>富山県立大学　天然芝グラウンド</dd></div></div>
-      <div class="ph">地図・駐車場案内・会場配置図</div>
-      <p class="note">県外からお越しのチームもあるため、地図は大きめに置く想定です。</p>
+
+      <!-- 会場配置図（素材: 夏休みカップロゴ.pptx の14枚目）2026-08-21 -->
+      <h4 class="figcap">会場配置図</h4>
+      <a class="figbox" href="assets/venue_layout.jpg" target="_blank" rel="noopener">
+        <img src="assets/venue_layout.jpg" alt="会場配置図。第1〜第5コートとベンチの位置、アップ場、チームテント設置場所、観覧場所">
+      </a>
+      <p class="fighint">画像をタップすると大きく表示できます</p>
+
+      <!-- 会場までの地図（Googleマップ 2026-08-21）
+           APIキーの要らない埋め込み方式。読み込めない機種にそなえ、下にリンクも置く。 -->
+      <h4 class="figcap">会場までの地図</h4>
+      <div class="mapembed">
+        <iframe
+          src="https://maps.google.com/maps?q=%E5%AF%8C%E5%B1%B1%E7%9C%8C%E7%AB%8B%E5%A4%A7%E5%AD%A6%E3%82%B0%E3%83%A9%E3%82%A6%E3%83%B3%E3%83%89&hl=ja&z=16&output=embed"
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          title="富山県立大学グラウンドの地図"></iframe>
+      </div>
+      <a class="maplink"
+         href="https://www.google.com/maps/search/?api=1&query=%E5%AF%8C%E5%B1%B1%E7%9C%8C%E7%AB%8B%E5%A4%A7%E5%AD%A6%E3%82%B0%E3%83%A9%E3%82%A6%E3%83%B3%E3%83%89"
+         target="_blank" rel="noopener">Googleマップで開く（経路案内）　→</a>
+
+      <p class="note">駐車場のご案内は、トップページの「駐車場の利用に関するお願い」からご覧いただけます。</p>
     </section>
 
-    <section class="sec" id="teams">
-      <h2>TEAMS</h2><h3>参加チーム</h3>
-
-      <div class="pins only-u8">
-        <div class="pin host"><span>ヴァリエンテ<br>富山</span></div>
-        <div class="pin"><span>TOLL</span></div>
-        <div class="pin"><span>みなみFC</span></div>
-        <div class="pin"><span>蜷川</span></div>
-        <div class="pin"><span>石動大谷</span></div>
-        <div class="pin"><span>鵜坂</span></div>
-        <div class="pin"><span>スフィーダ</span></div>
-        <div class="pin"><span>EST小杉</span></div>
-        <div class="pin"><span>富山中央FC</span></div>
-        <div class="pin"><span>プリマ<br>ヴェーラ入善</span></div>
-        <div class="pin"><span>BEZERRO</span></div>
-        <div class="pin"><span>大久保少年<br>サッカー<br>クラブ</span></div>
-        <div class="pin"><span>FC滑川</span></div>
-        <div class="pin"><span>ALVA</span></div>
-        <div class="pin tbd"><span>リオペードラ<br>加賀 *</span></div>
-        <div class="pin tbd"><span>テイヘンズ *</span></div>
-        <div class="pin tbd"><span>デランテロ *</span></div>
-        <div class="pin tbd"><span>JK KIDS *</span></div>
-      </div>
-
-      <div class="pins only-u9">
-        <div class="pin host"><span>ヴァリエンテ<br>富山<br>（仮）</span></div>
-        <div class="pin"><span>石動大谷<br>（仮）</span></div>
-        <div class="pin"><span>みなみFC<br>（仮）</span></div>
-        <div class="pin tbd"><span>旭丘 *<br>（仮）</span></div>
-        <div class="pin"><span>婦中西部<br>（仮）</span></div>
-        <div class="pin tbd"><span>南星 *<br>（仮）</span></div>
-        <div class="pin"><span>BLUE SOX<br>（仮）</span></div>
-        <div class="pin"><span>氷見FC<br>（仮）</span></div>
-        <div class="pin"><span>富山中央<br>FCA（仮）</span></div>
-        <div class="pin"><span>富山中央<br>FCB（仮）</span></div>
-        <div class="pin"><span>プリマヴェーラ<br>入善（仮）</span></div>
-        <div class="pin"><span>CAMPIONE<br>FUKUOKA<br>（仮）</span></div>
-        <div class="pin"><span>ALVA<br>（仮）</span></div>
-        <div class="pin"><span>CAVALLO<br>（仮）</span></div>
-        <div class="pin tbd"><span>エスポワール<br>白山 *<br>（仮）</span></div>
-        <div class="pin tbd"><span>JK KIDS *<br>（仮）</span></div>
-      </div>
-
-      <p class="note">* が付いたチームは、正式な表記を主催者に確認中です。<br>
-      各チームのエンブレム画像をいただければ、文字の代わりに差し替えられます。</p>
-    </section>
 
     <section class="sec" id="info">
       <h2>INFO</h2><h3>お知らせ</h3>
@@ -462,6 +957,55 @@ document.addEventListener('keydown',function(e){
 });
 
 /* ============================================================================
+   最上部のカテゴリーバー（2026-08-21）
+   いま画面に出ているセクションのタブを光らせ、
+   そのタブがバーの外に隠れていたら横スクロールして見える位置へ寄せる。
+   ============================================================================ */
+(function(){
+  var bar  = document.getElementById('catbar');
+  if(!bar) return;
+  var tabs = [].slice.call(bar.querySelectorAll('.cattab'));
+  var secs = tabs.map(function(a){
+    return document.getElementById(a.getAttribute('href').slice(1));
+  });
+
+  function activate(i){
+    if(i<0 || tabs[i].classList.contains('is-active')) return;
+    tabs.forEach(function(t){ t.classList.remove('is-active'); });
+    var tab = tabs[i];
+    tab.classList.add('is-active');
+    /* タブがバーからはみ出していたら、見える位置まで横に寄せる */
+    var l = tab.offsetLeft, r = l + tab.offsetWidth;
+    if(l < bar.scrollLeft)                      bar.scrollLeft = l - 8;
+    else if(r > bar.scrollLeft + bar.clientWidth) bar.scrollLeft = r - bar.clientWidth + 8;
+  }
+
+  /* バーの高さぶん下を「現在地」とみなす */
+  function current(){
+    var line = (bar.getBoundingClientRect().height || 38) + 12;
+    var found = -1;
+    for(var i=0;i<secs.length;i++){
+      if(secs[i] && secs[i].getBoundingClientRect().top <= line) found = i;
+    }
+    /* 一番下まで来たら最後のタブにする */
+    if(window.innerHeight + window.scrollY >= document.body.scrollHeight - 4){
+      found = secs.length - 1;
+    }
+    return found;
+  }
+
+  var ticking = false;
+  function onScroll(){
+    if(ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function(){ activate(current()); ticking = false; });
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  onScroll();
+})();
+
+/* ============================================================================
    ライブ更新（V CUP と同じ仕組み）
    スマホ(admin)→GAS→スプレッドシート に書き込まれた結果を、
    公開CSV（gviz）で REFRESH 秒ごとに読み直して画面を作り替える。
@@ -476,15 +1020,16 @@ var LIVE = {
   /* シート名（GASが作る名前に合わせる） */
   resultSheet: "U9試合結果",          // 全試合。上からグループリーグ→決勝トーナメント
 
-  /* 順位表は「段階」ごとにまとめる。段階が1つなら見出しは出ない */
+  /* U9はクラスリーグが無く、グループリーグ1段階だけ（4組 × 4チーム） */
   standingPhases: [
-    { label:"", sheets:["U9リーグA順位表","U9リーグB順位表","U9リーグC順位表","U9リーグD順位表"],
-                labels:["Aグループ","Bグループ","Cグループ","Dグループ"] }
+    { label:"",
+      sheets:["U9グループA順位表","U9グループB順位表","U9グループC順位表","U9グループD順位表"],
+      labels:["A組","B組","C組","D組"] }
   ],
   finalSheet:     "U9最終順位表",
 
-  /* グループリーグの試合数（ここから下の行が決勝トーナメント）
-     U9 ＝ 4組×4チーム総当たり ＝ 24試合 ／ U8 ＝ 方式が決まり次第 */
+  /* リーグ戦の試合数（ここから下の行がトーナメント）
+     U9 ＝ 4組 × 4チーム総当たり ＝ 24試合 */
   glCount: 24,
   refreshSec: 30      // 読み直す間隔（秒）
 };
@@ -542,6 +1087,17 @@ function matchCard(r){
          '</div>';
 }
 
+/* 試合名から、どの段階の試合かを判定する（2026-08-21）
+     GL … 予選リーグ
+     CL … クラスリーグ（上位1〜4組・下位1〜2組）
+     FR … 決勝トーナメント・順位決定戦（下位リーグの13-14位決定戦などもここ） */
+function phaseOf(name){
+  var s=String(name||'');
+  if(s.indexOf('予選')===0) return 'GL';
+  if(/^(上位|下位)[0-9０-９]+組/.test(s)) return 'CL';
+  return 'FR';
+}
+
 /* --- ① 試合スケジュール　横＝コート／縦＝時間の表（V CUPと同じ形） --- */
 function toMin(t){
   var m=String(t||'').match(/(\d{1,2})\s*[:：]\s*(\d{1,2})/);
@@ -586,51 +1142,121 @@ function renderSchedule(rows){
            '</div>';
   }
 
-  var html='<div class="schedwrap"><table class="sched"><thead><tr>'+
-           '<th class="tcol">時刻</th>'+
-           courts.map(function(c){ return '<th>第'+c+'<br>コート</th>'; }).join('')+
-           '</tr></thead><tbody>';
-  times.forEach(function(t){
-    html+='<tr><td class="tcol">'+hhmm(t)+'</td>'+
-      courts.map(function(c){
-        var r=at[t+'_'+c];
-        return r ? '<td>'+cellHtml(r)+'</td>' : '<td class="empty"></td>';
-      }).join('')+'</tr>';
-  });
-  html+='</tbody></table></div>'+
-        '<p class="scrollhint">← 横にスクロールできます →</p>';
+  /* 2026-08-22 U9は表を分けず【1つの表】にまとめる。左上の見出しは「日程」。
+     U8は GL／CL／FR の3つに分けているが、U9は
+     　・10:10 の枠でグループリーグとトーナメントが同時に走る
+     　・クラスリーグが無く段階が2つしかない
+     ため、分けるとかえって分かりにくくなる。 */
+  var groups=[{ ph:'日程', times:times }];
+
+  var html=groups.map(function(g){
+    return '<div class="schedwrap"><table class="sched">'+
+      '<thead><tr><th class="tcol">'+esc(g.ph)+'</th>'+
+      courts.map(function(c){ return '<th>第'+c+'<br>コート</th>'; }).join('')+
+      '</tr></thead><tbody>'+
+      g.times.map(function(t){
+        return '<tr><td class="tcol">'+hhmm(t)+'</td>'+
+          courts.map(function(c){
+            var r=at[t+'_'+c];
+            return r ? '<td>'+cellHtml(r)+'</td>' : '<td class="empty"></td>';
+          }).join('')+'</tr>';
+      }).join('')+
+      '</tbody></table></div>';
+  }).join('');
+  html+='<p class="scrollhint">← 横にスクロールできます →</p>';
   box.innerHTML=html;
   document.getElementById('upd-schedule').textContent=stamp();
 }
 
-/* --- ② 順位表　段階（予選リーグ／上位リーグ…）ごとに並べる --- */
-function oneStanding(label,rows){
-  var sorted=rows.filter(function(r){return r[S.team];}).slice().sort(function(a,b){
-    var d=(parseFloat(b[S.pts])||0)-(parseFloat(a[S.pts])||0); if(d) return d;
-    d=(parseFloat(b[S.gd])||0)-(parseFloat(a[S.gd])||0);       if(d) return d;
-    return (parseFloat(b[S.gf])||0)-(parseFloat(a[S.gf])||0);
-  });
-  return '<div class="gblock"><h4>'+esc(label)+'</h4>'+
-    '<div class="tscroll"><table class="stbl">'+
-    '<thead><tr><th>順</th><th>チーム</th><th>点</th><th>差</th>'+
-    '<th>試</th><th>勝</th><th>分</th><th>負</th><th>得</th><th>失</th></tr></thead><tbody>'+
-    sorted.map(function(r,i){
-      var rv=(r[S.rank]!==undefined&&r[S.rank]!=='')?r[S.rank]:(i+1);
-      var rc=rv==1?'rank-1':rv==2?'rank-2':rv==3?'rank-3':'';
-      return '<tr><td><span class="rank-badge '+rc+'">'+esc(rv)+'</span></td>'+
-             '<td class="tname">'+esc(r[S.team])+'</td>'+
-             [S.pts,S.gd,S.gp,S.w,S.d,S.l,S.gf,S.ga].map(function(ci){
-               return '<td>'+esc(r[ci]!==''&&r[ci]!==undefined?r[ci]:'—')+'</td>';
-             }).join('')+'</tr>';
-    }).join('')+
-    '</tbody></table></div></div>';
+/* --- ② 順位表（星取表つき）2026-08-21 作り直し ------------------------------
+   紙の大会でよく使う「星取表」の形にした。
+   　・縦にも横にも同じチームが並び、交差したマスがその2チームの対戦結果
+   　・マスには ○（勝ち）／△（引き分け）／×（負け）と、そのスコア
+   　・右側に 勝／分／負／得点／失点／得失差／勝点／順位
+   横に長いので、チーム名の列は左に貼り付いたままスクロールする。
+   --------------------------------------------------------------------------- */
+var LAST_MATCHES=[];   /* 直近に読み込んだ全試合。星取表の対戦結果を引くのに使う */
+var H2H_NO=['①','②','③','④','⑤','⑥','⑦','⑧'];
+
+/* チーム x から見た y との対戦結果。まだ組まれていなければ null */
+function headToHead(label,x,y){
+  for(var i=0;i<LAST_MATCHES.length;i++){
+    var r=LAST_MATCHES[i];
+    if(!r) continue;
+    /* 同じチーム名が予選とクラスリーグの両方に出るので、試合名でブロックを絞る */
+    if(label && String(r[C.name]||'').indexOf(label)<0) continue;
+    var mine,theirs,mpk,tpk;
+    if(r[C.home]===x && r[C.away]===y){ mine=r[C.hs]; theirs=r[C.as]; mpk=r[C.hpk]; tpk=r[C.apk]; }
+    else if(r[C.home]===y && r[C.away]===x){ mine=r[C.as]; theirs=r[C.hs]; mpk=r[C.apk]; tpk=r[C.hpk]; }
+    else continue;
+    if(mine===''||theirs===''||mine===undefined||theirs===undefined) return { played:false };
+    var m=parseFloat(mine), t=parseFloat(theirs);
+    var pk='';
+    if(mpk!==''&&tpk!==''&&mpk!==undefined&&tpk!==undefined) pk='PK '+mpk+'-'+tpk;
+    return { played:true,
+             mark:(m>t?'○':(m<t?'×':'△')),
+             cls:(m>t?'m-w':(m<t?'m-l':'m-d')),
+             score:mine+' - '+theirs, pk:pk };
+  }
+  return null;
 }
-/* all = 段階の配列。各段階は [{label, rows}, ...] */
-function renderStandings(all){
-  var box=document.getElementById('live-standings');
-  if(!box||!all) return;
+
+function oneStanding(label,rows){
+  /* 並べ替えは主催者が決めた順位の決め方に合わせる（2026-08-21）
+       ① 勝点 → ② 直接対決の結果 → ③ 得失点差 → ④ 総得点 → ⑤ 抽選
+     ⑤の抽選は自動では決められないので、そこまで同じなら同順のまま。
+     ※スプレッドシートの「順位」列に値が入っていれば、表示はそちらが優先される。 */
+  var sorted=rows.filter(function(r){return r[S.team];}).slice().sort(function(a,b){
+    var d=(parseFloat(b[S.pts])||0)-(parseFloat(a[S.pts])||0); if(d) return d;   /* ① 勝点 */
+    var h=headToHead(label,a[S.team],b[S.team]);                                  /* ② 直接対決 */
+    if(h && h.played){
+      if(h.mark==='○') return -1;
+      if(h.mark==='×') return 1;
+    }
+    d=(parseFloat(b[S.gd])||0)-(parseFloat(a[S.gd])||0); if(d) return d;          /* ③ 得失点差 */
+    return (parseFloat(b[S.gf])||0)-(parseFloat(a[S.gf])||0);                     /* ④ 総得点 */
+  });
+  var names=sorted.map(function(r){ return r[S.team]; });
+
+  var head='<tr><th class="c-name">チーム</th>'+
+    names.map(function(n,i){ return '<th class="c-h2h">'+H2H_NO[i]+'</th>'; }).join('')+
+    '<th>勝</th><th>分</th><th>負</th><th>得</th><th>失</th><th>差</th><th>点</th><th>順</th></tr>';
+
+  var body=sorted.map(function(r,i){
+    var me=r[S.team];
+    var grid=names.map(function(n,j){
+      if(i===j) return '<td class="c-h2h self"></td>';
+      var h=headToHead(label,me,n);
+      if(!h)          return '<td class="c-h2h"><span class="mk">—</span></td>';
+      if(!h.played)   return '<td class="c-h2h"><span class="mk yet">–</span><span class="sc">vs</span></td>';
+      return '<td class="c-h2h"><span class="mk '+h.cls+'">'+h.mark+'</span>'+
+             '<span class="sc">'+esc(h.score)+'</span>'+
+             (h.pk?'<span class="pk">'+esc(h.pk)+'</span>':'')+'</td>';
+    }).join('');
+    var stats=[S.w,S.d,S.l,S.gf,S.ga,S.gd,S.pts].map(function(ci){
+      return '<td>'+esc(r[ci]!==''&&r[ci]!==undefined?r[ci]:'—')+'</td>';
+    }).join('');
+    var rv=(r[S.rank]!==undefined&&r[S.rank]!=='')?r[S.rank]:(i+1);
+    var rc=rv==1?'rank-1':rv==2?'rank-2':rv==3?'rank-3':'';
+    return '<tr><td class="c-name tname"><b>'+H2H_NO[i]+'</b> '+esc(me)+'</td>'+
+           grid+stats+
+           '<td><span class="rank-badge '+rc+'">'+esc(rv)+'</span></td></tr>';
+  }).join('');
+
+  return '<div class="gblock"><h4>'+esc(label)+'</h4>'+
+    '<div class="tscroll"><table class="stbl xtbl">'+
+    '<thead>'+head+'</thead><tbody>'+body+'</tbody></table></div>'+
+    '<p class="scrollhint">← 横にスクロールできます →</p></div>';
+}
+/* all = 段階の配列。各段階は [{label, rows}, ...]
+   2026-08-21 表示を2か所に分けた。
+     1段階目（予選リーグ）      → GL「グループリーグ」の欄
+     2段階目以降（上位・下位）  → CL「クラスリーグ」の欄 */
+function paintStandings(boxId, updId, phases, showLabel){
+  var box=document.getElementById(boxId);
+  if(!box||!phases||!phases.length) return;
   var html='', any=false;
-  all.forEach(function(phase,pi){
+  phases.forEach(function(phase){
     if(!phase || !phase.blocks) return;
     var inner='';
     phase.blocks.forEach(function(b){
@@ -639,12 +1265,21 @@ function renderStandings(all){
       inner+=oneStanding(b.label,b.rows);
     });
     if(!inner) return;
-    html+=(LIVE.standingPhases.length>1 && phase.label
-            ? '<p class="phase">'+esc(phase.label)+'</p>' : '')+inner;
+    html+=(showLabel && phase.label ? '<p class="phase">'+esc(phase.label)+'</p>' : '')+inner;
   });
   if(!any) return;
   box.innerHTML=html;
-  document.getElementById('upd-standings').textContent=stamp();
+  var u=document.getElementById(updId);
+  if(u) u.textContent=stamp();
+}
+var LAST_STANDINGS=null;   /* 試合結果が後から届いたとき描き直すために覚えておく */
+function renderStandings(all){
+  if(!all) return;
+  LAST_STANDINGS=all;
+  /* 予選リーグはブロックが6つ並ぶだけなので、段階名の見出しは出さない */
+  paintStandings('live-standings',    'upd-standings',    all.slice(0,1), false);
+  /* クラスリーグは「上位リーグ」「下位リーグ」の2段階に分かれるので見出しを出す */
+  paintStandings('live-standings-cl', 'upd-standings-cl', all.slice(1),   true);
 }
 
 /* --- ③ 決勝トーナメント　線でつないだトーナメント表 --- */
@@ -655,9 +1290,45 @@ function renderStandings(all){
      そうしないと「3位トーナメント 準決勝」が3位決定戦と誤判定される */
 var BRE=/([0-9０-９]+位トーナメント|上位トーナメント|下位トーナメント|決勝トーナメント)/;
 function bracketOf(name){
-  var m=String(name||'').match(BRE);
+  var s=String(name||'');
+  /* 「下位リーグ　13-14位決定戦」のような1試合の順位決定戦は、それ自体を1つの
+     かたまりとして扱う（2026-08-21）。※「1位トーナメント　3位決定戦」は
+     ハイフンが無いのでここには当たらない */
+  var d=s.match(/([0-9０-９]+-[0-9０-９]+位決定戦)/);
+  if(d) return d[1];
+  var m=s.match(BRE);
   if(m) return m[1];
-  return String(name||'').split(/[　\s]/)[0] || '決勝トーナメント';
+  return s.split(/[　\s]/)[0] || '決勝トーナメント';
+}
+/* 表示の順番と見出しの文言（2026-08-21 ご指定）
+   上から 1-4位 → 5-8位 → 9-12位 → 13-14位 → 15-16位 → 17-18位 */
+var BORDER=['1位トーナメント','2位トーナメント','3位トーナメント','4位トーナメント',
+            '13-14位決定戦','15-16位決定戦','17-18位決定戦'];
+function bracketLabel(b){
+  var m=String(b).match(/^([0-9０-９]+)位トーナメント/);
+  if(m){
+    var n=parseInt(m[1].replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-65248);}),10);
+    if(n) return (n*4-3)+'-'+(n*4)+'位決定トーナメント';
+  }
+  return b;
+}
+/* 各トーナメントの中の「3位決定戦」が実際に決める順位
+   1位T→3-4位 ／ 2位T→7-8位 ／ 3位T→11-12位 */
+function thirdLabel(b){
+  var n=bracketNo(b);
+  return n ? (n*4-1)+'-'+(n*4)+'位決定戦' : '3位決定戦';
+}
+/* 各トーナメントの「決勝」が実際に決める順位
+   1位T→1-2位 ／ 2位T→5-6位 ／ 3位T→9-10位 */
+function finalLabel(b){
+  var n=bracketNo(b);
+  return n ? (n*4-3)+'-'+(n*4-2)+'位決定戦' : '決勝';
+}
+/* 「2位トーナメント」→ 2 を取り出す */
+function bracketNo(b){
+  var m=String(b).match(/^([0-9０-９]+)位トーナメント/);
+  if(!m) return 0;
+  return parseInt(m[1].replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-65248);}),10)||0;
 }
 function roundOf(name){
   var s=String(name||'').replace(BRE,'');
@@ -713,15 +1384,21 @@ function renderBracket(rows){
     map[b][roundOf(r[C.name])].push(r);
   });
 
+  /* ご指定の順番に並べ替える。表にない名前は後ろへ回す */
+  order.sort(function(a,b){
+    var ia=BORDER.indexOf(a); if(ia<0) ia=99;
+    var ib=BORDER.indexOf(b); if(ib<0) ib=99;
+    return ia-ib;
+  });
+
   box.innerHTML = order.map(function(b){
-    var m=map[b], pr=placeRange(b);
-    var html='<div class="bgroup"><h4>'+esc(b)+
-             (pr?'<i>'+esc(pr)+'</i>':'')+'</h4>';
+    var m=map[b];
+    var html='<div class="bgroup"><h4>'+esc(bracketLabel(b))+'</h4>';
 
     if(m.qf.length===4 && m.sf.length===2 && m.final.length===1){
       /* 8チームのトーナメント表 */
       html+='<div class="bwrap">'+
-              '<div class="bhead"><span>準々決勝</span><span>準決勝</span><span>決勝</span></div>'+
+              '<div class="bhead"><span>準々決勝</span><span>準決勝</span><span>'+esc(finalLabel(b))+'</span></div>'+
               '<div class="bracket">'+
                 '<div class="bcol">'+
                   '<div class="bpair">'+bMatch(m.qf[0])+bMatch(m.qf[1])+'</div>'+
@@ -736,19 +1413,24 @@ function renderBracket(rows){
     } else if(m.sf.length===2 && m.final.length===1){
       /* 4チームのトーナメント表 */
       html+='<div class="bwrap">'+
-              '<div class="bhead"><span>準決勝</span><span>決勝</span></div>'+
+              '<div class="bhead"><span>準決勝</span><span>'+esc(finalLabel(b))+'</span></div>'+
               '<div class="bracket" style="min-width:250px">'+
                 '<div class="bcol"><div class="bpair">'+bMatch(m.sf[0])+bMatch(m.sf[1])+'</div></div>'+
                 '<div class="bcol">'+bMatch(m.final[0],' champ')+'</div>'+
               '</div>'+
             '</div>';
+    } else if(m.other.length===1 && !m.qf.length && !m.sf.length && !m.final.length && !m.third.length){
+      /* 13-14位決定戦のような1試合だけの順位決定戦（2026-08-21） */
+      html+='<div class="bwrap"><div class="bracket" style="min-width:200px">'+
+              '<div class="bcol">'+bMatch(m.other[0])+'</div>'+
+            '</div></div>';
     } else {
       /* 形が読み取れないときは、これまでどおりカードで並べる */
       html+=[].concat(m.qf,m.sf,m.final,m.other).map(matchCard).join('');
     }
 
     if(m.third.length){
-      html+='<div class="bthird"><div class="lbl">3位決定戦</div>'+
+      html+='<div class="bthird"><div class="lbl">'+esc(thirdLabel(b))+'</div>'+
             m.third.map(function(r){ return bMatch(r); }).join('')+'</div>';
     }
     return html+'</div>';
@@ -775,9 +1457,14 @@ function renderFinal(rows){
 }
 
 function loadAll(){
+  /* ★2026-08-22 修正
+     スプレッドシート未接続のとき、空データで仮の組み合わせを上書きしてしまう問題を修正 */
   loadSheet(LIVE.resultSheet,function(rows){
+    if(!rows || !rows.length) return;
+    LAST_MATCHES=rows;
     renderSchedule(rows);
     renderBracket(rows);
+    if(LAST_STANDINGS) renderStandings(LAST_STANDINGS);
   });
   var need=0, done=0, out=LIVE.standingPhases.map(function(p){
     need+=p.sheets.length;
@@ -788,78 +1475,169 @@ function loadAll(){
     p.sheets.forEach(function(name,i){
       loadSheet(name,function(rows){
         out[pi].blocks[i].rows=rows; done++;
-        if(done===need) renderStandings(out);
+        if(done!==need) return;
+        var any=out.some(function(ph){
+          return (ph.blocks||[]).some(function(b){ return b.rows && b.rows.length; });
+        });
+        if(any) renderStandings(out);
       });
     });
   });
   loadSheet(LIVE.finalSheet,renderFinal);
 }
 /* ============================================================================
-   ▼▼▼ 仮の組み合わせ（動作確認用）。抽選が終わったら丸ごと削除する ▼▼▼
+   ▼▼▼ U9 の組み合わせ【確定】2026-08-22 ▼▼▼
+   ★主催者の条件にもとづいて決定。もう「仮」ではない。削除しないこと。
+   　 記録は 02_受領素材\組み合わせ_確定_2026-08-21.md にも残してある。
+
+   ▼主催者からの条件
+   　① 指定のチームは指定の組へ
+   　　　A組 … CAMPIONE FUKUOKA
+   　　　B組 … ヴァリエンテ富山
+   　　　C組 … 旭丘 ／ JK KIDS
+   　　　D組 … エスポワール白山
+   　② 富山中央FCA と 富山中央FCB は決勝まで当たらないようにする
+
+   ▼②をどう満たしたか
+   　トーナメントの準決勝は「A組 vs B組」「C組 vs D組」と決まっている。
+   　そこで 富山中央FCA を【A組】、富山中央FCB を【D組】に分けた。
+   　　→ 2チームは必ず山の反対側に分かれる
+   　　→ 当たるとしたら決勝（または3位決定戦）だけ。準決勝では当たらない
+   　　→ 組の順位がずれれば、そもそも別のトーナメントになり当たらない
+
+   ▼残りの9チームの配り方
+   　あいうえお順に、空いている組へ順番に配った（A→B→C→D→…）。
+   　強さの情報が無いため、機械的で偏りのない方法にしている。
+
    LIVE.sheetId にIDを入れると、こちらは使われずスプレッドシートの実データになる。
+   その際も【スプレッドシート側をこの組み合わせに合わせて作る】こと。
    ============================================================================ */
 var DEMO = {
   slotMin: 25, courts: 5, startH: 8, startM: 30,
+  /* グループリーグ 4組 × 4チーム（＝各組6試合・全24試合） */
   groups: [
-    ["ヴァリエンテ富山（仮）","BLUE SOX（仮）","プリマヴェーラ入善（仮）","JK KIDS（仮）"],
-    ["石動大谷（仮）","氷見FC（仮）","CAMPIONE FUKUOKA（仮）","旭丘（仮）"],
-    ["みなみFC（仮）","富山中央FCA（仮）","ALVA（仮）","南星（仮）"],
-    ["婦中西部（仮）","富山中央FCB（仮）","CAVALLO（仮）","エスポワール白山（仮）"]
+    ["CAMPIONE FUKUOKA","富山中央FCA","ALVA","氷見FC"],
+    ["ヴァリエンテ富山","石動大谷","婦中西部","みなみFC"],
+    ["旭丘","JK KIDS","CAVALLO","BLUE SOX"],
+    ["エスポワール白山","富山中央FCB","南星","プリマヴェーラ入善"]
   ]
 };
 function demoTime(slot){
   var t=DEMO.startH*60+DEMO.startM+slot*DEMO.slotMin;
   return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');
 }
+
+/* ============================================================================
+   グループリーグのコート割り【2026-08-22 圧縮版】
+
+   ▼ねらい
+   5コートすべてを使い、24試合を【5枠】に収める（前は4コート・6枠だった）。
+   連続試合は許容する、というご指示にもとづく。
+
+   ▼なぜ5枠が限界か
+   24試合 ÷ 5コート ＝ 4.8 → どうがんばっても5枠より短くはできない。
+   つまりこれが最短。
+
+   ▼4チームの総当たりの組み方
+   6試合を3つのラウンドに分けると、1ラウンドの2試合は相手が重ならないので
+   同じ時間に並べられる。
+     ラウンド0 … [0-1] と [2-3]
+     ラウンド1 … [0-2] と [1-3]
+     ラウンド2 … [0-3] と [1-2]
+   ただし違うラウンドどうしは必ず選手が重なるので、同じ時間には置けない。
+
+   ▼コートの使い方
+   A組は第1・2コート、B組は第3・4コートに固定。
+   C組とD組は空いたところを使うため、途中でコートが変わる。
+   ============================================================================ */
+var RR4=[[0,1],[2,3],[0,2],[1,3],[0,3],[1,2]];
+/* [組, ラウンド, ラウンド内の何試合目, 枠, コート]
+   枠 0=8:30 1=8:55 2=9:20 3=9:45 4=10:10 */
+var QPLAN9=[
+  [0,0,0, 0,1],[0,0,1, 0,2],[1,0,0, 0,3],[1,0,1, 0,4],[2,0,0, 0,5],
+  [0,1,0, 1,1],[0,1,1, 1,2],[3,0,0, 1,3],[3,0,1, 1,4],[2,0,1, 1,5],
+  [2,1,0, 2,1],[2,1,1, 2,2],[1,1,0, 2,3],[1,1,1, 2,4],[3,1,0, 2,5],
+  [0,2,0, 3,1],[0,2,1, 3,2],[1,2,0, 3,3],[1,2,1, 3,4],[3,1,1, 3,5],
+  [2,2,0, 4,1],[2,2,1, 4,2],[3,2,0, 4,3],[3,2,1, 4,4]
+];
 function demoGL(){
-  /* 4チームの総当たり＝3ラウンド×2試合。1ラウンドで全チームが1試合ずつ */
-  var rr=[[0,1],[2,3],[0,2],[1,3],[0,3],[1,2]];
   var rows=[], no=1;
-  for(var r=0;r<3;r++){
-    var k=0;
-    for(var g=0;g<DEMO.groups.length;g++){
-      for(var m=0;m<2;m++){
-        var p=rr[r*2+m];
-        var slot=r*2+(k>=DEMO.courts?1:0);
-        var court=(k>=DEMO.courts?k-DEMO.courts:k)+1;
-        rows.push([ String(no++), String.fromCharCode(65+g)+'組',
-                    demoTime(slot), '第'+court+'コート',
-                    DEMO.groups[g][p[0]], '', '', '', '', DEMO.groups[g][p[1]] ]);
-        k++;
-      }
-    }
-  }
+  var list=QPLAN9.map(function(x){
+    return { g:x[0], pair:RR4[x[1]*2+x[2]], slot:x[3], court:x[4] };
+  });
+  list.sort(function(a,b){ return (a.slot-b.slot) || (a.court-b.court); });
+  list.forEach(function(x){
+    var t=DEMO.groups[x.g];
+    rows.push([ String(no++), '予選'+String.fromCharCode(65+x.g)+'組',
+                demoTime(x.slot), '第'+x.court+'コート',
+                t[x.pair[0]], '', '', '', '', t[x.pair[1]] ]);
+  });
+  DEMO._nextSlot=5; DEMO._nextNo=no;
   return rows;
 }
+
+/* ============================================================================
+   決勝トーナメント・順位決定戦【2026-08-22 圧縮版】
+
+   各組の1位が1位トーナメント、2位が2位T、3位が3位T、4位が4位Tへ。
+   どのトーナメントも4チームで、準決勝2試合 → 決勝・3位決定戦（計4試合）。
+   4トーナメント × 4試合 ＝ 16試合。
+
+   ▼圧縮のねらい
+   16試合 ÷ 5コート ＝ 3.2 → 4枠が最短。前は5枠だったので1枠（25分）短くなる。
+   連続試合は許容するというご指示にもとづき、準決勝の直後に決勝を置く枠もある。
+
+   ▼並べ方（2026-08-22 再調整／最終試合を 11:25 にする）
+
+   ★キーになったのは【10:10の空きコート】
+   　A組とB組はグループリーグを 9:45 で戦い終えるので、10:10 の枠では試合が無い。
+   　10:10 は C組・D組が4試合（第1〜4コート）を行い、第5コートが空いていた。
+   　そこへ「A組4位 vs B組4位」（4位トーナメントの準決勝①）を入れた。
+   　→ トーナメントが1試合ぶん前倒しになり、全体が1枠（25分）縮まった。
+
+   　10:10 … 4位T準決勝①（A組4位 vs B組4位）※グループリーグと並行
+   　10:35 … 1位・2位・3位トーナメントの準決勝① ／ 3位T準決勝② ／ 4位T準決勝②
+   　11:00 … 1位・2位トーナメントの準決勝② ／ 11-12位・13-14位・15-16位決定戦
+   　11:25 … 1-2位・3-4位・5-6位・7-8位・9-10位決定戦　←【最終試合】
+
+   　16試合 ＝ 1（10:10の空き）＋ 5 ＋ 5 ＋ 5。ちょうど収まる。
+   　空きコートが1つしか無いので、これ以上は前に詰められない。
+
+   ※「①」はA組 vs B組、「②」はC組 vs D組の準決勝。
+   　 ①はA・B組が9:45で終わるため早く始められる。
+   　 ②はC・D組が10:10で終わるので10:35以降になる。
+   ※「15-16位決定戦」は 4位トーナメントの3位決定戦のこと。
+
+   [試合名, 枠のずれ(-1〜2), コート, ホーム, アウェイ]
+   ずれ -1=10:10 0=10:35 1=11:00 2=11:25
+   ============================================================================ */
+var TPLAN9=[
+  /* 10:10 … グループリーグの空きコート（第5）を使う。A・B組は9:45で終了済み */
+  ['4位トーナメント　準決勝',  -1,5,'A組4位','B組4位'],
+  /* 10:35 */
+  ['1位トーナメント　準決勝',   0,1,'A組1位','B組1位'],
+  ['2位トーナメント　準決勝',   0,2,'A組2位','B組2位'],
+  ['3位トーナメント　準決勝',   0,3,'A組3位','B組3位'],
+  ['3位トーナメント　準決勝',   0,4,'C組3位','D組3位'],
+  ['4位トーナメント　準決勝',   0,5,'C組4位','D組4位'],
+  /* 11:00 */
+  ['1位トーナメント　準決勝',   1,1,'C組1位','D組1位'],
+  ['2位トーナメント　準決勝',   1,2,'C組2位','D組2位'],
+  ['3位トーナメント　3位決定戦', 1,3,'準決勝① 敗者','準決勝② 敗者'],
+  ['4位トーナメント　決勝',     1,4,'準決勝① 勝者','準決勝② 勝者'],
+  ['4位トーナメント　3位決定戦', 1,5,'準決勝① 敗者','準決勝② 敗者'],
+  /* 11:25 … 最終枠。ここで1位から10位までが決まる */
+  ['1位トーナメント　決勝',     2,1,'準決勝① 勝者','準決勝② 勝者'],
+  ['1位トーナメント　3位決定戦', 2,2,'準決勝① 敗者','準決勝② 敗者'],
+  ['2位トーナメント　決勝',     2,3,'準決勝① 勝者','準決勝② 勝者'],
+  ['2位トーナメント　3位決定戦', 2,4,'準決勝① 敗者','準決勝② 敗者'],
+  ['3位トーナメント　決勝',     2,5,'準決勝① 勝者','準決勝② 勝者']
+];
 function demoTourn(){
-  /* 順位別の4トーナメント。
-     各組の1位が1位T、2位が2位T … に進み、それぞれ4チームで
-     準決勝2試合 → 決勝・3位決定戦 の計4試合を戦う（4T × 4試合 ＝ 16試合） */
-  var rows=[], no=25;
-  function row(name,slot,court,h,a){
-    return [String(no++),name,demoTime(slot),'第'+court+'コート',h,'','','','',a];
-  }
-  var k=0;
-  /* 準決勝 8試合（4トーナメント × 2試合） */
-  [1,2,3,4].forEach(function(n){
-    [['A','B'],['C','D']].forEach(function(p){
-      var slot=6+(k>=DEMO.courts?1:0);
-      var court=(k>=DEMO.courts?k-DEMO.courts:k)+1;
-      rows.push(row(n+'位トーナメント　準決勝',slot,court,
-                    p[0]+'組'+n+'位（仮）', p[1]+'組'+n+'位（仮）'));
-      k++;
-    });
-  });
-  /* 決勝・3位決定戦 8試合 */
-  k=0;
-  [1,2,3,4].forEach(function(n){
-    [['決勝','準決勝① 勝者','準決勝② 勝者'],
-     ['3位決定戦','準決勝① 敗者','準決勝② 敗者']].forEach(function(x){
-      var slot=8+(k>=DEMO.courts?1:0);
-      var court=(k>=DEMO.courts?k-DEMO.courts:k)+1;
-      rows.push(row(n+'位トーナメント　'+x[0],slot,court,x[1],x[2]));
-      k++;
-    });
+  var rows=[], no=DEMO._nextNo, s0=DEMO._nextSlot;
+  TPLAN9.forEach(function(x){
+    rows.push([String(no++), x[0], demoTime(s0+x[1]), '第'+x[2]+'コート',
+               x[3],'','','','',x[4]]);
   });
   return rows;
 }
@@ -867,23 +1645,25 @@ function zeroRows(teams){
   return teams.map(function(t){ return [t,'0','0','0','0','0','0','0','0','']; });
 }
 function demoStandings(){
-  return [{ label:"", blocks: DEMO.groups.map(function(teams,i){
-    return { label:String.fromCharCode(65+i)+'グループ', rows:zeroRows(teams) };
-  })}];
+  return [
+    { label:"", blocks: DEMO.groups.map(function(teams,i){
+        return { label:String.fromCharCode(65+i)+'組', rows:zeroRows(teams) }; }) }
+  ];
 }
 function showDemo(){
   var rows=demoGL().concat(demoTourn());
+  LAST_MATCHES=rows;            /* 星取表の対戦結果に使う */
   renderSchedule(rows);
   renderBracket(rows);
   renderStandings(demoStandings());
   var f=document.getElementById('live-final');
-  if(f) f.innerHTML='<p class="live-wait">決勝トーナメントが終わると、'+
+  if(f) f.innerHTML='<p class="live-wait">トーナメント・順位決定戦が終わると、'+
                     '1位から16位までの最終順位がここに出ます。</p>';
   ['upd-schedule','upd-standings','upd-bracket'].forEach(function(id){
-    var e=document.getElementById(id); if(e) e.textContent='仮の組み合わせを表示中';
+    var e=document.getElementById(id); if(e) e.textContent='組み合わせを表示中（スプレッドシート未接続）';
   });
 }
-/* ▲▲▲ ここまでが仮の組み合わせ ▲▲▲ */
+/* ▲▲▲ ここまでが U9 の確定した組み合わせ ▲▲▲ */
 
 if(!LIVE.sheetId){ showDemo(); }
 loadAll();

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>駐車場の利用に関するお願い｜50日前の自分へ 夏休みの軌跡カップ</title>
+<style>
+:root{
+  --edge:#17291a;     /* 濃い緑（白いパネルの枠線・文字） */
+  --hair:rgba(23,41,26,.22);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{overflow-x:hidden; background:#000;}
+/* 2026-08-21 このページの地色は黒。
+   文字はすべて白いパネルの中にあるので、読みにくくなる箇所はない。 */
+body{font-family:"Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;
+  background:#000; color:var(--edge); overflow-x:hidden; width:100%;}
+img{max-width:100%;display:block;}
+.wrap{max-width:480px;margin:0 auto;position:relative;width:100%;min-height:100svh;
+  padding:0 0 40px;}
+
+/* 見出しは素材のバナーをそのまま使う（U8ページのボタンと同じ画像） */
+.head{padding:4.6rem 12px 0;}
+.head img{width:100%;}
+
+/* 戻るボタン（u8 と同じ形・黒地に白） */
+.back-toggle{position:fixed;top:1rem;left:max(1rem, calc(50vw - 240px + 1rem));z-index:40;
+  width:2.6rem;height:2.6rem;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:#000;border:3px solid #fff;
+  color:#fff;font-size:1.35rem;font-weight:700;line-height:1;
+  text-decoration:none;cursor:pointer;
+  box-shadow:0 2px 9px rgba(0,0,0,.4);
+  -webkit-tap-highlight-color:transparent;}
+.back-toggle:active{transform:translateY(1px);}
+
+/* 白い角丸パネル（U8ページの各項目と同じ作り） */
+.panel{background:#fff;border:2px solid var(--edge);border-radius:14px;
+  margin:14px 12px;padding:14px;box-shadow:0 2px 0 rgba(23,41,26,.18);}
+.panel h2{font-size:13px;letter-spacing:.04em;margin-bottom:9px;}
+.panel p{font-size:12.5px;line-height:1.8;}
+
+/* 駐車場マップ。タップすると別のタブで大きく開く */
+.mapbox{display:block;border:1px solid var(--hair);border-radius:10px;overflow:hidden;}
+.mapbox img{width:100%;height:auto;}
+.maphint{font-size:11px;line-height:1.7;color:rgba(23,41,26,.7);
+  text-align:center;margin-top:8px;}
+
+.home{display:block;text-align:center;margin:18px 12px 0;
+  padding:13px 10px;border:2px solid var(--edge);border-radius:12px;
+  background:#fff;color:var(--edge);text-decoration:none;font-weight:900;font-size:13px;
+  letter-spacing:.06em;box-shadow:0 2px 0 rgba(23,41,26,.18);}
+.home:active{transform:translateY(1px);box-shadow:none;}
+</style>
+</head>
+<body>
+
+<a class="back-toggle" href="index.html" aria-label="トップへ戻る">&larr;</a>
+
+<div class="wrap">
+
+  <div class="head">
+    <img src="assets/logo_parking.png" alt="駐車場の利用に関するお願い">
+  </div>
+
+  <!-- 主催者作成の駐車場案内（素材: 夏休みカップロゴ.pptx の12枚目） -->
+  <div class="panel">
+    <a class="mapbox" href="assets/parking_map.jpg" target="_blank" rel="noopener">
+      <img src="assets/parking_map.jpg" alt="駐車場の案内図。駐車場A・B・C、チームテント設置場所、荷物車の一方通行・外周走行の経路">
+    </a>
+    <p class="maphint">画像をタップすると大きく表示できます<br>
+      （指でひろげても拡大できます）</p>
+  </div>
+
+  <div class="panel">
+    <h2>お守りいただきたいこと</h2>
+    <p>
+      ○　指定場所以外での駐車は禁止<br>
+      ○　県外チームと指導者は<b>駐車場B</b><br>
+      ○　県内チームは<b>駐車場A</b>と<b>駐車場C</b><br>
+      ○　駐車場Aが満車の場合は<b>駐車場C</b><br>
+      ○　白線外での駐車は禁止<br>
+      ○　テント搬入などの荷物車は各チーム1台、<b>駐車場B</b>をご利用ください
+    </p>
+  </div>
+
+  <div class="panel">
+    <h2>荷物車のグラウンド内進入</h2>
+    <p>
+      次の2点を必ずお守りください。<br>
+      <b>①　一方通行</b><br>
+      <b>②　外周走行</b>
+    </p>
+  </div>
+
+  <div class="panel">
+    <h2>駐車禁止</h2>
+    <p><b>歌の森運動公園駐車場</b>には駐車できません。</p>
+  </div>
+
+  <a class="home" href="index.html">トップへもどる</a>
+
+</div>
+</body>
+</html>
