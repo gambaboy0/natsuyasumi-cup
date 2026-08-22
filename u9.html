@@ -489,7 +489,15 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .pin.host{background:#fff; border-color:#000;}
 .pin.tbd span{color:#000;}
 /* エンブレム画像を入れたマス（2026-08-21）。マスいっぱいに、縦横比を保って収める */
-.pin img{width:100%; height:100%; object-fit:contain; display:block;}
+/* ★2026-08-22 修正
+   画像を width/height 100% で入れていたが、縦長のエンブレムだと
+   高さが decided されず、画像の縦横比のままマスが縦に伸びていた。
+   （ヴァリエンテ富山のマスだけ他より大きくなっていた原因）
+   → 画像を絶対配置にして、マスの内側にきっちり収める。
+   　 これで他のチームのエンブレムを足しても、必ず正方形に収まる。 */
+.pin img{position:absolute; top:0; left:0;
+  width:100%; height:100%; padding:5px;
+  object-fit:contain; display:block;}
 
 /* ============================================================================
    ★ 2026-08-21 大会方式の図
@@ -775,8 +783,8 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
         <div class="row only-u8"><dt>参加チーム</dt><dd>18チーム</dd></div>
         <div class="row only-u9"><dt>参加チーム</dt><dd>16チーム</dd></div>
         <div class="row"><dt>会場</dt><dd>富山県立大学　天然芝グラウンド</dd></div>
-        <div class="row only-u8"><dt>競技のフィールド</dt><dd>40m × 30m</dd></div>
-        <div class="row only-u9"><dt>競技のフィールド</dt><dd>50m × 40m</dd></div>
+        <!-- 2026-08-22 具体的なメートル表示はやめ、U8・U9とも「スモールサイズ」に統一 -->
+        <div class="row"><dt>競技のフィールド</dt><dd>スモールサイズ</dd></div>
         <div class="row"><dt>競技者数</dt><dd>6人制</dd></div>
         <div class="row only-u8"><dt>試合時間</dt><dd>8分 − 1分 − 8分</dd></div>
         <div class="row only-u9"><dt>試合時間</dt><dd>10分 − 2分 − 10分</dd></div>
@@ -1206,12 +1214,24 @@ function oneStanding(label,rows){
        ① 勝点 → ② 直接対決の結果 → ③ 得失点差 → ④ 総得点 → ⑤ 抽選
      ⑤の抽選は自動では決められないので、そこまで同じなら同順のまま。
      ※スプレッドシートの「順位」列に値が入っていれば、表示はそちらが優先される。 */
+  /* ② 直接対決は「2チームだけが勝点で並んだとき」に使う。
+     3チーム以上が並ぶと勝ち負けが一周してしまい順番が決まらないので、③へ進む。
+     スプレッドシート側（GAS）の順位計算とまったく同じ扱いにしてある。 */
+  var ptsCount={};
+  rows.forEach(function(r){
+    if(!r[S.team]) return;
+    var p=parseFloat(r[S.pts])||0;
+    ptsCount[p]=(ptsCount[p]||0)+1;
+  });
   var sorted=rows.filter(function(r){return r[S.team];}).slice().sort(function(a,b){
-    var d=(parseFloat(b[S.pts])||0)-(parseFloat(a[S.pts])||0); if(d) return d;   /* ① 勝点 */
-    var h=headToHead(label,a[S.team],b[S.team]);                                  /* ② 直接対決 */
-    if(h && h.played){
-      if(h.mark==='○') return -1;
-      if(h.mark==='×') return 1;
+    var pa=parseFloat(a[S.pts])||0, pb=parseFloat(b[S.pts])||0;
+    var d=pb-pa; if(d) return d;                                                  /* ① 勝点 */
+    if(ptsCount[pa]===2){                                                         /* ② 直接対決 */
+      var h=headToHead(label,a[S.team],b[S.team]);
+      if(h && h.played){
+        if(h.mark==='○') return -1;
+        if(h.mark==='×') return 1;
+      }
     }
     d=(parseFloat(b[S.gd])||0)-(parseFloat(a[S.gd])||0); if(d) return d;          /* ③ 得失点差 */
     return (parseFloat(b[S.gf])||0)-(parseFloat(a[S.gf])||0);                     /* ④ 総得点 */

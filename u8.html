@@ -486,7 +486,15 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .pin.host{background:#fff; border-color:#000;}
 .pin.tbd span{color:#000;}
 /* エンブレム画像を入れたマス（2026-08-21）。マスいっぱいに、縦横比を保って収める */
-.pin img{width:100%; height:100%; object-fit:contain; display:block;}
+/* ★2026-08-22 修正
+   画像を width/height 100% で入れていたが、縦長のエンブレムだと
+   高さが decided されず、画像の縦横比のままマスが縦に伸びていた。
+   （ヴァリエンテ富山のマスだけ他より大きくなっていた原因）
+   → 画像を絶対配置にして、マスの内側にきっちり収める。
+   　 これで他のチームのエンブレムを足しても、必ず正方形に収まる。 */
+.pin img{position:absolute; top:0; left:0;
+  width:100%; height:100%; padding:5px;
+  object-fit:contain; display:block;}
 
 /* ============================================================================
    ★ 2026-08-22 チーム専用ページ
@@ -821,8 +829,8 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
         <div class="row only-u8"><dt>参加チーム</dt><dd>18チーム</dd></div>
         <div class="row only-u9"><dt>参加チーム</dt><dd>16チーム</dd></div>
         <div class="row"><dt>会場</dt><dd>富山県立大学　天然芝グラウンド</dd></div>
-        <div class="row only-u8"><dt>競技のフィールド</dt><dd>40m × 30m</dd></div>
-        <div class="row only-u9"><dt>競技のフィールド</dt><dd>50m × 40m</dd></div>
+        <!-- 2026-08-22 具体的なメートル表示はやめ、U8・U9とも「スモールサイズ」に統一 -->
+        <div class="row"><dt>競技のフィールド</dt><dd>スモールサイズ</dd></div>
         <div class="row"><dt>競技者数</dt><dd>6人制</dd></div>
         <div class="row only-u8"><dt>試合時間</dt><dd>8分 − 1分 − 8分</dd></div>
         <div class="row only-u9"><dt>試合時間</dt><dd>10分 − 2分 − 10分</dd></div>
@@ -1024,11 +1032,11 @@ var LIVE = {
               "U8予選D順位表","U8予選E順位表","U8予選F順位表"],
       labels:["A組","B組","C組","D組","E組","F組"] },
     { label:"上位リーグ", stage:"CLASS LEAGUE",
-      sheets:["U8上位1組順位表","U8上位2組順位表","U8上位3組順位表","U8上位4組順位表"],
-      labels:["上位1組","上位2組","上位3組","上位4組"] },
+      sheets:["U8_1組（上位）順位表","U8_2組（上位）順位表","U8_3組（上位）順位表","U8_4組（上位）順位表"],
+      labels:["1組（上位）","2組（上位）","3組（上位）","4組（上位）"] },
     { label:"下位リーグ", stage:"CLASS LEAGUE",
-      sheets:["U8下位1組順位表","U8下位2組順位表"],
-      labels:["下位1組","下位2組"] }
+      sheets:["U8_5組（下位）順位表","U8_6組（下位）順位表"],
+      labels:["5組（下位）","6組（下位）"] }
   ],
   finalSheet:     "U8最終順位表",
 
@@ -1218,12 +1226,24 @@ function oneStanding(label,rows){
        ① 勝点 → ② 直接対決の結果 → ③ 得失点差 → ④ 総得点 → ⑤ 抽選
      ⑤の抽選は自動では決められないので、そこまで同じなら同順のまま。
      ※スプレッドシートの「順位」列に値が入っていれば、表示はそちらが優先される。 */
+  /* ② 直接対決は「2チームだけが勝点で並んだとき」に使う。
+     3チーム以上が並ぶと勝ち負けが一周してしまい順番が決まらないので、③へ進む。
+     スプレッドシート側（GAS）の順位計算とまったく同じ扱いにしてある。 */
+  var ptsCount={};
+  rows.forEach(function(r){
+    if(!r[S.team]) return;
+    var p=parseFloat(r[S.pts])||0;
+    ptsCount[p]=(ptsCount[p]||0)+1;
+  });
   var sorted=rows.filter(function(r){return r[S.team];}).slice().sort(function(a,b){
-    var d=(parseFloat(b[S.pts])||0)-(parseFloat(a[S.pts])||0); if(d) return d;   /* ① 勝点 */
-    var h=headToHead(label,a[S.team],b[S.team]);                                  /* ② 直接対決 */
-    if(h && h.played){
-      if(h.mark==='○') return -1;
-      if(h.mark==='×') return 1;
+    var pa=parseFloat(a[S.pts])||0, pb=parseFloat(b[S.pts])||0;
+    var d=pb-pa; if(d) return d;                                                  /* ① 勝点 */
+    if(ptsCount[pa]===2){                                                         /* ② 直接対決 */
+      var h=headToHead(label,a[S.team],b[S.team]);
+      if(h && h.played){
+        if(h.mark==='○') return -1;
+        if(h.mark==='×') return 1;
+      }
     }
     d=(parseFloat(b[S.gd])||0)-(parseFloat(a[S.gd])||0); if(d) return d;          /* ③ 得失点差 */
     return (parseFloat(b[S.gf])||0)-(parseFloat(a[S.gf])||0);                     /* ④ 総得点 */
@@ -1371,7 +1391,7 @@ function buildTeamPage(team){
     return found;
   }
 
-  /* 見出しの下に「GROUP LEAGUE A組 ／ CLASS LEAGUE 上位1組」のように出す */
+  /* 見出しの下に「GROUP LEAGUE A組 ／ CLASS LEAGUE 1組（上位）」のように出す */
   var belong=[];
   ['GROUP LEAGUE','CLASS LEAGUE'].forEach(function(st){
     findBlocks(st).forEach(function(f){ belong.push(st+'　'+f.block.label); });
@@ -1695,10 +1715,10 @@ var DEMO = {
      2026-08-21 プリマヴェーラ入善を C組 → E組 に移動（大久保少年サッカークラブと入れ替え）。
      TOLL（B組）と当たる可能性を最後まで残さないため。理由は下の upper のメモを参照。 */
   groups: [
-    ["ヴァリエンテ富山","EST小杉","リオペードラ加賀"],
+    ["ヴァリエンテ富山","JK KIDS","リオペードラ加賀"],
     ["TOLL","富山中央FC","テイヘンズ"],
     ["みなみFC","大久保少年サッカークラブ","デランテロ"],
-    ["蜷川","BEZERRO","JK KIDS"],
+    ["蜷川","BEZERRO","EST小杉"],
     ["石動大谷","プリマヴェーラ入善","FC滑川"],
     ["鵜坂","スフィーダ","ALVA"]
   ],
@@ -1721,18 +1741,18 @@ var DEMO = {
         → 当たるとしたら決勝か3位決定戦、つまり最終戦だけ。
         （どちらが1位で通ろうと2位で通ろうと、この関係は変わらない） */
   upper: [
-    { label:"上位1組", teams:["A組1位","C組1位","B組2位"] },
-    { label:"上位2組", teams:["B組1位","F組1位","D組2位"] },
-    { label:"上位3組", teams:["D組1位","A組2位","E組2位"] },
-    { label:"上位4組", teams:["E組1位","C組2位","F組2位"] }
+    { label:"1組（上位）", teams:["A組1位","C組1位","B組2位"] },
+    { label:"2組（上位）", teams:["B組1位","F組1位","D組2位"] },
+    { label:"3組（上位）", teams:["D組1位","A組2位","E組2位"] },
+    { label:"4組（上位）", teams:["E組1位","C組2位","F組2位"] }
   ],
   /* 下位リーグ 2ブロック × 3チーム（予選の3位＝6チーム）
      2026-08-21 ご指定どおり A・B・C の3位／D・E・F の3位 に分けた。
      TOLL（B）と プリマヴェーラ入善（E）は別の組になるので、
      ここでも予選3位どうしで当たることはない。 */
   lower: [
-    { label:"下位1組", teams:["A組3位","B組3位","C組3位"] },
-    { label:"下位2組", teams:["D組3位","E組3位","F組3位"] }
+    { label:"5組（下位）", teams:["A組3位","B組3位","C組3位"] },
+    { label:"6組（下位）", teams:["D組3位","E組3位","F組3位"] }
   ]
 };
 function demoTime(slot){
@@ -1817,9 +1837,9 @@ function demoGL(){
         0, 1);
   /* 上位リーグ12 ＋ 下位リーグ6 ＝ 18試合（スロット4〜7 ＝ 10:20〜11:20開始）
      2026-08-21 予選とまったく同じコート割りのルールを適用した。
-       上位1組 … 第1コート固定 ／ 上位2組 … 第2コート固定
-       上位3組 … 第3コート固定 ／ 上位4組 … 第4コート固定
-       下位1組・下位2組 … 空き時間をはさんで1回だけコートが変わる
+       1組（上位） … 第1コート固定 ／ 2組（上位） … 第2コート固定
+       3組（上位） … 第3コート固定 ／ 4組（上位） … 第4コート固定
+       5組（下位）・6組（下位） … 空き時間をはさんで1回だけコートが変わる
      となり合う時間帯でコートが変わることは一度もない。 */
   var both=DEMO.upper.concat(DEMO.lower);
   var u=planRows(both,
@@ -1845,17 +1865,17 @@ function demoTourn(){
      決勝へ進む2チームの休憩時間も同じになる（前は①と②が20分ずれていた）。 */
   var i=0;
   /* 11:40 … 3位T準決勝①②（第1・2コート）＋ 2位T準決勝①②（第3・4コート） */
-  push('3位トーナメント　準決勝', i++, s0, '上位1組3位','上位2組3位');
-  push('3位トーナメント　準決勝', i++, s0, '上位3組3位','上位4組3位');
-  push('2位トーナメント　準決勝', i++, s0, '上位1組2位','上位2組2位');
-  push('2位トーナメント　準決勝', i++, s0, '上位3組2位','上位4組2位');
+  push('3位トーナメント　準決勝', i++, s0, '1組（上位）3位','2組（上位）3位');
+  push('3位トーナメント　準決勝', i++, s0, '3組（上位）3位','4組（上位）3位');
+  push('2位トーナメント　準決勝', i++, s0, '1組（上位）2位','2組（上位）2位');
+  push('2位トーナメント　準決勝', i++, s0, '3組（上位）2位','4組（上位）2位');
   i=DEMO.courts;   /* ← ここから次の時間帯（12:00）の第1コート */
   /* 12:00 … 1位T準決勝①②（第1・2コート）＋ 下位の順位決定戦3試合 */
-  push('1位トーナメント　準決勝', i++, s0, '上位1組1位','上位2組1位');
-  push('1位トーナメント　準決勝', i++, s0, '上位3組1位','上位4組1位');
+  push('1位トーナメント　準決勝', i++, s0, '1組（上位）1位','2組（上位）1位');
+  push('1位トーナメント　準決勝', i++, s0, '3組（上位）1位','4組（上位）1位');
   [['13-14位決定戦','1位'],['15-16位決定戦','2位'],['17-18位決定戦','3位']]
     .forEach(function(x){
-      push('下位リーグ　'+x[0], i++, s0, '下位1組'+x[1], '下位2組'+x[1]);
+      push('下位リーグ　'+x[0], i++, s0, '5組（下位）'+x[1], '6組（下位）'+x[1]);
     });
   var s1=s0+Math.ceil(i/DEMO.courts);   /* ＝12:20 */
   /* 決勝・3位決定戦 6試合。
