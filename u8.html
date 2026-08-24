@@ -712,44 +712,55 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 
     <section class="sec" id="teams">
       <div class="pins only-u8">
-        <!-- 2026-08-21 舟見さんからいただいた読みで、あいうえお順に並べ替え。
-             左上から右へ、行が終わったら次の行の左へ。
-             ALVA=あるば ／ EST小杉=いーえすてぃーこすぎ ／ 石動大谷=いするぎおおたに ／
-             鵜坂=うさか ／ ヴァリエンテ富山=ゔぁりえんてとやま ／ FC滑川=えふしーなめりかわ ／
-             大久保少年サッカークラブ=おおくぼしょうねんさっかーくらぶ ／ JK KIDS=じぇいけーきっず ／
-             スフィーダ=すふぃーだ ／ テイヘンズ=ていへんず ／ デランテロ=でらんてろ ／
-             TOLL=とーる ／ 富山中央FC=とやまちゅうおうえふしー ／ 蜷川=にながわ ／
-             プリマヴェーラ入善=ぷりまゔぇーらにゅうぜん ／ BEZERRO=べぜーろ ／
-             みなみFC=みなみえふしー ／ リオペードラ加賀=りおぺーどらかが -->
+        <!-- 2026-08-24 【正式名称】であいうえお順に並べ替え。左上から右へ、行が終わったら次の行の左へ。
+             ★data-team は変えないこと。スプレッドシートと突き合わせる合言葉なので、
+               ここが1文字でも違うと順位計算が壊れる。見た目の文字（span の中）だけを正式名称にしている。
+
+             石動大谷=いするぎおおたに ／ 鵜坂=うさか ／
+             ヴァリエンテ富山=ゔぁりえんてとやま ／ FC ALVA=えふしーあるば ／
+             FC滑川=えふしーなめりかわ ／ 大久保少年サッカークラブ=おおくぼしょうねんさっかーくらぶ ／
+             小杉エストゥディアンテス=こすぎえすとぅでぃあんてす ／
+             JK KIDS=じぇいけーきっず ／ スフィーダ富山FC=すふぃーだとやま ／ 成美M.F.C.=せいびえむえふしー ／
+             テイヘンズ=ていへんず ／ デランテロ=でらんてろ ／ TOLL=とーる ／
+             富山中央FC=とやまちゅうおうえふしー ／ 蜷川=にながわ ／
+             プリマヴェーラ入善=ぷりまゔぇーらにゅうぜん ／ BEZERRO=べぜーろ ／ みなみFC=みなみえふしー
+
+             2026-08-24 の変更
+             ・ALVA → 正式名称「FC ALVA」（えふしーあるば）。先頭から FC滑川 の手前へ移動
+             ・成美 → 正式名称「成美M.F.C.」。読みは【せいび】（エンブレムの SEIBI SSS より）。
+               「なるみ」と仮定して置いていたのは誤りだったので、スフィーダの次へ移動。＊も外した
+             ・スフィーダ → 「スフィーダ富山FC」／BEZERRO → 「ベゼーロ」。読みは変わらず位置もそのまま
+             ・EST小杉 → 正式名称「小杉エストゥディアンテス」。読みが【こすぎ…】になるため
+               先頭から7番目（大久保少年サッカークラブの次）へ移動。先頭マスは石動大谷になった -->
         <!-- 1行目 … 左に1チーム／中央2マスに見出しバナー／右に1チーム -->
-        <button type="button" class="pin" data-team="ALVA"><span>ALVA</span></button>
+        <button type="button" class="pin tbd" data-team="石動大谷"><span>石動大谷 *</span></button>
         <div class="pin-head"><img src="assets/teams_head_u8.png" alt="PARTICIPATING 18 TEAMS U8"></div>
-        <button type="button" class="pin" data-team="EST小杉"><span>EST小杉</span></button>
+        <button type="button" class="pin tbd" data-team="鵜坂"><span>鵜坂 *</span></button>
 
         <!-- 2行目以降 … 残り16チームを4×4で -->
-        <button type="button" class="pin" data-team="石動大谷"><span>石動大谷</span></button>
-        <button type="button" class="pin" data-team="鵜坂"><span>鵜坂</span></button>
         <!-- 主催チームはエンブレム画像（素材\emblem_metallic_透過.png を320px幅に縮小） -->
-        <button type="button" class="pin host" data-team="ヴァリエンテ富山"><img src="assets/emblem_valiente.png" alt="ヴァリエンテ富山"></button>
-        <button type="button" class="pin" data-team="FC滑川"><span>FC滑川</span></button>
+        <button type="button" class="pin host" data-team="ヴァリエンテ富山"><img src="assets/emblem_valiente.png" alt="ヴァリエンテ富山ジュニア"></button>
+        <button type="button" class="pin" data-team="ALVA"><img src="assets/emblem_alva.png" alt="FC ALVA"></button>
+        <button type="button" class="pin" data-team="FC滑川"><img src="assets/emblem_namerikawa.png" alt="FC滑川ジュニア"></button>
+        <button type="button" class="pin" data-team="大久保少年サッカークラブ"><img src="assets/emblem_okubo.png" alt="大久保少年サッカークラブ"></button>
 
-        <button type="button" class="pin" data-team="大久保少年サッカークラブ"><span>大久保少年<br>サッカー<br>クラブ</span></button>
-        <button type="button" class="pin tbd" data-team="JK KIDS"><span>JK KIDS *</span></button>
-        <button type="button" class="pin" data-team="スフィーダ"><span>スフィーダ</span></button>
-        <button type="button" class="pin tbd" data-team="テイヘンズ"><span>テイヘンズ *</span></button>
+        <button type="button" class="pin" data-team="EST小杉"><img src="assets/emblem_kosugi.png" alt="小杉エストゥディアンテス"></button>
+        <button type="button" class="pin" data-team="JK KIDS"><img src="assets/emblem_jkkids.png" alt="JKキッズなめりかわ"></button>
+        <button type="button" class="pin" data-team="スフィーダ"><img src="assets/emblem_sfida.png" alt="スフィーダ富山FC"></button>
+        <button type="button" class="pin" data-team="成美"><img src="assets/emblem_seibi.png" alt="成美M.F.C."></button>
 
+        <button type="button" class="pin" data-team="テイヘンズ"><img src="assets/emblem_teihens.png" alt="テイヘンズFC金沢U12"></button>
         <button type="button" class="pin tbd" data-team="デランテロ"><span>デランテロ *</span></button>
-        <button type="button" class="pin" data-team="TOLL"><span>TOLL</span></button>
-        <button type="button" class="pin" data-team="富山中央FC"><span>富山中央FC</span></button>
-        <button type="button" class="pin" data-team="蜷川"><span>蜷川</span></button>
+        <button type="button" class="pin tbd" data-team="TOLL"><span>TOLL *</span></button>
+        <button type="button" class="pin" data-team="富山中央FC"><img src="assets/emblem_chuo.png" alt="富山中央FC"></button>
 
-        <button type="button" class="pin" data-team="プリマヴェーラ入善"><span>プリマ<br>ヴェーラ入善</span></button>
-        <button type="button" class="pin" data-team="BEZERRO"><span>BEZERRO</span></button>
-        <button type="button" class="pin" data-team="みなみFC"><span>みなみFC</span></button>
-        <button type="button" class="pin tbd" data-team="リオペードラ加賀"><span>リオペードラ<br>加賀 *</span></button>
+        <button type="button" class="pin" data-team="蜷川"><img src="assets/emblem_ninagawa.png" alt="蜷川少年サッカークラブ"></button>
+        <button type="button" class="pin" data-team="プリマヴェーラ入善"><img src="assets/emblem_primavera.png" alt="プリマヴェーラ入善"></button>
+        <button type="button" class="pin" data-team="BEZERRO"><img src="assets/emblem_bezerro.png" alt="ベゼーロ"></button>
+        <button type="button" class="pin" data-team="みなみFC"><img src="assets/emblem_minami.png" alt="みなみFC"></button>
       </div>
 
-      <p class="note">* が付いたチームは、正式な表記を主催者に確認中です。<br>
+      <p class="note">* が付いたチームは、正式なチーム名を確認中です。<br>
       各チームのエンブレム画像をいただければ、文字の代わりに差し替えられます。</p>
     </section>
 
@@ -1715,12 +1726,12 @@ var DEMO = {
      2026-08-21 プリマヴェーラ入善を C組 → E組 に移動（大久保少年サッカークラブと入れ替え）。
      TOLL（B組）と当たる可能性を最後まで残さないため。理由は下の upper のメモを参照。 */
   groups: [
-    ["ヴァリエンテ富山","JK KIDS","リオペードラ加賀"],
-    ["TOLL","富山中央FC","テイヘンズ"],
+    ["ヴァリエンテ富山","JK KIDS","成美"],
+    ["TOLL","富山中央FC","ALVA"],
     ["みなみFC","大久保少年サッカークラブ","デランテロ"],
     ["蜷川","BEZERRO","EST小杉"],
     ["石動大谷","プリマヴェーラ入善","FC滑川"],
-    ["鵜坂","スフィーダ","ALVA"]
+    ["鵜坂","スフィーダ","テイヘンズ"]
   ],
   /* 上位リーグ 4ブロック × 3チーム（予選の1・2位＝12チーム）
      2026-08-21 組み直し。守っている条件は3つ。

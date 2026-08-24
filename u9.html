@@ -498,6 +498,12 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .pin img{position:absolute; top:0; left:0;
   width:100%; height:100%; padding:5px;
   object-fit:contain; display:block;}
+/* 富山中央FCA・FCB は同じクラブでエンブレムも同じ絵になる。
+   右下に小さく A / B を出して見分けられるようにする（2026-08-24） */
+.pin .ab{position:absolute; right:3px; bottom:2px; z-index:2;
+  font-size:12px; font-weight:900; color:#000; line-height:1;
+  background:rgba(255,255,255,.92); border:1px solid #000;
+  border-radius:3px; padding:1px 4px;}
 
 /* ============================================================================
    ★ 2026-08-21 大会方式の図
@@ -673,37 +679,56 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
     <section class="sec" id="teams">
       <!-- 見出しバナー（PARTICIPATING 16 TEAMS／U9）2026-08-22
            マス目の外に出して、その上に置く。幅は「マス2つ＋隙間1つ」ぶん。
-           中央ぞろえなので、ちょうど ALVA と 石動大谷 の真上に来る。 -->
+           中央ぞろえなので、ちょうど2列目と3列目の真上に来る。
+           2026-08-24 の並べ替えで、その位置は 石動大谷 と ヴァリエンテ富山 になった。 -->
       <div class="pins-head4">
         <img src="assets/teams_head_u9.png" alt="PARTICIPATING 16 TEAMS U9">
       </div>
 
       <div class="pins only-u9-list">
-        <!-- U9 16チーム。あいうえお順（左上から右へ）。16チームちょうどなので4×4に収まる。
-             ★読みが未確認のチーム（旭丘／南星／CAMPIONE FUKUOKA／CAVALLO）は
-             　推定の読みで並べている。正しい読みが分かり次第、並べ直すこと。 -->
-        <div class="pin tbd"><span>旭丘 *</span></div>
-        <div class="pin"><span>ALVA</span></div>
-        <div class="pin"><span>石動大谷</span></div>
-        <div class="pin host"><img src="assets/emblem_valiente.png" alt="ヴァリエンテ富山"></div>
+        <!-- 2026-08-24 【正式名称】であいうえお順に並べ替え（左上から右へ・4×4）。
+             ★data-team は変えないこと。スプレッドシートと突き合わせる合言葉なので、
+             　ここが1文字でも違うと順位計算が壊れる。見た目の文字（span の中）だけを正式名称にしている。
 
-        <div class="pin tbd"><span>エスポ<br>ワール白山 *</span></div>
-        <div class="pin"><span>CAVALLO</span></div>
-        <div class="pin"><span>CAMPIONE<br>FUKUOKA</span></div>
-        <div class="pin tbd"><span>JK KIDS *</span></div>
+             旭丘フットボールクラブ=あさひ… ／ 石動大谷=いするぎおおたに ／
+             ヴァリエンテ富山=ゔぁりえんてとやま ／ エスポワール白山=えすぽわーるはくさん ／
+             FC ALVA=えふしーあるば ／ FC.CAMPIONE福岡=えふしーかんぴおーねふくおか ／
+             FC南星スポーツ少年団=えふしーなんせい… ／ CAVALLO=かゔぁっろ ／ JK KIDS=じぇいけーきっず ／
+             富山中央FCA・FCB=とやまちゅうおうえふしー ／ 氷見FC=ひみえふしー ／
+             婦中西部=ふちゅうせいぶ ／ BLUE SOX=ぶるーそっくす ／
+             プリマヴェーラ入善=ぷりまゔぇーらにゅうぜん ／ みなみFC=みなみえふしー
 
-        <div class="pin"><span>富山中央<br>FCA</span></div>
-        <div class="pin"><span>富山中央<br>FCB</span></div>
-        <div class="pin tbd"><span>南星 *</span></div>
-        <div class="pin"><span>氷見FC</span></div>
+             2026-08-24 の変更
+             ・旭丘 → 正式名称「旭丘フットボールクラブ」。読みは【あさひ】で確定（ASAHI F.C. より）。
+             　位置は変わらず先頭。＊を外した
+             ・ALVA → 正式名称「FC ALVA」（えふしーあるば）。2番目から5番目へ移動
+             ・CAMPIONE FUKUOKA → 正式名称「FC.CAMPIONE福岡」（えふしー…）。CAVALLO の手前へ移動
+             ・エスポワール白山 → 正式名称「エスポワール白山FC」。位置は変わらず。＊を外した（2026-08-24）
+             ・南星 → 正式名称「FC南星スポーツ少年団」。読みが【えふしーなんせい…】になるため
+             　11番目から7番目（FC.CAMPIONE福岡の次）へ移動。＊を外した（2026-08-24）
+             ★読みがまだ未確認：CAVALLO（かゔぁっろ と仮定） -->
+        <div class="pin" data-team="旭丘"><img src="assets/emblem_asahi.png" alt="旭丘フットボールクラブ"></div>
+        <div class="pin tbd" data-team="石動大谷"><span>石動大谷 *</span></div>
+        <div class="pin host" data-team="ヴァリエンテ富山"><img src="assets/emblem_valiente.png" alt="ヴァリエンテ富山ジュニア"></div>
+        <div class="pin" data-team="エスポワール白山"><img src="assets/emblem_espoir.png" alt="エスポワール白山FC"></div>
 
-        <div class="pin"><span>婦中西部</span></div>
-        <div class="pin"><span>BLUE SOX</span></div>
-        <div class="pin"><span>プリマ<br>ヴェーラ入善</span></div>
-        <div class="pin"><span>みなみFC</span></div>
+        <div class="pin" data-team="ALVA"><img src="assets/emblem_alva.png" alt="FC ALVA"></div>
+        <div class="pin" data-team="CAMPIONE FUKUOKA"><img src="assets/emblem_campione.png" alt="FC.CAMPIONE福岡"></div>
+        <div class="pin" data-team="南星"><img src="assets/emblem_nansei.png" alt="FC南星スポーツ少年団"></div>
+        <div class="pin tbd" data-team="CAVALLO"><span>CAVALLO *</span></div>
+
+        <div class="pin" data-team="JK KIDS"><img src="assets/emblem_jkkids.png" alt="JKキッズなめりかわ"></div>
+        <div class="pin" data-team="富山中央FCA"><img src="assets/emblem_chuo.png" alt="富山中央FCA"><span class="ab">A</span></div>
+        <div class="pin" data-team="富山中央FCB"><img src="assets/emblem_chuo.png" alt="富山中央FCB"><span class="ab">B</span></div>
+        <div class="pin tbd" data-team="氷見FC"><span>氷見FC *</span></div>
+
+        <div class="pin tbd" data-team="婦中西部"><span>婦中西部 *</span></div>
+        <div class="pin tbd" data-team="BLUE SOX"><span>BLUE SOX *</span></div>
+        <div class="pin" data-team="プリマヴェーラ入善"><img src="assets/emblem_primavera.png" alt="プリマヴェーラ入善"></div>
+        <div class="pin" data-team="みなみFC"><img src="assets/emblem_minami.png" alt="みなみFC"></div>
       </div>
 
-      <p class="note">* が付いたチームは、正式な表記を主催者に確認中です。<br>
+      <p class="note">* が付いたチームは、正式なチーム名を確認中です。<br>
       各チームのエンブレム画像をいただければ、文字の代わりに差し替えられます。</p>
     </section>
 
@@ -1536,9 +1561,9 @@ var DEMO = {
   slotMin: 25, courts: 5, startH: 8, startM: 30,
   /* グループリーグ 4組 × 4チーム（＝各組6試合・全24試合） */
   groups: [
-    ["CAMPIONE FUKUOKA","富山中央FCA","ALVA","氷見FC"],
+    ["旭丘","富山中央FCA","ALVA","氷見FC"],
     ["ヴァリエンテ富山","石動大谷","婦中西部","みなみFC"],
-    ["旭丘","JK KIDS","CAVALLO","BLUE SOX"],
+    ["CAMPIONE FUKUOKA","JK KIDS","CAVALLO","BLUE SOX"],
     ["エスポワール白山","富山中央FCB","南星","プリマヴェーラ入善"]
   ]
 };
