@@ -506,6 +506,70 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
   border-radius:3px; padding:1px 4px;}
 
 /* ============================================================================
+   チーム専用ページ（2026-08-24 U8から移植）
+   参加チームのマスをタップすると、他の項目を隠してここだけを表示する。
+   ============================================================================ */
+/* マスはボタンになったので、押せることが分かるようにする */
+.pin{appearance:none; font:inherit; cursor:pointer; -webkit-tap-highlight-color:transparent;}
+.pin:active{transform:translateY(1px);}
+.pin:hover{background:#fffbe8;}
+
+/* ============================================================================
+   マスの見た目【2026-08-24】
+   ・エンブレムが届いたチーム … 黒い枠と白い地をなくし、絵だけを置く
+   ・まだ届いていないチーム   … テイヘンズ／FC滑川と同じ大きさの四角にして名前を入れる
+     （.pin img は上下左右0・幅高さ100%・内側5px なので、絵の四角はマスの5px内側。
+       文字の四角も同じ位置・同じ大きさにそろえてある）
+   ============================================================================ */
+.pin{background:transparent; border:none; box-shadow:none;}
+.pin.host{background:transparent; border:none;}
+.pin:hover{background:transparent;}
+.pin > span:not(.ab){
+  position:absolute; top:5px; left:5px; right:5px; bottom:5px;
+  display:flex; align-items:center; justify-content:center;
+  text-align:center; padding:3px;
+  background:#e7e3d8; color:#000;}
+.pin:hover > span:not(.ab){background:#f2efe4;}
+
+.tp-back{appearance:none; display:inline-block; margin-bottom:12px;
+  padding:8px 12px; border:2px solid var(--edge); background:#fff;
+  color:var(--edge); font:inherit; font-size:11.5px; font-weight:900;
+  cursor:pointer; -webkit-tap-highlight-color:transparent;}
+.tp-back:active{transform:translateY(1px);}
+
+.tp-head{text-align:center; margin-bottom:6px;}
+#tp-emblem img{width:84px; height:84px; object-fit:contain; margin:0 auto 6px;}
+#tp-name{font-size:16px; font-weight:900; letter-spacing:.02em; line-height:1.3;}
+
+.tp-sec{margin-top:18px;}
+.tp-sec h4{font-size:11.5px; font-weight:900; letter-spacing:.08em;
+  color:var(--edge); text-align:center; margin-bottom:8px;
+  border-top:1px solid var(--hair); padding-top:12px;}
+.tp-sec:first-of-type h4{border-top:none; padding-top:0;}
+
+/* 試合の表：キックオフ／コート／対戦相手／スコア の横並び */
+.tp-tbl{white-space:normal;}
+.tp-tbl th{font-size:10px; padding:6px 4px;}
+.tp-tbl td{font-size:11.5px; padding:8px 5px; vertical-align:middle;}
+.tp-tbl .tp-time{font-weight:900; white-space:nowrap;}
+.tp-tbl .tp-court{white-space:nowrap; font-size:10.5px;}
+.tp-tbl .tp-opp{text-align:left; font-weight:700; line-height:1.35;}
+.tp-tbl .tp-score{white-space:nowrap; min-width:56px;}
+.tp-tbl .tp-score b{font-size:14px; font-weight:900;}
+.tp-tbl .tp-score small{display:block; font-size:8.5px; font-weight:700; opacity:.7;}
+.tp-tbl .tp-w{color:#1a7f37;}   /* 勝ち */
+.tp-tbl .tp-d{color:#8a6d0b;}   /* 引き分け */
+.tp-tbl .tp-l{color:#b3261e;}   /* 負け */
+
+/* 成績のまとめ */
+.tp-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin-top:6px;}
+.tp-stat{border:2px solid var(--edge); background:#fff; padding:6px 2px; text-align:center;}
+.tp-stat b{display:block; font-size:15px; font-weight:900; line-height:1.15;}
+.tp-stat i{display:block; font-style:normal; font-size:9px; font-weight:700;
+  color:rgba(23,41,26,.65);}
+.tp-note{font-size:11px; line-height:1.75; color:rgba(23,41,26,.7); margin-top:8px;}
+
+/* ============================================================================
    ★ 2026-08-21 大会方式の図
    主催者作成の図（夏休みカップロゴ.pptx 11枚目）をHPの見た目に合わせて作り直し。
    ・枠は角ばった黒緑の線（チーム一覧のマスと同じテイスト）
@@ -624,12 +688,11 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
   <nav class="catbar">
     <div class="catbar-inner" id="catbar">
       <a class="cattab" href="#teams">チーム</a>
-      <a class="cattab" href="#schedule">日程</a>
-      <!-- U9はクラスリーグが無いので CL タブは置かない -->
-      <a class="cattab" href="#group">GL</a>
-      <a class="cattab" href="#bracket">決勝T</a>
-      <a class="cattab" href="#result">最終順位</a>
       <a class="cattab" href="#outline">要項</a>
+      <a class="cattab" href="#schedule">日程</a>
+      <a class="cattab" href="#group">GL</a>
+      <a class="cattab" href="#bracket">KO</a>
+      <a class="cattab" href="#result">最終順位</a>
       <a class="cattab" href="#access">会場</a>
       <a class="cattab" href="#info">お知らせ</a>
     </div>
@@ -647,13 +710,13 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
       <button type="button" class="idx-close" data-close aria-label="閉じる">×</button>
       <p class="idx-title">INDEX</p>
       <ol class="idx-list">
+        <li><a href="#teams"><span class="en">TEAMS</span><span class="jp">参加チーム</span></a></li>
+        <li><a href="#outline"><span class="en">OUTLINE</span><span class="jp">大会要項</span></a></li>
         <li><a href="#schedule"><span class="en">SCHEDULE</span><span class="jp">スケジュール</span></a></li>
         <li><a href="#group"><span class="en">GROUP LEAGUE</span><span class="jp">グループリーグ</span></a></li>
-        <li><a href="#bracket"><span class="en">FINAL ROUND</span><span class="jp">トーナメント</span></a></li>
+        <li><a href="#bracket"><span class="en">KNOCKOUT ROUND</span><span class="jp">トーナメント</span></a></li>
         <li><a href="#result"><span class="en">RESULT</span><span class="jp">最終順位</span></a></li>
-        <li><a href="#outline"><span class="en">OUTLINE</span><span class="jp">大会要項</span></a></li>
         <li><a href="#access"><span class="en">ACCESS</span><span class="jp">会場アクセス</span></a></li>
-        <li><a href="#teams"><span class="en">TEAMS</span><span class="jp">参加チーム</span></a></li>
         <li><a href="#info"><span class="en">INFO</span><span class="jp">お知らせ</span></a></li>
       </ol>
     </nav>
@@ -676,6 +739,18 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 
   <!-- ③ 詳細 -->
   <div class="detail">
+
+    <!-- チーム専用ページ（2026-08-24 U8から移植）
+         参加チームのマスをタップすると、他の項目を隠してここだけを表示する。
+         中身は下のJS（buildTeamPage）が組み立てる。 -->
+    <section class="sec" id="teampage" hidden>
+      <div class="tp-head">
+        <div id="tp-emblem"></div>
+        <h2 id="tp-name"></h2>
+      </div>
+      <div id="tp-body"></div>
+    </section>
+
     <section class="sec" id="teams">
       <!-- 見出しバナー（PARTICIPATING 16 TEAMS／U9）2026-08-22
            マス目の外に出して、その上に置く。幅は「マス2つ＋隙間1つ」ぶん。
@@ -707,89 +782,30 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
              ・南星 → 正式名称「FC南星スポーツ少年団」。読みが【えふしーなんせい…】になるため
              　11番目から7番目（FC.CAMPIONE福岡の次）へ移動。＊を外した（2026-08-24）
              ★読みがまだ未確認：CAVALLO（かゔぁっろ と仮定） -->
-        <div class="pin" data-team="旭丘"><img src="assets/emblem_asahi.png" alt="旭丘フットボールクラブ"></div>
-        <div class="pin tbd" data-team="石動大谷"><span>石動大谷 *</span></div>
-        <div class="pin host" data-team="ヴァリエンテ富山"><img src="assets/emblem_valiente.png" alt="ヴァリエンテ富山ジュニア"></div>
-        <div class="pin" data-team="エスポワール白山"><img src="assets/emblem_espoir.png" alt="エスポワール白山FC"></div>
+        <button type="button" class="pin" data-team="旭丘"><img src="assets/emblem_asahi.png" alt="旭丘フットボールクラブ"></button>
+        <button type="button" class="pin tbd" data-team="石動大谷"><span>石動大谷 *</span></button>
+        <button type="button" class="pin host" data-team="ヴァリエンテ"><img src="assets/emblem_valiente.png" alt="ヴァリエンテ富山ジュニア"></button>
+        <button type="button" class="pin" data-team="エスポ"><img src="assets/emblem_espoir.png" alt="エスポワール白山FC"></button>
 
-        <div class="pin" data-team="ALVA"><img src="assets/emblem_alva.png" alt="FC ALVA"></div>
-        <div class="pin" data-team="CAMPIONE FUKUOKA"><img src="assets/emblem_campione.png" alt="FC.CAMPIONE福岡"></div>
-        <div class="pin" data-team="南星"><img src="assets/emblem_nansei.png" alt="FC南星スポーツ少年団"></div>
-        <div class="pin tbd" data-team="CAVALLO"><span>CAVALLO *</span></div>
+        <button type="button" class="pin" data-team="ALVA"><img src="assets/emblem_alva.png" alt="FC ALVA"></button>
+        <button type="button" class="pin" data-team="カンピ"><img src="assets/emblem_campione.png" alt="FC.CAMPIONE福岡"></button>
+        <button type="button" class="pin" data-team="FC南星"><img src="assets/emblem_nansei.png" alt="FC南星スポーツ少年団"></button>
+        <button type="button" class="pin tbd" data-team="CAVALLO"><span>CAVALLO *</span></button>
 
-        <div class="pin" data-team="JK KIDS"><img src="assets/emblem_jkkids.png" alt="JKキッズなめりかわ"></div>
-        <div class="pin" data-team="富山中央FCA"><img src="assets/emblem_chuo.png" alt="富山中央FCA"><span class="ab">A</span></div>
-        <div class="pin" data-team="富山中央FCB"><img src="assets/emblem_chuo.png" alt="富山中央FCB"><span class="ab">B</span></div>
-        <div class="pin tbd" data-team="氷見FC"><span>氷見FC *</span></div>
+        <button type="button" class="pin" data-team="JKキッズ"><img src="assets/emblem_jkkids.png" alt="JKキッズなめりかわ"></button>
+        <button type="button" class="pin" data-team="富山中央A"><img src="assets/emblem_chuo.png" alt="富山中央FCA"><span class="ab">A</span></button>
+        <button type="button" class="pin" data-team="富山中央B"><img src="assets/emblem_chuo.png" alt="富山中央FCB"><span class="ab">B</span></button>
+        <button type="button" class="pin tbd" data-team="氷見FC"><span>氷見FC *</span></button>
 
-        <div class="pin tbd" data-team="婦中西部"><span>婦中西部 *</span></div>
-        <div class="pin tbd" data-team="BLUE SOX"><span>BLUE SOX *</span></div>
-        <div class="pin" data-team="プリマヴェーラ入善"><img src="assets/emblem_primavera.png" alt="プリマヴェーラ入善"></div>
-        <div class="pin" data-team="みなみFC"><img src="assets/emblem_minami.png" alt="みなみFC"></div>
+        <button type="button" class="pin tbd" data-team="婦中西部"><span>婦中西部 *</span></button>
+        <button type="button" class="pin" data-team="ブルソ"><img src="assets/emblem_bluesox.png" alt="ブルーソックスjrSC"></button>
+        <button type="button" class="pin" data-team="プリマ"><img src="assets/emblem_primavera.png" alt="プリマヴェーラ入善"></button>
+        <button type="button" class="pin" data-team="みなみ"><img src="assets/emblem_minami.png" alt="みなみFC"></button>
       </div>
 
       <p class="note">* が付いたチームは、正式なチーム名を確認中です。<br>
       各チームのエンブレム画像をいただければ、文字の代わりに差し替えられます。</p>
     </section>
-
-    <section class="sec" id="schedule">
-      <h2>SCHEDULE</h2><h3>スケジュール</h3>
-      <div id="live-schedule">
-        <p class="live-wait">試合結果の読み込み中…<br>（スプレッドシートの設定が済むと、ここに全試合が並びます）</p>
-      </div>
-      <p class="updated" id="upd-schedule"></p>
-    </section>
-
-    <section class="sec" id="group">
-      <h2>GROUP LEAGUE</h2><h3>グループリーグ</h3>
-      <div id="live-standings">
-        <p class="live-wait">順位表の読み込み中…<br>（スコアが入力されると自動で並び替わります）</p>
-      </div>
-      <p class="updated" id="upd-standings"></p>
-      <p class="note only-u8">※ 3チーム × 6ブロックの総当たり（各チーム2試合・全18試合）。<br>
-        各ブロックの<b>1・2位はクラスリーグの上位リーグ</b>へ、<b>3位は下位リーグ</b>へ進みます。</p>
-      <p class="note only-u9">※ 4グループ × 4チームの総当たり（各チーム3試合・全24試合）。<br>
-        各組の1位が1位トーナメント、2位が2位トーナメント、3位が3位トーナメント、4位が4位トーナメントに進みます。</p>
-    </section>
-
-    <!-- クラスリーグ（旧: グループリーグの中にあった上位リーグ・下位リーグ）2026-08-21 分離 -->
-    <section class="sec only-u8" id="class">
-      <h2>CLASS LEAGUE</h2><h3>クラスリーグ</h3>
-      <div id="live-standings-cl">
-        <p class="live-wait">順位表の読み込み中…<br>（グループリーグの結果が出そろうと対戦相手が決まります）</p>
-      </div>
-      <p class="updated" id="upd-standings-cl"></p>
-      <p class="note">※ グループリーグの成績で2つのクラスに分かれます。<br>
-        <b>上位リーグ</b>（3チーム × 4ブロック）… 各ブロックの1・2位＝12チーム<br>
-        <b>下位リーグ</b>（3チーム × 2ブロック）… 各ブロックの3位＝6チーム<br>
-        ここでの順位が、決勝トーナメント・順位決定戦の組み合わせになります。</p>
-    </section>
-
-    <section class="sec" id="bracket">
-      <h2>FINAL ROUND</h2><h3>決勝トーナメント・順位決定戦</h3>
-      <div id="live-bracket">
-        <p class="live-wait">トーナメントの読み込み中…<br>（グループリーグの結果に連動して対戦カードが埋まります）</p>
-      </div>
-      <p class="updated" id="upd-bracket"></p>
-      <p class="note only-u8">※ 上位リーグの各組1位が<b>1位トーナメント（1-4位決定戦）</b>、
-        2位が<b>2位トーナメント（5-8位決定戦）</b>、3位が<b>3位トーナメント（9-12位決定戦）</b>へ。<br>
-        下位リーグは1位同士・2位同士・3位同士で対戦し、<b>13-18位</b>が決まります。<br>
-        <b>上位リーグ進出チームは6試合、下位リーグ進出チームは5試合。18位まですべて決まります。</b></p>
-      <p class="note only-u9">※ <b>順位別に4つのトーナメント</b>を行います。
-        1位トーナメントで1〜4位、2位トーナメントで5〜8位、
-        3位トーナメントで9〜12位、4位トーナメントで13〜16位が決まります。<br>
-        各トーナメントは4チームで、準決勝2試合 → 決勝・3位決定戦（計4試合）。<br>
-        <b>全チームが5試合（予選3＋トーナメント2）を戦い、16位まですべて決まります。</b></p>
-    </section>
-
-    <section class="sec" id="result">
-      <h2>RESULT</h2><h3>最終順位</h3>
-      <div id="live-final">
-        <p class="live-wait">最終順位の読み込み中…<br>（決勝トーナメント終了後に確定します）</p>
-      </div>
-      <p class="updated" id="upd-final"></p>
-    </section>
-
     <section class="sec" id="outline">
       <h2>OUTLINE</h2><h3>大会要項</h3>
       <!-- 2026-08-21 ご指定の順に並べ替え
@@ -866,7 +882,7 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
         <p class="fmt-arrow">▼<br>クラスリーグの順位で進み先が決まります</p>
 
         <div class="fmt-stage">
-          <p class="fmt-head"><b>FINAL ROUND</b><span>決勝トーナメント・順位決定戦</span></p>
+          <p class="fmt-head"><b>KNOCKOUT ROUND</b><span>決勝トーナメント・順位決定戦</span></p>
           <div class="fmt-grid g3">
             <div class="fcard"><b>1-4位</b><i>決定トーナメント</i><em>上位1〜4組の<br>各1位</em></div>
             <div class="fcard"><b>5-8位</b><i>決定トーナメント</i><em>上位1〜4組の<br>各2位</em></div>
@@ -920,7 +936,7 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
         <p class="fmt-arrow">▼<br>各組の順位で進み先が決まります</p>
 
         <div class="fmt-stage">
-          <p class="fmt-head"><b>FINAL ROUND</b><span>決勝トーナメント・順位決定戦</span></p>
+          <p class="fmt-head"><b>KNOCKOUT ROUND</b><span>決勝トーナメント・順位決定戦</span></p>
           <div class="fmt-grid g2">
             <div class="fcard"><b>1-4位</b><i>決定トーナメント</i><em>A〜D組の<br>各1位</em></div>
             <div class="fcard"><b>5-8位</b><i>決定トーナメント</i><em>A〜D組の<br>各2位</em></div>
@@ -935,6 +951,64 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
         </div>
 
       </div>
+    </section>
+
+    <section class="sec" id="schedule">
+      <h2>SCHEDULE</h2><h3>スケジュール</h3>
+      <div id="live-schedule">
+        <p class="live-wait">試合結果の読み込み中…<br>（スプレッドシートの設定が済むと、ここに全試合が並びます）</p>
+      </div>
+      <p class="updated" id="upd-schedule"></p>
+    </section>
+
+    <section class="sec" id="group">
+      <h2>GROUP LEAGUE</h2><h3>グループリーグ</h3>
+      <div id="live-standings">
+        <p class="live-wait">順位表の読み込み中…<br>（スコアが入力されると自動で並び替わります）</p>
+      </div>
+      <p class="updated" id="upd-standings"></p>
+      <p class="note only-u8">※ 3チーム × 6ブロックの総当たり（各チーム2試合・全18試合）。<br>
+        各ブロックの<b>1・2位はクラスリーグの上位リーグ</b>へ、<b>3位は下位リーグ</b>へ進みます。</p>
+      <p class="note only-u9">※ 4グループ × 4チームの総当たり（各チーム3試合・全24試合）。<br>
+        各組の1位が1位トーナメント、2位が2位トーナメント、3位が3位トーナメント、4位が4位トーナメントに進みます。</p>
+    </section>
+
+    <!-- クラスリーグ（旧: グループリーグの中にあった上位リーグ・下位リーグ）2026-08-21 分離 -->
+    <section class="sec only-u8" id="class">
+      <h2>CLASS LEAGUE</h2><h3>クラスリーグ</h3>
+      <div id="live-standings-cl">
+        <p class="live-wait">順位表の読み込み中…<br>（グループリーグの結果が出そろうと対戦相手が決まります）</p>
+      </div>
+      <p class="updated" id="upd-standings-cl"></p>
+      <p class="note">※ グループリーグの成績で2つのクラスに分かれます。<br>
+        <b>上位リーグ</b>（3チーム × 4ブロック）… 各ブロックの1・2位＝12チーム<br>
+        <b>下位リーグ</b>（3チーム × 2ブロック）… 各ブロックの3位＝6チーム<br>
+        ここでの順位が、決勝トーナメント・順位決定戦の組み合わせになります。</p>
+    </section>
+
+    <section class="sec" id="bracket">
+      <h2>KNOCKOUT ROUND</h2><h3>決勝トーナメント・順位決定戦</h3>
+      <div id="live-bracket">
+        <p class="live-wait">トーナメントの読み込み中…<br>（グループリーグの結果に連動して対戦カードが埋まります）</p>
+      </div>
+      <p class="updated" id="upd-bracket"></p>
+      <p class="note only-u8">※ 上位リーグの各組1位が<b>1位トーナメント（1-4位決定戦）</b>、
+        2位が<b>2位トーナメント（5-8位決定戦）</b>、3位が<b>3位トーナメント（9-12位決定戦）</b>へ。<br>
+        下位リーグは1位同士・2位同士・3位同士で対戦し、<b>13-18位</b>が決まります。<br>
+        <b>上位リーグ進出チームは6試合、下位リーグ進出チームは5試合。18位まですべて決まります。</b></p>
+      <p class="note only-u9">※ <b>順位別に4つのトーナメント</b>を行います。
+        1位トーナメントで1〜4位、2位トーナメントで5〜8位、
+        3位トーナメントで9〜12位、4位トーナメントで13〜16位が決まります。<br>
+        各トーナメントは4チームで、準決勝2試合 → 決勝・3位決定戦（計4試合）。<br>
+        <b>全チームが5試合（予選3＋トーナメント2）を戦い、16位まですべて決まります。</b></p>
+    </section>
+
+    <section class="sec" id="result">
+      <h2>RESULT</h2><h3>最終順位</h3>
+      <div id="live-final">
+        <p class="live-wait">最終順位の読み込み中…<br>（決勝トーナメント終了後に確定します）</p>
+      </div>
+      <p class="updated" id="upd-final"></p>
     </section>
 
     <section class="sec" id="access">
@@ -1055,7 +1129,8 @@ var LIVE = {
 
   /* U9はクラスリーグが無く、グループリーグ1段階だけ（4組 × 4チーム） */
   standingPhases: [
-    { label:"",
+    /* stage … 段階の正式名（チーム専用ページの表示に使う 2026-08-24） */
+    { label:"", stage:"GROUP LEAGUE",
       sheets:["U9グループA順位表","U9グループB順位表","U9グループC順位表","U9グループD順位表"],
       labels:["A組","B組","C組","D組"] }
   ],
@@ -1127,7 +1202,11 @@ function matchCard(r){
 function phaseOf(name){
   var s=String(name||'');
   if(s.indexOf('予選')===0) return 'GL';
-  if(/^(上位|下位)[0-9０-９]+組/.test(s)) return 'CL';
+  /* 2026-08-24 修正。組の呼び方を「1組（上位）」の形に変えたとき、
+     ここの判定が古い「上位1組」のままだったため、クラスリーグの試合が
+     KNOCKOUT ROUND として扱われていた。新旧どちらの書き方でも通るようにする。 */
+  if(/^[0-9０-９]+組（(上位|下位)）/.test(s)) return 'CL';
+  if(/^(上位|下位)[0-9０-９]+組/.test(s))     return 'CL';
   return 'FR';
 }
 
@@ -1177,7 +1256,7 @@ function renderSchedule(rows){
 
   /* 2026-08-22 U9は表を分けず【1つの表】にまとめる。左上の見出しは「日程」。
      U8は GL／CL／FR の3つに分けているが、U9は
-     　・10:10 の枠でグループリーグとトーナメントが同時に走る
+     　・9:40 の枠でグループリーグとトーナメントが同時に走る
      　・クラスリーグが無く段階が2つしかない
      ため、分けるとかえって分かりにくくなる。 */
   var groups=[{ ph:'日程', times:times }];
@@ -1326,6 +1405,227 @@ function renderStandings(all){
   /* クラスリーグは「上位リーグ」「下位リーグ」の2段階に分かれるので見出しを出す */
   paintStandings('live-standings-cl', 'upd-standings-cl', all.slice(1),   true);
 }
+
+/* ============================================================================
+   チーム専用ページ（2026-08-24 U8から移植）
+
+   参加チームのマスをタップすると、他の項目をすべて隠して、そのチームの
+   ・GROUP LEAGUE … 日程／結果・成績・順位表（星取表）
+   ・KNOCKOUT ROUND  … トーナメント・順位決定戦の日程／結果
+   だけを表示する。
+
+   U8との違いは【クラスリーグが無い】ことだけ。U9は段階が2つしかないので
+   GROUP LEAGUE と KNOCKOUT ROUND の2つを出す。
+   ============================================================================ */
+
+/* ============================================================================
+   略称 → 正式名称（2026-08-24）
+
+   スケジュール表・順位表・星取表・トーナメント表は【略称】で出す。
+   幅が限られるうえ、スプレッドシートと突き合わせる合言葉でもあるため。
+   ここに書いた正式名称は【チーム専用ページの見出し】だけに使う。
+
+   ★ここに無いチームは略称のまま出す（正式名称がまだ届いていないチーム）。
+   ★左側の略称は data-team と完全に一致させること。
+   ============================================================================ */
+var FULLNAME = {
+  "ALVA": "FC ALVA",
+  "TOLL": "FC TOLL",
+  "ブルソ": "ブルーソックスjrSC",
+  "小杉EST": "小杉エストゥディアンテス",
+  "ヴァリエンテ": "ヴァリエンテ富山ジュニア",
+  "FC滑川": "FC滑川ジュニア",
+  "大久保": "大久保少年サッカークラブ",
+  "JKキッズ": "JKキッズなめりかわ",
+  "スフィーダ": "スフィーダ富山FC",
+  "テイヘンズ": "テイヘンズFC金沢U12",
+  "富山中央": "富山中央FC",
+  "成美": "成美M.F.C.",
+  "蜷川": "蜷川少年サッカークラブ",
+  "プリマ": "プリマヴェーラ入善",
+  "ベゼ": "ベゼーロ",
+  "みなみ": "みなみFC",
+  "旭丘": "旭丘フットボールクラブ",
+  "エスポ": "エスポワール白山FC",
+  "カンピ": "FC.CAMPIONE福岡",
+  "FC南星": "FC南星スポーツ少年団",
+  "富山中央A": "富山中央FCA",
+  "富山中央B": "富山中央FCB"
+};
+/* 正式名称があればそれを、無ければ略称をそのまま返す */
+function fullName(team){ return FULLNAME[team] || team; }
+
+/* 1試合ぶんの結果を、そのチームから見た形にする */
+function tpResult(r,team){
+  var home = r[C.home]===team;
+  var mine = home ? r[C.hs] : r[C.as];
+  var opp  = home ? r[C.as] : r[C.hs];
+  var oppName = home ? r[C.away] : r[C.home];
+  if(mine===''||opp===''||mine===undefined||opp===undefined)
+    return { played:false, opp:oppName };
+  var m=parseFloat(mine), o=parseFloat(opp);
+  var mpk = home ? r[C.hpk] : r[C.apk];
+  var opk = home ? r[C.apk] : r[C.hpk];
+  var pk = (mpk!==''&&opk!==''&&mpk!==undefined&&opk!==undefined) ? mpk+'-'+opk : '';
+  return { played:true, opp:oppName, mine:m, opp_:o, pk:pk,
+           mark:(m>o?'○':(m<o?'×':'△')), cls:(m>o?'w':(m<o?'l':'d')) };
+}
+
+/* 試合を横並びの表で出す。キックオフ／コート／対戦相手／スコア の4列。
+   スコアはまだ入力されていなければ空欄にする。 */
+function tpTable(list,team){
+  return '<div class="tscroll"><table class="stbl tp-tbl">'+
+    '<thead><tr><th>キックオフ</th><th>コート</th><th>対戦相手</th><th>スコア</th></tr></thead>'+
+    '<tbody>'+
+    list.map(function(r){
+      var h=tpResult(r,team);
+      var sc = h.played
+        ? '<b class="tp-'+h.cls+'">'+esc(h.mine)+' - '+esc(h.opp_)+'</b>'+
+          (h.pk?'<small>PK '+esc(h.pk)+'</small>':'')
+        : '';
+      return '<tr>'+
+               '<td class="tp-time">'+esc(r[C.time]||'')+'</td>'+
+               '<td class="tp-court">'+esc(r[C.court]||'')+'</td>'+
+               '<td class="tp-opp">'+esc(h.opp||'—')+'</td>'+
+               '<td class="tp-score">'+sc+'</td>'+
+             '</tr>';
+    }).join('')+
+    '</tbody></table></div>';
+}
+
+/* まだ対戦相手が決まっていない試合を、空欄の行として出す（2026-08-24）
+   項目を隠してしまうと「この先どうなるのか」が分からないので、
+   これから何試合あるのかだけ先に見せる。 */
+function tpBlankTable(n){
+  var rows='';
+  for(var i=0;i<n;i++){
+    rows+='<tr><td class="tp-time">—</td><td class="tp-court">—</td>'+
+          '<td class="tp-opp">—</td><td class="tp-score"></td></tr>';
+  }
+  return '<div class="tscroll"><table class="stbl tp-tbl">'+
+    '<thead><tr><th>キックオフ</th><th>コート</th><th>対戦相手</th><th>スコア</th></tr></thead>'+
+    '<tbody>'+rows+'</tbody></table></div>';
+}
+
+function buildTeamPage(team){
+  document.getElementById('tp-name').textContent=fullName(team);
+
+  /* マスに画像があるチームは、その画像を見出しにも出す */
+  var pin=document.querySelector('.pin[data-team="'+team.replace(/"/g,'')+'"] img');
+  document.getElementById('tp-emblem').innerHTML =
+    pin ? '<img src="'+pin.getAttribute('src')+'" alt="'+esc(team)+'">' : '';
+
+  /* このチームが出る試合を、時間の早い順に集める */
+  var mine=LAST_MATCHES.filter(function(r){
+    return r && (r[C.home]===team || r[C.away]===team);
+  });
+
+  /* 所属ブロックと、順位表の自分の行をさがす */
+  function findBlocks(stage){
+    var found=[];
+    (LAST_STANDINGS||[]).forEach(function(ph){
+      if((ph.stage||'')!==stage) return;
+      (ph.blocks||[]).forEach(function(b){
+        (b.rows||[]).forEach(function(r){
+          if(r[S.team]===team) found.push({ block:b, row:r });
+        });
+      });
+    });
+    return found;
+  }
+
+
+  /* 成績の数字を8マスで出す */
+  function statsHtml(row){
+    var v=function(i){ return (row[i]!==''&&row[i]!==undefined)?row[i]:'—'; };
+    return '<div class="tp-stats">'+
+             '<div class="tp-stat"><b>'+esc(v(S.pts))+'</b><i>勝点</i></div>'+
+             '<div class="tp-stat"><b>'+esc(v(S.w))+'</b><i>勝</i></div>'+
+             '<div class="tp-stat"><b>'+esc(v(S.d))+'</b><i>分</i></div>'+
+             '<div class="tp-stat"><b>'+esc(v(S.l))+'</b><i>負</i></div>'+
+           '</div>'+
+           '<div class="tp-stats">'+
+             '<div class="tp-stat"><b>'+esc(v(S.gf))+'</b><i>得点</i></div>'+
+             '<div class="tp-stat"><b>'+esc(v(S.ga))+'</b><i>失点</i></div>'+
+             '<div class="tp-stat"><b>'+esc(v(S.gd))+'</b><i>得失差</i></div>'+
+             '<div class="tp-stat"><b>'+esc(v(S.rank))+'</b><i>順位</i></div>'+
+           '</div>';
+  }
+
+  var html='';
+
+  /* ① GROUP LEAGUE … 日程・結果と成績と星取表 */
+  var gl=mine.filter(function(r){ return phaseOf(r[C.name])==='GL'; });
+  var fs=findBlocks('GROUP LEAGUE');
+  html+='<div class="tp-sec"><h4>GROUP LEAGUE</h4>';
+  html+= gl.length ? tpTable(gl,team) : tpBlankTable(3);
+  fs.forEach(function(f){
+    html+=statsHtml(f.row);
+    html+=oneStanding(f.block.label, f.block.rows);
+  });
+  html+='</div>';
+
+  /* ② KNOCKOUT ROUND … トーナメント・順位決定戦
+     2026-08-24 対戦相手が決まる前でも【項目を隠さず、空欄の表で出す】。
+     U9はどのチームも 準決勝＋（決勝または3位決定戦）＝ 2試合で同じ。 */
+  var tourn=mine.filter(function(r){ return phaseOf(r[C.name])!=='GL'; });
+  html+='<div class="tp-sec"><h4>KNOCKOUT ROUND</h4>';
+  if(tourn.length){
+    html+=tpTable(tourn,team);
+  }else{
+    html+=tpBlankTable(2);
+    html+='<p class="tp-note">ノックアウトラウンドは、どのチームも <b>2試合</b> です'+
+          '（準決勝と、決勝または3位決定戦）。<br>'+
+          '対戦相手は、グループリーグの順位が決まってから入ります。</p>';
+  }
+  html+='</div>';
+
+  document.getElementById('tp-body').innerHTML=html;
+}
+
+function openTeamPage(team){
+  buildTeamPage(team);
+  var lg=document.querySelector('.pagelogo'); if(lg) lg.hidden=true;
+  document.querySelectorAll('.detail > .sec').forEach(function(s){
+    s.hidden = (s.id!=='teampage');
+  });
+  window.scrollTo(0,0);
+}
+function closeTeamPage(){
+  var lg=document.querySelector('.pagelogo'); if(lg) lg.hidden=false;
+  document.querySelectorAll('.detail > .sec').forEach(function(s){
+    s.hidden = (s.id==='teampage');
+  });
+  var t=document.getElementById('teams');
+  if(t) window.scrollTo(0, Math.max(0, t.offsetTop-60));
+}
+function teamPageOpen(){
+  var tp=document.getElementById('teampage');
+  return tp && !tp.hidden;
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest) return;
+
+  /* 左上の丸い戻るボタン。チーム専用ページを開いているときは、
+     オープニングへ戻るのではなくU9のページに戻す */
+  var back=e.target.closest('.back-toggle');
+  if(back){
+    if(teamPageOpen()){ e.preventDefault(); closeTeamPage(); }
+    return;
+  }
+
+  /* チームのマス → そのチームのページへ */
+  var pin=e.target.closest('.pin[data-team]');
+  if(pin){ openTeamPage(pin.getAttribute('data-team')); return; }
+
+  /* ページ内の「もどる」ボタン */
+  if(e.target.closest('#tp-back')){ closeTeamPage(); return; }
+
+  /* 上のタブ／INDEXの項目を押したときは、チーム専用ページを閉じてから移動する */
+  if(e.target.closest('.cattab') || e.target.closest('.idx-list a')){
+    if(teamPageOpen()) closeTeamPage();
+  }
+});
 
 /* --- ③ 決勝トーナメント　線でつないだトーナメント表 --- */
 
@@ -1513,7 +1813,7 @@ function loadAll(){
   });
   var need=0, done=0, out=LIVE.standingPhases.map(function(p){
     need+=p.sheets.length;
-    return { label:p.label, blocks:p.sheets.map(function(s,i){
+    return { label:p.label, stage:p.stage, blocks:p.sheets.map(function(s,i){
       return { label:(p.labels&&p.labels[i])||s, rows:null }; }) };
   });
   LIVE.standingPhases.forEach(function(p,pi){
@@ -1558,13 +1858,13 @@ function loadAll(){
    その際も【スプレッドシート側をこの組み合わせに合わせて作る】こと。
    ============================================================================ */
 var DEMO = {
-  slotMin: 25, courts: 5, startH: 8, startM: 30,
+  slotMin: 25, courts: 5, startH: 8, startM: 0,   /* 2026-08-24 全体を30分繰り上げ（8:00→8:00開始） */
   /* グループリーグ 4組 × 4チーム（＝各組6試合・全24試合） */
   groups: [
-    ["旭丘","富山中央FCA","ALVA","氷見FC"],
-    ["ヴァリエンテ富山","石動大谷","婦中西部","みなみFC"],
-    ["CAMPIONE FUKUOKA","JK KIDS","CAVALLO","BLUE SOX"],
-    ["エスポワール白山","富山中央FCB","南星","プリマヴェーラ入善"]
+    ["旭丘","富山中央A","ALVA","氷見FC"],
+    ["ヴァリエンテ","石動大谷","婦中西部","みなみ"],
+    ["カンピ","JKキッズ","CAVALLO","ブルソ"],
+    ["エスポ","富山中央B","FC南星","プリマ"]
   ]
 };
 function demoTime(slot){
@@ -1594,15 +1894,32 @@ function demoTime(slot){
    ▼コートの使い方
    A組は第1・2コート、B組は第3・4コートに固定。
    C組とD組は空いたところを使うため、途中でコートが変わる。
+
+   ▼2026-08-24 組み直し
+   【旭丘フットボールクラブ と エスポワール白山FC を、8:00の第1試合に入れない】
+   というご指示のため、A組とB組の出番を入れ替えた。
+
+   ・4チームの組は、1つの枠に2試合（＝その組の4チーム全員）が入る作りなので、
+   　A組が8:00に試合をする限り、旭丘は必ず8:00に出ることになる。
+   　→ A組そのものを8:00から外し、8:25・8:50・9:15の3枠に移した。
+   ・8:00の5試合は B組の2試合 ＋ C組の2試合 ＋ D組の1試合（南星 vs プリマヴェーラ入善）。
+   　D組はエスポワール白山が出ない組み合わせのほうを置いている。
+   ・A組は9:15、B組は8:50で終わる。9:40の「4位トーナメント準決勝①（A組4位 vs B組4位）」
+   　は今までどおり成立する（ここが崩れると終了時刻が25分のびる）。
    ============================================================================ */
 var RR4=[[0,1],[2,3],[0,2],[1,3],[0,3],[1,2]];
 /* [組, ラウンド, ラウンド内の何試合目, 枠, コート]
-   枠 0=8:30 1=8:55 2=9:20 3=9:45 4=10:10 */
+   枠 0=8:00 1=8:25 2=8:50 3=9:15 4=9:40 */
 var QPLAN9=[
-  [0,0,0, 0,1],[0,0,1, 0,2],[1,0,0, 0,3],[1,0,1, 0,4],[2,0,0, 0,5],
-  [0,1,0, 1,1],[0,1,1, 1,2],[3,0,0, 1,3],[3,0,1, 1,4],[2,0,1, 1,5],
-  [2,1,0, 2,1],[2,1,1, 2,2],[1,1,0, 2,3],[1,1,1, 2,4],[3,1,0, 2,5],
-  [0,2,0, 3,1],[0,2,1, 3,2],[1,2,0, 3,3],[1,2,1, 3,4],[3,1,1, 3,5],
+  /* 8:00 … A組は出ない（旭丘）／D組はエスポワール白山が出ない試合だけ */
+  [2,0,0, 0,1],[2,0,1, 0,2],[1,0,0, 0,3],[1,0,1, 0,4],[3,0,1, 0,5],
+  /* 8:25 */
+  [0,0,0, 1,1],[0,0,1, 1,2],[1,1,0, 1,3],[1,1,1, 1,4],[3,0,0, 1,5],
+  /* 8:50 */
+  [0,1,0, 2,1],[0,1,1, 2,2],[1,2,0, 2,3],[1,2,1, 2,4],[2,1,0, 2,5],
+  /* 9:15 */
+  [0,2,0, 3,1],[0,2,1, 3,2],[2,1,1, 3,3],[3,1,0, 3,4],[3,1,1, 3,5],
+  /* 9:40 … 第5コートは「4位トーナメント準決勝①」に使う */
   [2,2,0, 4,1],[2,2,1, 4,2],[3,2,0, 4,3],[3,2,1, 4,4]
 ];
 function demoGL(){
@@ -1632,46 +1949,46 @@ function demoGL(){
    16試合 ÷ 5コート ＝ 3.2 → 4枠が最短。前は5枠だったので1枠（25分）短くなる。
    連続試合は許容するというご指示にもとづき、準決勝の直後に決勝を置く枠もある。
 
-   ▼並べ方（2026-08-22 再調整／最終試合を 11:25 にする）
+   ▼並べ方（2026-08-22 再調整／最終試合を 10:55 にする）
 
-   ★キーになったのは【10:10の空きコート】
-   　A組とB組はグループリーグを 9:45 で戦い終えるので、10:10 の枠では試合が無い。
-   　10:10 は C組・D組が4試合（第1〜4コート）を行い、第5コートが空いていた。
+   ★キーになったのは【9:40の空きコート】
+   　A組とB組はグループリーグを 9:15 で戦い終えるので、9:40 の枠では試合が無い。
+   　9:40 は C組・D組が4試合（第1〜4コート）を行い、第5コートが空いていた。
    　そこへ「A組4位 vs B組4位」（4位トーナメントの準決勝①）を入れた。
    　→ トーナメントが1試合ぶん前倒しになり、全体が1枠（25分）縮まった。
 
-   　10:10 … 4位T準決勝①（A組4位 vs B組4位）※グループリーグと並行
-   　10:35 … 1位・2位・3位トーナメントの準決勝① ／ 3位T準決勝② ／ 4位T準決勝②
-   　11:00 … 1位・2位トーナメントの準決勝② ／ 11-12位・13-14位・15-16位決定戦
-   　11:25 … 1-2位・3-4位・5-6位・7-8位・9-10位決定戦　←【最終試合】
+   　9:40 … 4位T準決勝①（A組4位 vs B組4位）※グループリーグと並行
+   　10:05 … 1位・2位・3位トーナメントの準決勝① ／ 3位T準決勝② ／ 4位T準決勝②
+   　10:30 … 1位・2位トーナメントの準決勝② ／ 11-12位・13-14位・15-16位決定戦
+   　10:55 … 1-2位・3-4位・5-6位・7-8位・9-10位決定戦　←【最終試合】
 
-   　16試合 ＝ 1（10:10の空き）＋ 5 ＋ 5 ＋ 5。ちょうど収まる。
+   　16試合 ＝ 1（9:40の空き）＋ 5 ＋ 5 ＋ 5。ちょうど収まる。
    　空きコートが1つしか無いので、これ以上は前に詰められない。
 
    ※「①」はA組 vs B組、「②」はC組 vs D組の準決勝。
-   　 ①はA・B組が9:45で終わるため早く始められる。
-   　 ②はC・D組が10:10で終わるので10:35以降になる。
+   　 ①はA・B組が9:15で終わるため早く始められる。
+   　 ②はC・D組が9:40で終わるので10:05以降になる。
    ※「15-16位決定戦」は 4位トーナメントの3位決定戦のこと。
 
    [試合名, 枠のずれ(-1〜2), コート, ホーム, アウェイ]
-   ずれ -1=10:10 0=10:35 1=11:00 2=11:25
+   ずれ -1=9:40 0=10:05 1=10:30 2=10:55
    ============================================================================ */
 var TPLAN9=[
-  /* 10:10 … グループリーグの空きコート（第5）を使う。A・B組は9:45で終了済み */
+  /* 9:40 … グループリーグの空きコート（第5）を使う。A・B組は9:15で終了済み */
   ['4位トーナメント　準決勝',  -1,5,'A組4位','B組4位'],
-  /* 10:35 */
+  /* 10:05 */
   ['1位トーナメント　準決勝',   0,1,'A組1位','B組1位'],
   ['2位トーナメント　準決勝',   0,2,'A組2位','B組2位'],
   ['3位トーナメント　準決勝',   0,3,'A組3位','B組3位'],
   ['3位トーナメント　準決勝',   0,4,'C組3位','D組3位'],
   ['4位トーナメント　準決勝',   0,5,'C組4位','D組4位'],
-  /* 11:00 */
+  /* 10:30 */
   ['1位トーナメント　準決勝',   1,1,'C組1位','D組1位'],
   ['2位トーナメント　準決勝',   1,2,'C組2位','D組2位'],
   ['3位トーナメント　3位決定戦', 1,3,'準決勝① 敗者','準決勝② 敗者'],
   ['4位トーナメント　決勝',     1,4,'準決勝① 勝者','準決勝② 勝者'],
   ['4位トーナメント　3位決定戦', 1,5,'準決勝① 敗者','準決勝② 敗者'],
-  /* 11:25 … 最終枠。ここで1位から10位までが決まる */
+  /* 10:55 … 最終枠。ここで1位から10位までが決まる */
   ['1位トーナメント　決勝',     2,1,'準決勝① 勝者','準決勝② 勝者'],
   ['1位トーナメント　3位決定戦', 2,2,'準決勝① 敗者','準決勝② 敗者'],
   ['2位トーナメント　決勝',     2,3,'準決勝① 勝者','準決勝② 勝者'],
@@ -1691,7 +2008,7 @@ function zeroRows(teams){
 }
 function demoStandings(){
   return [
-    { label:"", blocks: DEMO.groups.map(function(teams,i){
+    { label:"", stage:"GROUP LEAGUE", blocks: DEMO.groups.map(function(teams,i){
         return { label:String.fromCharCode(65+i)+'組', rows:zeroRows(teams) }; }) }
   ];
 }
