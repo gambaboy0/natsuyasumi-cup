@@ -768,7 +768,7 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
              旭丘フットボールクラブ=あさひ… ／ 石動大谷=いするぎおおたに ／
              ヴァリエンテ富山=ゔぁりえんてとやま ／ エスポワール白山=えすぽわーるはくさん ／
              FC ALVA=えふしーあるば ／ FC.CAMPIONE福岡=えふしーかんぴおーねふくおか ／
-             FC南星スポーツ少年団=えふしーなんせい… ／ CAVALLO=かゔぁっろ ／ JK KIDS=じぇいけーきっず ／
+             FC CAVALLO=えふしーかゔぁっろ ／ FC南星スポーツ少年団=えふしーなんせい… ／ JKキッズ=じぇいけーきっず ／
              富山中央FCA・FCB=とやまちゅうおうえふしー ／ 氷見FC=ひみえふしー ／
              婦中西部=ふちゅうせいぶ ／ BLUE SOX=ぶるーそっくす ／
              プリマヴェーラ入善=ぷりまゔぇーらにゅうぜん ／ みなみFC=みなみえふしー
@@ -781,21 +781,22 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
              ・エスポワール白山 → 正式名称「エスポワール白山FC」。位置は変わらず。＊を外した（2026-08-24）
              ・南星 → 正式名称「FC南星スポーツ少年団」。読みが【えふしーなんせい…】になるため
              　11番目から7番目（FC.CAMPIONE福岡の次）へ移動。＊を外した（2026-08-24）
-             ★読みがまだ未確認：CAVALLO（かゔぁっろ と仮定） -->
+             ・CAVALLO → 正式名称「FC CAVALLO」。読みが【えふしーかゔぁっろ】になるため
+             　8番目 → 6番目（FC ALVA の次）へ移動。＊を外した（2026-08-26） -->
         <button type="button" class="pin" data-team="旭丘"><img src="assets/emblem_asahi.png" alt="旭丘フットボールクラブ"></button>
-        <button type="button" class="pin tbd" data-team="石動大谷"><span>石動大谷 *</span></button>
+        <button type="button" class="pin" data-team="石動大谷"><img src="assets/emblem_isurugi.png" alt="石動大谷サッカースポーツ少年団"></button>
         <button type="button" class="pin host" data-team="ヴァリエンテ"><img src="assets/emblem_valiente.png" alt="ヴァリエンテ富山ジュニア"></button>
         <button type="button" class="pin" data-team="エスポ"><img src="assets/emblem_espoir.png" alt="エスポワール白山FC"></button>
 
         <button type="button" class="pin" data-team="ALVA"><img src="assets/emblem_alva.png" alt="FC ALVA"></button>
+        <button type="button" class="pin" data-team="FC CAVALLO"><img src="assets/emblem_cavallo.png" alt="FC CAVALLO"></button>
         <button type="button" class="pin" data-team="カンピ"><img src="assets/emblem_campione.png" alt="FC.CAMPIONE福岡"></button>
         <button type="button" class="pin" data-team="FC南星"><img src="assets/emblem_nansei.png" alt="FC南星スポーツ少年団"></button>
-        <button type="button" class="pin tbd" data-team="CAVALLO"><span>CAVALLO *</span></button>
 
         <button type="button" class="pin" data-team="JKキッズ"><img src="assets/emblem_jkkids.png" alt="JKキッズなめりかわ"></button>
         <button type="button" class="pin" data-team="富山中央A"><img src="assets/emblem_chuo.png" alt="富山中央FCA"><span class="ab">A</span></button>
         <button type="button" class="pin" data-team="富山中央B"><img src="assets/emblem_chuo.png" alt="富山中央FCB"><span class="ab">B</span></button>
-        <button type="button" class="pin tbd" data-team="氷見FC"><span>氷見FC *</span></button>
+        <button type="button" class="pin" data-team="氷見"><img src="assets/emblem_himi.png" alt="氷見FC"></button>
 
         <button type="button" class="pin tbd" data-team="婦中西部"><span>婦中西部 *</span></button>
         <button type="button" class="pin" data-team="ブルソ"><img src="assets/emblem_bluesox.png" alt="ブルーソックスjrSC"></button>
@@ -1431,6 +1432,9 @@ function renderStandings(all){
 var FULLNAME = {
   "ALVA": "FC ALVA",
   "TOLL": "FC TOLL",
+  "氷見": "氷見FC",
+  "石動大谷": "石動大谷サッカースポーツ少年団",
+  "デランテロ": "デランテロFCジュニア",
   "ブルソ": "ブルーソックスjrSC",
   "小杉EST": "小杉エストゥディアンテス",
   "ヴァリエンテ": "ヴァリエンテ富山ジュニア",
@@ -1861,9 +1865,9 @@ var DEMO = {
   slotMin: 25, courts: 5, startH: 8, startM: 0,   /* 2026-08-24 全体を30分繰り上げ（8:00→8:00開始） */
   /* グループリーグ 4組 × 4チーム（＝各組6試合・全24試合） */
   groups: [
-    ["旭丘","富山中央A","ALVA","氷見FC"],
+    ["旭丘","富山中央A","ALVA","氷見"],
     ["ヴァリエンテ","石動大谷","婦中西部","みなみ"],
-    ["カンピ","JKキッズ","CAVALLO","ブルソ"],
+    ["カンピ","JKキッズ","FC CAVALLO","ブルソ"],
     ["エスポ","富山中央B","FC南星","プリマ"]
   ]
 };
