@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>スコア入力 | 夏休みの軌跡カップ 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --dg:#17291A;          /* 深緑（大会の基調色） */
+  --dg2:#0d1a10;
+  --gold:#C7BA8E;
+  --u8:#facd10;          /* U8の地色 */
+  --u9:#014218;          /* U9の地色 */
+  --bg:#F2F4F0;
+  --card:#FFFFFF;
+  --text:#1A1A2E;
+  --muted:#6B7280;
+  --border:#E2E5DE;
+  --ok:#166534; --ok-bg:#DCFCE7;
+  --ng:#B91C1C; --ng-bg:#FEE2E2;
+  --warn:#92400E; --warn-bg:#FEF3C7; --warn-line:#D97706;
+}
+
+body{
+  font-family:'Noto Sans JP',sans-serif;
+  color:var(--text); background:var(--bg);
+  min-height:100vh; -webkit-text-size-adjust:100%;
+}
+
+/* ===== ヘッダー ===== */
+header{
+  background:var(--dg); color:#fff;
+  padding:14px 16px;
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  position:sticky; top:0; z-index:20;
+  box-shadow:0 2px 10px rgba(0,0,0,.25);
+}
+header h1{font-size:.98rem; font-weight:900; line-height:1.35;}
+header h1 small{display:block; font-size:.68rem; font-weight:400; color:var(--gold); letter-spacing:.06em;}
+.cat-chip{
+  font-size:.78rem; font-weight:900; padding:6px 12px; border-radius:999px;
+  white-space:nowrap; flex-shrink:0;
+}
+.cat-chip.u8{background:var(--u8); color:#3a2f00;}
+.cat-chip.u9{background:#fff; color:var(--u9);}
+
+main{max-width:560px; margin:0 auto; padding:16px 14px 80px;}
+
+/* ===== カード ===== */
+.card{
+  background:var(--card); border-radius:14px; padding:18px 16px;
+  box-shadow:0 2px 10px rgba(23,41,26,.10); margin-bottom:14px;
+}
+.card-title{
+  font-size:.95rem; font-weight:900; color:var(--dg);
+  margin-bottom:14px; display:flex; align-items:center; gap:8px;
+}
+.card-title .step{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:24px; height:24px; border-radius:50%;
+  background:var(--dg); color:#fff; font-size:.76rem; font-weight:900; flex-shrink:0;
+}
+.card-title .step.warn{background:var(--warn-line);}
+
+/* ===== 部品 ===== */
+.lbl{display:block; font-size:.8rem; font-weight:700; margin-bottom:6px;}
+.sub{font-size:.76rem; color:var(--muted); line-height:1.6;}
+
+input[type=text],input[type=password],input[type=number],select{
+  width:100%; padding:13px 14px; font-family:inherit; font-size:1rem;
+  border:2px solid var(--border); border-radius:10px; background:#fff; color:var(--text);
+  -webkit-appearance:none; appearance:none;
+}
+select{
+  font-size:.88rem; padding-right:36px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center;
+}
+input:focus,select:focus{outline:none; border-color:var(--dg);}
+
+.btn{
+  width:100%; padding:15px; border:none; border-radius:12px;
+  font-family:inherit; font-size:1rem; font-weight:900; cursor:pointer;
+  transition:filter .15s, transform .1s;
+}
+.btn:active{transform:scale(.985);}
+.btn-main{background:var(--dg); color:#fff;}
+.btn-main:disabled{background:#D8DCD6; color:#98A09A; cursor:not-allowed; transform:none;}
+.btn-warn{background:var(--warn-line); color:#fff;}
+.btn-ghost{
+  background:#fff; color:var(--muted); border:2px solid var(--border);
+  font-size:.86rem; padding:11px; margin-top:9px;
+}
+
+.row2{display:flex; gap:9px;}
+.row2>*{flex:1;}
+
+/* ===== 切替ボタン ===== */
+.seg{display:flex; gap:8px;}
+.seg button{
+  flex:1; padding:13px 8px; border:2px solid var(--border); border-radius:10px;
+  background:#fff; color:var(--muted); font-family:inherit; font-size:.92rem; font-weight:900;
+  cursor:pointer; transition:all .15s; line-height:1.3;
+}
+.seg button small{display:block; font-size:.66rem; font-weight:700; opacity:.8;}
+.seg button.on{border-color:var(--dg); background:#EDF2EC; color:var(--dg);}
+.seg button.on-warn{border-color:var(--warn-line); background:var(--warn-bg); color:var(--warn);}
+
+/* ===== 試合情報 ===== */
+.match-box{
+  background:#EDF2EC; border-left:5px solid var(--dg);
+  border-radius:8px; padding:12px 14px; margin-bottom:14px; display:none;
+}
+.match-box.show{display:block;}
+.match-box .mname{font-size:1rem; font-weight:900; color:var(--dg);}
+.match-box .mmeta{font-size:.78rem; color:var(--muted); margin-top:3px;}
+
+/* ===== スコア ===== */
+.score-line{display:flex; align-items:center; gap:8px; justify-content:center;}
+.score-side{flex:1; min-width:0; text-align:center;}
+.score-side .tname{
+  font-size:.84rem; font-weight:900; margin-bottom:6px; line-height:1.3;
+  overflow-wrap:anywhere;
+}
+.score-side .side{font-size:.66rem; color:var(--muted); font-weight:700; margin-bottom:3px;}
+.score-input{
+  width:100%; max-width:92px; margin:0 auto; display:block;
+  text-align:center; font-size:1.6rem; font-weight:900; padding:12px 6px;
+}
+.score-vs{font-size:1rem; font-weight:900; color:var(--muted); padding-top:26px;}
+
+.pk-wrap{display:none; border-top:1px dashed var(--border); margin-top:16px; padding-top:14px;}
+.pk-wrap.show{display:block;}
+.pk-head{font-size:.8rem; font-weight:900; color:var(--warn); margin-bottom:10px;}
+.pk-note{font-size:.72rem; color:var(--muted); margin-top:8px; line-height:1.6;}
+
+/* ===== 通知 ===== */
+.alert{padding:13px 15px; border-radius:10px; font-size:.88rem; font-weight:700; margin-bottom:12px; display:none; line-height:1.6;}
+.alert.show{display:block;}
+.alert-ok{background:var(--ok-bg); color:var(--ok);}
+.alert-ng{background:var(--ng-bg); color:var(--ng);}
+
+.notice{
+  background:var(--warn-bg); border:1px solid var(--warn-line);
+  border-radius:10px; padding:13px 15px; font-size:.78rem; color:var(--warn); line-height:1.7;
+}
+.notice strong{display:block; font-size:.85rem; margin-bottom:4px;}
+
+/* ===== 順位表 ===== */
+.stand-table{width:100%; border-collapse:collapse; font-size:.82rem; margin-bottom:14px;}
+.stand-table th{
+  background:var(--dg); color:#fff; font-size:.7rem; font-weight:700;
+  padding:7px 4px; text-align:center;
+}
+.stand-table td{border-bottom:1px solid var(--border); padding:9px 4px; text-align:center;}
+.stand-table td.tm{text-align:left; font-weight:900; padding-left:8px;}
+.stand-table tr.tied td{background:var(--warn-bg);}
+.stand-table td.rk{font-weight:900;}
+
+.pick-list{display:flex; flex-direction:column; gap:9px;}
+.pick{
+  padding:15px 14px; border:2px solid var(--border); border-radius:10px;
+  background:#fff; color:var(--text); font-family:inherit; font-size:.95rem; font-weight:900;
+  text-align:left; cursor:pointer; transition:all .15s;
+}
+.pick.on{border-color:var(--warn-line); background:var(--warn-bg); color:var(--warn);}
+.pick-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px;}
+.pick-grid .pick{text-align:center; padding:16px 4px;}
+
+.confirm{background:var(--bg); border-radius:10px; padding:13px 15px; margin-bottom:12px; font-size:.9rem; line-height:1.9;}
+.confirm b{color:var(--warn);}
+
+.status{font-size:.72rem; color:var(--muted); text-align:center; margin-top:10px;}
+.hide{display:none !important;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⚽ スコア入力<small>50日前の自分へ　夏休みの軌跡カップ</small></h1>
+  <span class="cat-chip u8" id="catChip">U8</span>
+</header>
+
+<main>
+
+  <!-- ===== 合言葉 ===== -->
+  <div class="card" id="pwCard">
+    <div class="card-title"><span class="step">🔑</span>合言葉</div>
+    <label class="lbl" for="pw">当日の担当者に伝えられた合言葉を入れてください</label>
+    <input type="password" id="pw" inputmode="latin" autocomplete="off" placeholder="合言葉">
+    <button class="btn btn-main" style="margin-top:12px;" onclick="savePw()">この端末に記憶して始める</button>
+    <p class="sub" style="margin-top:10px;">
+      一度入れると、次からは入力せずに使えます（この端末だけに保存されます）。
+    </p>
+  </div>
+
+  <div id="app" class="hide">
+
+    <!-- ===== カテゴリ・モード ===== -->
+    <div class="card">
+      <div class="card-title"><span class="step">1</span>カテゴリ</div>
+      <div class="seg" style="margin-bottom:14px;">
+        <button id="btnU8" class="on" onclick="setCat('U8')">U8<small>9月5日(土)</small></button>
+        <button id="btnU9" onclick="setCat('U9')">U9<small>9月6日(日)</small></button>
+      </div>
+      <div class="seg">
+        <button id="btnScore" class="on" onclick="setMode('score')">⚽ スコア入力</button>
+        <button id="btnTie" onclick="setMode('tie')">⚠️ 同着の順位</button>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         スコア入力
+    ============================================================ -->
+    <div id="scoreMode">
+
+      <div class="card">
+        <div class="card-title"><span class="step">2</span>試合をえらぶ</div>
+        <select id="matchSel" onchange="onPickMatch()">
+          <option value="">-- 読み込み中 --</option>
+        </select>
+        <div class="row2" style="margin-top:10px;">
+          <button class="btn btn-ghost" style="margin-top:0;" onclick="reload(true)">🔄 最新にする</button>
+          <button class="btn btn-ghost" style="margin-top:0;" onclick="jumpNext()">⏭ 次の未入力へ</button>
+        </div>
+        <div class="status" id="loadStatus">　</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="step">3</span>スコアを入れる</div>
+
+        <div class="alert alert-ok" id="okMsg"></div>
+        <div class="alert alert-ng" id="ngMsg"></div>
+
+        <div class="match-box" id="matchBox">
+          <div class="mname" id="mName">—</div>
+          <div class="mmeta" id="mMeta">—</div>
+        </div>
+
+        <div class="score-line">
+          <div class="score-side">
+            <div class="side">ホーム</div>
+            <div class="tname" id="homeName">—</div>
+            <input type="number" id="homeScore" class="score-input" inputmode="numeric" pattern="[0-9]*" min="0" max="99" placeholder="0">
+          </div>
+          <div class="score-vs">−</div>
+          <div class="score-side">
+            <div class="side">アウェイ</div>
+            <div class="tname" id="awayName">—</div>
+            <input type="number" id="awayScore" class="score-input" inputmode="numeric" pattern="[0-9]*" min="0" max="99" placeholder="0">
+          </div>
+        </div>
+
+        <div class="pk-wrap" id="pkWrap">
+          <div class="pk-head">PK戦（引き分けのときだけ入れる）</div>
+          <div class="score-line">
+            <div class="score-side">
+              <div class="side">ホームPK</div>
+              <input type="number" id="homePk" class="score-input" inputmode="numeric" pattern="[0-9]*" min="0" max="20" placeholder="0">
+            </div>
+            <div class="score-vs" style="padding-top:20px;">−</div>
+            <div class="score-side">
+              <div class="side">アウェイPK</div>
+              <input type="number" id="awayPk" class="score-input" inputmode="numeric" pattern="[0-9]*" min="0" max="20" placeholder="0">
+            </div>
+          </div>
+          <p class="pk-note">
+            トーナメント・順位決定戦で引き分けたときは<b>サドンデスPK</b>です。<br>
+            <b>PKを入れるまで勝者は決まりません</b>（次の試合の相手が空欄のままになります）。
+          </p>
+        </div>
+
+        <button class="btn btn-main" id="sendBtn" style="margin-top:18px;" onclick="sendScore()" disabled>送信する</button>
+        <button class="btn btn-ghost" onclick="clearScore()">入力をけす</button>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         同着の順位（抽選の結果を入れる）
+    ============================================================ -->
+    <div id="tieMode" class="hide">
+
+      <div class="card">
+        <div class="card-title"><span class="step warn">A</span>順位表をえらぶ</div>
+        <select id="standSel" onchange="loadStanding()">
+          <option value="">-- えらんでください --</option>
+        </select>
+        <p class="sub" style="margin-top:10px;">
+          勝点・直接対決・得失点差・総得点まで並んだときは<b>抽選</b>です。
+          抽選で決まった順位を、ここで入れてください。
+        </p>
+      </div>
+
+      <div class="card hide" id="standCard">
+        <div class="card-title"><span class="step warn">B</span>チームをえらぶ</div>
+        <div id="standWrap"></div>
+        <div class="pick-list" id="teamPicks"></div>
+      </div>
+
+      <div class="card hide" id="rankCard">
+        <div class="card-title"><span class="step warn">C</span>順位をえらぶ</div>
+        <div class="pick-grid" id="rankPicks"></div>
+      </div>
+
+      <div class="card hide" id="tieConfirm">
+        <div class="card-title"><span class="step warn">✓</span>確認して送信</div>
+        <div class="alert alert-ok" id="tieOk"></div>
+        <div class="alert alert-ng" id="tieNg"></div>
+        <div class="confirm" id="tieText"></div>
+        <button class="btn btn-warn" id="tieBtn" onclick="sendRank()">この順位で確定する</button>
+        <button class="btn btn-ghost" onclick="resetTie()">やり直す</button>
+      </div>
+
+      <div class="notice">
+        <strong>⚠️ これは手で順位を決める機能です</strong>
+        送信すると、その順位表の「順位」欄の自動計算が<b>数字で上書き</b>されます。
+        以降の組分け・トーナメントは、この数字にしたがって進みます。<br>
+        もとの自動計算に戻したいときは、スプレッドシートのメニュー
+        <b>「大会セットアップ」→「順位の手動指定を取り消す」</b>を使ってください（スコアは消えません）。
+      </div>
+    </div>
+
+  </div><!-- /#app -->
+</main>
+
+<script>
+/* ============================================================================
+   設定（変えるのはここだけ）
+   ============================================================================ */
+var GAS_URL  = "https://script.google.com/macros/s/AKfycbwkVqq2P78oew7Vjwuqmy054bHhINrD4guphom-Y_TBhjDxgoMexglgblISb8h15OdPOQ/exec";
+var SHEET_ID = "1cx1Iw1zQ7yLKoZ6aFJKoif0V5nteYMLLOq3TPT6buKY";
+
+/* 順位表シート（同着の順位を入れる先） */
+var STANDINGS = {
+  U8:[
+    {sheet:"U8予選A順位表",label:"予選A組"},{sheet:"U8予選B順位表",label:"予選B組"},
+    {sheet:"U8予選C順位表",label:"予選C組"},{sheet:"U8予選D順位表",label:"予選D組"},
+    {sheet:"U8予選E順位表",label:"予選E組"},{sheet:"U8予選F順位表",label:"予選F組"},
+    {sheet:"U8_1組（上位）順位表",label:"1組（上位）"},{sheet:"U8_2組（上位）順位表",label:"2組（上位）"},
+    {sheet:"U8_3組（上位）順位表",label:"3組（上位）"},{sheet:"U8_4組（上位）順位表",label:"4組（上位）"},
+    {sheet:"U8_5組（下位）順位表",label:"5組（下位）"},{sheet:"U8_6組（下位）順位表",label:"6組（下位）"}
+  ],
+  U9:[
+    {sheet:"U9グループA順位表",label:"グループA"},{sheet:"U9グループB順位表",label:"グループB"},
+    {sheet:"U9グループC順位表",label:"グループC"},{sheet:"U9グループD順位表",label:"グループD"}
+  ]
+};
+
+/* ============================================================================
+   状態
+   ============================================================================ */
+var PW      = "";
+var cat     = "U8";
+var mode    = "score";
+var rows    = { U8:null, U9:null };   /* 試合結果シートの中身（ヘッダーを除く） */
+var cur     = null;                    /* いま選んでいる試合 */
+var tie     = { sheet:null, label:null, row:null, team:null, rank:null, teams:[] };
+var timer   = null;
+
+/* ============================================================================
+   合言葉
+   ============================================================================ */
+function savePw(){
+  var v = document.getElementById('pw').value.trim();
+  if(!v){ alert('合言葉を入れてください'); return; }
+  PW = v;
+  try{ localStorage.setItem('natsu_pw', v); }catch(e){}
+  start();
+}
+function start(){
+  document.getElementById('pwCard').classList.add('hide');
+  document.getElementById('app').classList.remove('hide');
+  buildStandSel();
+  reload(false);
+  timer = setInterval(autoReload, 30000);
+}
+(function(){
+  var v = null;
+  try{ v = localStorage.getItem('natsu_pw'); }catch(e){}
+  if(v){ PW = v; start(); }
+})();
+
+/* ============================================================================
+   CSVの読み取り
+   ============================================================================ */
+function parseCSV(text){
+  var out=[], row=[], cur='', q=false;
+  for(var i=0;i<text.length;i++){
+    var c=text[i];
+    if(q){
+      if(c==='"'){ if(text[i+1]==='"'){ cur+='"'; i++; } else { q=false; } }
+      else cur+=c;
+    }else{
+      if(c==='"') q=true;
+      else if(c===','){ row.push(cur); cur=''; }
+      else if(c==='\n'){ row.push(cur); out.push(row); row=[]; cur=''; }
+      else if(c!=='\r') cur+=c;
+    }
+  }
+  if(cur!=='' || row.length){ row.push(cur); out.push(row); }
+  return out;
+}
+function sheetUrl(name){
+  return 'https://docs.google.com/spreadsheets/d/'+SHEET_ID+
+         '/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent(name)+'&_='+Date.now();
+}
+function fetchSheet(name){
+  return fetch(sheetUrl(name)).then(function(r){
+    if(!r.ok) throw new Error('読み取りに失敗しました');
+    return r.text();
+  }).then(function(t){ return parseCSV(t); });
+}
+
+/* ============================================================================
+   カテゴリ・モード
+   ============================================================================ */
+function setCat(c){
+  if(cat===c) return;
+  cat=c;
+  document.getElementById('btnU8').className = (c==='U8'?'on':'');
+  document.getElementById('btnU9').className = (c==='U9'?'on':'');
+  var chip=document.getElementById('catChip');
+  chip.className='cat-chip '+(c==='U8'?'u8':'u9');
+  chip.textContent=c;
+  cur=null; clearScore(); hideMsg();
+  document.getElementById('matchSel').value='';   /* 前のカテゴリの選択を持ち越さない */
+  document.getElementById('matchBox').classList.remove('show');
+  document.getElementById('sendBtn').disabled=true;
+  buildStandSel(); resetTie();
+  reload(false);
+}
+function setMode(m){
+  mode=m;
+  document.getElementById('btnScore').className = (m==='score'?'on':'');
+  document.getElementById('btnTie').className   = (m==='tie'?'on-warn':'');
+  document.getElementById('scoreMode').classList.toggle('hide', m!=='score');
+  document.getElementById('tieMode').classList.toggle('hide', m!=='tie');
+}
+
+/* ============================================================================
+   試合リスト
+   ============================================================================ */
+/* 予選と上位・下位リーグはリーグ戦（引き分けあり）。それ以外はPKで決着する */
+function isKnockout(name){
+  if(/^予選/.test(name)) return false;
+  if(/^\d+組（(上位|下位)）$/.test(name)) return false;
+  return true;
+}
+function done(r){ return r[5]!=='' && r[8]!==''; }
+
+function reload(manual){
+  var c=cat;
+  setStatus('読み込み中…');
+  fetchSheet(c+'試合結果').then(function(t){
+    rows[c]=t.slice(1).filter(function(r){ return r[0]!==''; });
+    if(cat===c){ renderMatches(); setStatus(stamp()+' 時点'); }
+  }).catch(function(){
+    setStatus('⚠ 読み込めませんでした。通信を確認してください');
+    if(manual) alert('スプレッドシートを読み込めませんでした。通信状況を確認してください。');
+  });
+}
+function autoReload(){
+  if(mode!=='score') return;
+  if(document.getElementById('homeScore').value!=='' ||
+     document.getElementById('awayScore').value!=='') return;  /* 入力中はさわらない */
+  reload(false);
+}
+function setStatus(s){ document.getElementById('loadStatus').textContent=s; }
+function stamp(){
+  var d=new Date();
+  return d.getHours()+':'+('0'+d.getMinutes()).slice(-2);
+}
+
+function renderMatches(){
+  var sel=document.getElementById('matchSel'), keep=sel.value;
+  var rs=rows[cat]||[];
+  sel.innerHTML='<option value="">-- 試合をえらぶ --</option>';
+  rs.forEach(function(r,i){
+    var home=r[4]||'？', away=r[9]||'？';
+    var vs=(r[4]&&r[9]) ? '　'+home+' vs '+away : '　（対戦相手はまだ決まっていません）';
+    var o=document.createElement('option');
+    o.value=i;
+    o.textContent=(done(r)?'✅ ':'') + '#'+r[0]+'  '+r[2]+' '+r[3]+'  '+r[1]+vs;
+    sel.appendChild(o);
+  });
+  sel.value=keep;
+  if(keep!=='' && rs[keep]) showMatch(parseInt(keep,10));
+}
+
+function jumpNext(){
+  var rs=rows[cat]||[];
+  for(var i=0;i<rs.length;i++){
+    if(!done(rs[i])){
+      document.getElementById('matchSel').value=i;
+      onPickMatch();
+      return;
+    }
+  }
+  alert('未入力の試合はありません。');
+}
+
+function onPickMatch(){
+  hideMsg(); clearScore();
+  var v=document.getElementById('matchSel').value;
+  if(v===''){
+    cur=null;
+    document.getElementById('matchBox').classList.remove('show');
+    document.getElementById('sendBtn').disabled=true;
+    return;
+  }
+  showMatch(parseInt(v,10));
+  document.getElementById('homeScore').focus();
+}
+
+function showMatch(i){
+  var r=(rows[cat]||[])[i];
+  if(!r) return;
+  cur={ index:i, row:i+2, name:r[1], time:r[2], court:r[3],
+        home:r[4], away:r[9], pk:isKnockout(r[1]) };
+
+  document.getElementById('mName').textContent = '#'+r[0]+'　'+r[1];
+  document.getElementById('mMeta').textContent = r[2]+'　'+r[3]+(done(r)?'　／ 入力ずみ（上書きになります）':'');
+  document.getElementById('matchBox').classList.add('show');
+  document.getElementById('homeName').textContent = r[4]||'（未定）';
+  document.getElementById('awayName').textContent = r[9]||'（未定）';
+  document.getElementById('pkWrap').classList.toggle('show', cur.pk);
+
+  /* すでに入っている値を出す（直しやすいように） */
+  document.getElementById('homeScore').value = r[5]||'';
+  document.getElementById('awayScore').value = r[8]||'';
+  document.getElementById('homePk').value    = r[6]||'';
+  document.getElementById('awayPk').value    = r[7]||'';
+
+  document.getElementById('sendBtn').disabled = !(r[4] && r[9]);
+  if(!(r[4]&&r[9])){
+    show('ngMsg','この試合はまだ対戦相手が決まっていません。前の試合の結果を先に入れてください。');
+  }
+}
+
+function clearScore(){
+  ['homeScore','awayScore','homePk','awayPk'].forEach(function(id){
+    document.getElementById(id).value='';
+  });
+}
+
+/* ============================================================================
+   送信
+   ============================================================================ */
+function show(id,msg){
+  var e=document.getElementById(id);
+  if(msg) e.textContent=msg;
+  e.classList.add('show');
+}
+function hideMsg(){
+  document.getElementById('okMsg').classList.remove('show');
+  document.getElementById('ngMsg').classList.remove('show');
+}
+
+function sendScore(){
+  if(!cur) return;
+  var hs=document.getElementById('homeScore').value;
+  var as=document.getElementById('awayScore').value;
+  if(hs===''||as===''){ alert('スコアを両方入れてください'); return; }
+
+  var hp=document.getElementById('homePk').value;
+  var ap=document.getElementById('awayPk').value;
+
+  if(cur.pk && hs===as && (hp===''||ap==='')){
+    if(!confirm('引き分けです。PKを入れないと勝者が決まらず、次の試合の相手が空欄のままになります。\n\nこのまま送信しますか？')) return;
+  }
+  if(cur.pk && hp!=='' && ap!=='' && hp===ap){
+    alert('PKが同じ本数です。サドンデスなので、どちらかが多くなるはずです。'); return;
+  }
+
+  var btn=document.getElementById('sendBtn');
+  btn.disabled=true; btn.textContent='送信中…'; hideMsg();
+
+  var payload={
+    password:PW, action:'score',
+    sheet:cat+'試合結果', row:cur.row,
+    homeScore:hs, awayScore:as
+  };
+  if(cur.pk && hp!=='' && ap!==''){ payload.homePK=hp; payload.awayPK=ap; }
+
+  fetch(GAS_URL,{ method:'POST', body:JSON.stringify(payload) })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      btn.disabled=false; btn.textContent='送信する';
+      if(d.ok){
+        show('okMsg','✅ '+cur.home+' '+hs+' − '+as+' '+cur.away+'　を記録しました');
+        reload(false);
+        setTimeout(function(){ hideMsg(); jumpNext(); }, 1500);
+      }else{
+        show('ngMsg','❌ '+(d.error||'送信できませんでした'));
+      }
+    })
+    .catch(function(){
+      btn.disabled=false; btn.textContent='送信する';
+      show('ngMsg','❌ 送信できませんでした。通信を確認して、もう一度押してください。');
+    });
+}
+
+/* ============================================================================
+   同着の順位
+   ============================================================================ */
+function buildStandSel(){
+  var sel=document.getElementById('standSel');
+  sel.innerHTML='<option value="">-- えらんでください --</option>';
+  STANDINGS[cat].forEach(function(s,i){
+    var o=document.createElement('option');
+    o.value=i; o.textContent=s.label;
+    sel.appendChild(o);
+  });
+}
+
+function resetTie(){
+  tie={ sheet:null,label:null,row:null,team:null,rank:null,teams:[] };
+  document.getElementById('standSel').value='';
+  ['standCard','rankCard','tieConfirm'].forEach(function(id){
+    document.getElementById(id).classList.add('hide');
+  });
+  document.getElementById('tieOk').classList.remove('show');
+  document.getElementById('tieNg').classList.remove('show');
+}
+
+function loadStanding(){
+  var v=document.getElementById('standSel').value;
+  if(v===''){ resetTie(); return; }
+  var s=STANDINGS[cat][parseInt(v,10)];
+  tie.sheet=s.sheet; tie.label=s.label;
+  tie.team=null; tie.rank=null; tie.row=null;
+  document.getElementById('rankCard').classList.add('hide');
+  document.getElementById('tieConfirm').classList.add('hide');
+  document.getElementById('standWrap').innerHTML='<p class="sub">読み込み中…</p>';
+  document.getElementById('teamPicks').innerHTML='';
+  document.getElementById('standCard').classList.remove('hide');
+
+  fetchSheet(s.sheet).then(function(t){
+    var body=t.slice(1).filter(function(r){ return r[0]!==''; });
+    tie.teams=body;
+    renderStanding(body);
+  }).catch(function(){
+    document.getElementById('standWrap').innerHTML='<p class="sub">⚠ 読み込めませんでした。通信を確認してください。</p>';
+  });
+}
+
+function renderStanding(body){
+  /* 同じ順位が2つ以上あれば色を付ける */
+  var count={};
+  body.forEach(function(r){ if(r[9]) count[r[9]]=(count[r[9]]||0)+1; });
+
+  var h='<table class="stand-table"><tr><th>チーム</th><th>勝点</th><th>得失</th><th>順位</th></tr>';
+  body.forEach(function(r){
+    var tied=r[9] && count[r[9]]>1;
+    h+='<tr class="'+(tied?'tied':'')+'">'+
+       '<td class="tm">'+r[0]+'</td><td>'+(r[8]||'0')+'</td><td>'+(r[7]||'0')+'</td>'+
+       '<td class="rk">'+(r[9]||'—')+'</td></tr>';
+  });
+  h+='</table>';
+  var anyTied=Object.keys(count).some(function(k){ return count[k]>1; });
+  if(anyTied) h+='<p class="sub" style="color:var(--warn);font-weight:700;">色が付いた行が同着です。抽選の結果を入れてください。</p>';
+  document.getElementById('standWrap').innerHTML=h;
+
+  var wrap=document.getElementById('teamPicks');
+  wrap.innerHTML='';
+  body.forEach(function(r,i){
+    var b=document.createElement('button');
+    b.className='pick'; b.textContent=r[0];
+    b.onclick=function(){ pickTeam(i,r[0]); };
+    wrap.appendChild(b);
+  });
+}
+
+function pickTeam(i,name){
+  tie.team=name; tie.row=i+2; tie.rank=null;
+  var bs=document.getElementById('teamPicks').children;
+  for(var k=0;k<bs.length;k++) bs[k].className='pick'+(k===i?' on':'');
+
+  var n=tie.teams.length, wrap=document.getElementById('rankPicks');
+  wrap.innerHTML='';
+  for(var r=1;r<=n;r++){
+    (function(rank){
+      var b=document.createElement('button');
+      b.className='pick'; b.textContent=rank+'位';
+      b.onclick=function(){ pickRank(rank); };
+      wrap.appendChild(b);
+    })(r);
+  }
+  document.getElementById('rankCard').classList.remove('hide');
+  document.getElementById('tieConfirm').classList.add('hide');
+}
+
+function pickRank(rank){
+  tie.rank=rank;
+  var bs=document.getElementById('rankPicks').children;
+  for(var k=0;k<bs.length;k++) bs[k].className='pick'+((k+1)===rank?' on':'');
+  document.getElementById('tieText').innerHTML=
+    tie.label+'　の<br><b>'+tie.team+'</b> を <b>'+rank+'位</b> にします';
+  document.getElementById('tieOk').classList.remove('show');
+  document.getElementById('tieNg').classList.remove('show');
+  document.getElementById('tieConfirm').classList.remove('hide');
+}
+
+function sendRank(){
+  if(!tie.sheet||!tie.row||!tie.rank) return;
+  var btn=document.getElementById('tieBtn');
+  btn.disabled=true; btn.textContent='送信中…';
+
+  fetch(GAS_URL,{ method:'POST', body:JSON.stringify({
+    password:PW, action:'rank_override',
+    sheet:tie.sheet, row:tie.row, rank:tie.rank
+  })})
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    btn.disabled=false; btn.textContent='この順位で確定する';
+    if(d.ok){
+      var e=document.getElementById('tieOk');
+      e.textContent='✅ '+tie.label+' の「'+tie.team+'」を '+tie.rank+'位 にしました';
+      e.classList.add('show');
+      document.getElementById('tieNg').classList.remove('show');
+      loadStanding();
+    }else{
+      var g=document.getElementById('tieNg');
+      g.textContent='❌ '+(d.error||'送信できませんでした');
+      g.classList.add('show');
+    }
+  })
+  .catch(function(){
+    btn.disabled=false; btn.textContent='この順位で確定する';
+    var g=document.getElementById('tieNg');
+    g.textContent='❌ 送信できませんでした。通信を確認してください。';
+    g.classList.add('show');
+  });
+}
+</script>
+</body>
+</html>
