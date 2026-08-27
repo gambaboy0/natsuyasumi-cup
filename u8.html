@@ -1111,15 +1111,22 @@ function stamp(){
 function esc(s){ return String(s==null?'':s).replace(/[&<>]/g,function(c){
   return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
 
-/* まだチームが決まっていない枠か（スプレッドシートが【A組1位】の形で入れてくる）
-   2026-08-27 追加。空欄だと当日どこの組の何位が入るのか分からなかったため。 */
-function isTBD(s){ return /^【.*】$/.test(String(s==null?'':s)); }
+/* まだチームが決まっていない枠か（2026-08-27）
+   スプレッドシートが「A組1位」「1組（上位）2位」「1位T準決勝①の勝者」の形で入れてくる。
+   参加チームの名前にこの形のものは無いので、文字の形だけで見分けられる。
+   ※ チーム名を変えるときは、この形にならないよう注意すること。 */
+function isTBD(s){
+  s=String(s==null?'':s);
+  return /^[A-Za-z]組[0-9]+位$/.test(s)            /* A組1位 */
+      || /^[0-9]+組（(上位|下位)）[0-9]+位$/.test(s) /* 1組（上位）2位 */
+      || /の(勝者|敗者)$/.test(s);                   /* 1位T準決勝①の勝者 */
+}
 
 /* チーム名の表示。未定の枠は薄い文字にして、本物のチーム名と見分けられるようにする */
 function teamCell(v){
   var s=String(v==null?'':v);
   if(!s) return '—';
-  if(isTBD(s)) return '<span class="tbd">'+esc(s.replace(/^【|】$/g,''))+'</span>';
+  if(isTBD(s)) return '<span class="tbd">'+esc(s)+'</span>';
   return esc(s);
 }
 
@@ -1192,9 +1199,9 @@ function renderSchedule(rows){
     var sc  = has ? (r[C.hs]+' - '+r[C.as]) : 'vs';
     return '<div class="cell">'+
              (r[C.name]?'<div class="cg">'+esc(r[C.name])+'</div>':'')+
-             '<div class="ct">'+esc(r[C.home]||'—')+'</div>'+
+             '<div class="ct">'+teamCell(r[C.home])+'</div>'+
              '<div class="cs'+(has?' on':'')+'">'+sc+'</div>'+
-             '<div class="ct">'+esc(r[C.away]||'—')+'</div>'+
+             '<div class="ct">'+teamCell(r[C.away])+'</div>'+
            '</div>';
   }
 

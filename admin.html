@@ -455,9 +455,16 @@ function isKnockout(name){
 }
 function done(r){ return r[5]!=='' && r[8]!==''; }
 
-/* まだチームが決まっていない枠（スプレッドシートが【A組1位】の形で入れてくる）。
-   2026-08-27 追加。名前は出すが、ここにスコアは入れられない。 */
-function isTBD(s){ return /^【.*】$/.test(String(s==null?'':s)); }
+/* まだチームが決まっていない枠（2026-08-27）
+   スプレッドシートが「A組1位」「1位T準決勝①の勝者」の形で入れてくる。
+   名前は出すが、ここにスコアは入れられない。
+   参加チームの名前にこの形のものは無いので、文字の形だけで見分けられる。 */
+function isTBD(s){
+  s=String(s==null?'':s);
+  return /^[A-Za-z]組[0-9]+位$/.test(s)
+      || /^[0-9]+組（(上位|下位)）[0-9]+位$/.test(s)
+      || /の(勝者|敗者)$/.test(s);
+}
 function ready(r){ return r[4] && r[9] && !isTBD(r[4]) && !isTBD(r[9]); }
 
 function reload(manual){
