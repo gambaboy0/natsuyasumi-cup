@@ -478,7 +478,8 @@ function stageLabel(name){
   var m=p[0].match(/^([0-9]+)位トーナメント$/);
   if(!m) return p[0]+' '+p[1];
   var n=parseInt(m[1],10);
-  return (n*4-3)+'-'+(n*4)+'位決定トーナメント '+p[1];
+  /* 試合の一覧は1行が長いので、HPの日程と同じく「T」と略す（2026-08-27） */
+  return (n*4-3)+'-'+(n*4)+'位決定T '+p[1];
 }
 function ready(r){ return r[4] && r[9] && !isTBD(r[4]) && !isTBD(r[9]); }
 

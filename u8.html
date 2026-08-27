@@ -380,6 +380,19 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
    引き分け（リーグ戦）は、どちらにも色を付けない。 */
 .cell .ct.win{background:rgba(207,170,21,.30);
   padding:1px 2px;font-weight:900;}
+.mname.win{background:rgba(207,170,21,.30);font-weight:900;}
+
+/* ---- KNOCKOUT ROUND（2026-08-27 作り直し）----
+   上から  上位決定戦（横並び1枚）→ 準決勝（縦並びを横に2つ）→ 下位決定戦（横並び1枚）
+   線でつないだトーナメント図はやめた。スマホで線がずれやすく、
+   横スクロールしないと決勝まで見えなかったため。 */
+.kolabel{font-size:10.5px;font-weight:900;letter-spacing:.1em;color:var(--edge);
+  background:var(--fill);text-align:center;padding:5px 8px;margin-top:10px;}
+.kobox{border:1px solid var(--hair);border-top:none;}
+.kosf{display:flex;}
+.kosf > div{flex:1 1 0;min-width:0;padding:8px 4px;}
+.kosf > div + div{border-left:1px solid var(--hair);}
+.kobox .mrow{border-bottom:none;padding:10px 6px 8px;}
 
 /* ---- 試合カード ---- */
 .mcard .no{color:rgba(23,41,26,.62);}
@@ -514,16 +527,18 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
    （エンブレム34px → ①24px → チーム名はその右）。
    幅を変えるときは left の値も合わせて直すこと。 */
 .xtbl .c-emb,.xtbl .c-no,.xtbl .c-name{position:sticky; z-index:2;}
-/* 2026-08-27 エンブレムを2倍（26px → 52px）にし、列幅と行の高さも合わせて広げた。
-   ★ left の値は左からの幅の合計。エンブレム68px → 丸数字26px → チーム名は94px。
-     どれかの幅を変えたら left も必ず直すこと。 */
-.xtbl .c-emb {left:0;    width:68px; min-width:68px; padding:6px 4px; text-align:center;}
-.xtbl .c-no  {left:68px; width:26px; min-width:26px; padding:6px 3px; text-align:center;
+/* 2026-08-27 エンブレムの大きさの経緯
+   　26px →（2倍）→ 52px →（0.7倍）→ 36px  ← いまここ
+   列幅も同じ割合で 68px → 48px にした。
+   ★ left の値は左からの幅の合計。エンブレム48px → 丸数字26px → チーム名は74px。
+     どれかの幅を変えたら left も必ず直すこと（ずれると横スクロール時に列が重なる）。 */
+.xtbl .c-emb {left:0;    width:48px; min-width:48px; padding:6px 4px; text-align:center;}
+.xtbl .c-no  {left:48px; width:26px; min-width:26px; padding:6px 3px; text-align:center;
   font-weight:900; color:rgba(23,41,26,.7);}
-.xtbl .c-name{left:94px; min-width:104px; max-width:128px;
+.xtbl .c-name{left:74px; min-width:104px; max-width:128px;
   white-space:normal; word-break:break-word; line-height:1.3;
   border-right:3px solid var(--edge);}   /* ← 縦の太いライン */
-.xtbl .c-emb .mem.st{width:52px; aspect-ratio:1 / 1; margin:0 auto;}
+.xtbl .c-emb .mem.st{width:36px; aspect-ratio:1 / 1; margin:0 auto;}
 
 /* 見出しの「チーム」は3列（エンブレム＋丸数字＋チーム名）を1マスにまとめ、
    その幅の中で左右中央に置く（2026-08-27）。中身のチーム名は左揃え。 */
@@ -546,12 +561,14 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .xtbl .c-h2h .sc.mark{font-size:13px; font-weight:900; line-height:1.2; opacity:1;}
 .xtbl .c-h2h .pk{display:block; font-size:8px; line-height:1.2; opacity:.6;}
 .xtbl .c-h2h .yet{opacity:.35;}
-.xtbl .m-w{color:#1a7f37;}   /* ○ 勝ち */
-.xtbl .m-d{color:#8a6d0b;}   /* △ 引き分け */
-.xtbl .m-l{color:#b3261e;}   /* ● 負け */
+/* 2026-08-27 対戦表の記号は色分けをやめ、すべて表の文字と同じ黒にする（舟見さん指示）。
+   勝ち負けは記号の形（○●△）で見分ける。 */
+.xtbl .m-w,.xtbl .m-d,.xtbl .m-l{color:var(--edge);}
 /* ●（黒丸）は同じ文字サイズだと ○（白丸）より一回り大きく見えるので、
    見た目の大きさが ○ とそろうように縮めている（2026-08-27 舟見さん指示） */
-.xtbl .c-h2h .sc.mark.m-l{font-size:10.5px;}
+/* 2026-08-27 ●を10.5pxに縮めていたが小さすぎたため、○と同じ13pxに戻した。
+   （○ と ● はもともと同じ大きさの文字なので、そろえるだけでよい） */
+.xtbl .c-h2h .sc.mark.m-l{font-size:13px;}
 
 /* 自分どうしのマスは斜線を引いて使わないことを示す */
 .xtbl .c-h2h.self{
@@ -663,8 +680,8 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .tp-tbl .tp-w{color:#1a7f37;}   /* ○ 勝ち */
 .tp-tbl .tp-d{color:#8a6d0b;}   /* △ 引き分け */
 .tp-tbl .tp-l{color:#b3261e;}   /* ● 負け */
-/* ●（黒丸）は ○（白丸）より大きく見えるので縮める（2026-08-27） */
-.tp-tbl .tp-l{font-size:.84em;}
+/* 2026-08-27 ●を縮めていたが小さすぎたため、○と同じ大きさに戻した
+   （色は勝敗が一目で分かるよう、チーム専用ページでは残してある） */
 
 /* 成績のまとめ */
 .tp-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin-top:6px;}
@@ -1377,9 +1394,13 @@ function lowerName(round){
    決勝・3位決定戦が決める順位も【範囲】で書く（1位決定戦 ではなく 1-2位決定戦）。
    ============================================================================ */
 function tourNo(t){ var m=String(t).match(/^([0-9]+)位トーナメント$/); return m?parseInt(m[1],10):0; }
+/* 日程のマスは幅が狭いので「トーナメント」を「T」と略す（2026-08-27 舟見さん指示）
+   　1位トーナメント → 1-4位決定T
+   ※ 要項とKNOCKOUT ROUNDの見出しは幅に余裕があるので、
+     「1-4位決定トーナメント」と省略せずに出している。 */
 function tourName(t){
   var n=tourNo(t);
-  return n ? (n*4-3)+'-'+(n*4)+'位決定トーナメント' : t;
+  return n ? (n*4-3)+'-'+(n*4)+'位決定T' : t;
 }
 
 /* トーナメントの決勝・3位決定戦は、大会全体の何位決定戦にあたるかを添える
@@ -1983,6 +2004,90 @@ function bMatch(r,extra){
            row(r[C.away],as,r[C.apk],aw)+
          '</div>';
 }
+/* ============================================================================
+   ★ KNOCKOUT ROUND の描き方（2026-08-27 舟見さん指示で作り直し）
+   ----------------------------------------------------------------------------
+   線でつないだトーナメント図をやめ、1つのトーナメントを3段に分けて並べる。
+
+   　　　　1-4位決定トーナメント
+   　┌ 1-2位決定戦 ─────────────┐   ← 上位決定戦（スポナビ式・横並び）
+   　│ [紋]ヴァリエンテ 1-0 蜷川[紋] │
+   　└──────────────────────────┘
+   　┌ 準決勝 ──────┬ 準決勝 ─────┐   ← 縦にチームを並べ、横に2つ置く
+   　│   [紋]        │   [紋]      │      （日程のマスと同じ形）
+   　│ ヴァリエンテ   │  蜷川       │
+   　│   1 - 0       │   2 - 1     │
+   　│  富山中央      │  石動大谷    │
+   　│   [紋]        │   [紋]      │
+   　└───────────────┴─────────────┘
+   　┌ 3-4位決定戦 ───────────────┐   ← 下位決定戦（スポナビ式）
+   　│ [紋]富山中央 0-2 石動大谷[紋] │
+   　└──────────────────────────┘
+
+   下位リーグの「13-14位決定戦」のように1試合だけのものは、スポナビ式1枚で出す。
+   ============================================================================ */
+
+/* 勝敗の判定（日程のマスと同じ規則をここでも使う） */
+function resultOf(r){
+  var has = r[C.hs]!=='' && r[C.as]!=='';
+  var hw=false, aw=false;
+  if(has){
+    var h=parseFloat(r[C.hs]), a=parseFloat(r[C.as]);
+    if(h>a) hw=true;
+    else if(a>h) aw=true;
+    else if(r[C.hpk]!=='' && r[C.apk]!==''){
+      if(parseFloat(r[C.hpk])>parseFloat(r[C.apk])) hw=true; else aw=true;
+    }
+  }
+  return { has:has, hw:hw, aw:aw };
+}
+function pkHtml(r,cls){
+  return (r[C.hs]!=='' && r[C.as]!=='' && r[C.hpk]!=='' && r[C.apk]!=='')
+    ? '<div class="'+cls+'">PK '+esc(r[C.hpk])+'-'+esc(r[C.apk])+'</div>' : '';
+}
+
+/* 縦並びのカード（日程のマスと同じ形） */
+function koCell(r){
+  if(!r) return '<div class="cell"><div class="cs">—</div></div>';
+  var v=resultOf(r);
+  var sc=v.has ? (esc(r[C.hs])+'<span class="dash">-</span>'+esc(r[C.as])) : 'VS';
+  return '<div class="cell">'+
+           '<div class="cg">'+esc(r[C.time]||'')+'　'+esc(r[C.court]||'')+'</div>'+
+           emblemHtml(r[C.home],'sm')+
+           '<div class="ct'+(v.hw?' win':'')+'">'+teamCell(r[C.home])+'</div>'+
+           '<div class="cs'+(v.has?' on':'')+'">'+sc+pkHtml(r,'cpk')+'</div>'+
+           '<div class="ct'+(v.aw?' win':'')+'">'+teamCell(r[C.away])+'</div>'+
+           emblemHtml(r[C.away],'sm')+
+           '<div class="cfoot'+(v.has?' done':'')+'">'+
+             (v.has ? '試合終了' : 'MN'+esc(r[C.no]))+'</div>'+
+         '</div>';
+}
+
+/* 横並びのカード（スポナビ式） */
+function koRow(r){
+  if(!r) return '';
+  var v=resultOf(r);
+  var center=v.has ? (esc(r[C.hs])+'<span class="dash">-</span>'+esc(r[C.as])) : 'VS';
+  return '<div class="mrow">'+
+           '<div class="mtop">'+
+             '<span class="court">'+esc(r[C.time]||'')+'　'+esc(r[C.court]||'')+'</span>'+
+           '</div>'+
+           '<div class="mmain">'+
+             emblemHtml(r[C.home])+
+             '<div class="mname l'+(v.hw?' win':'')+'">'+teamCell(r[C.home])+'</div>'+
+             '<div class="mcenter'+(v.has?' score':'')+'">'+center+pkHtml(r,'mpk')+'</div>'+
+             '<div class="mname r'+(v.aw?' win':'')+'">'+teamCell(r[C.away])+'</div>'+
+             emblemHtml(r[C.away])+
+           '</div>'+
+           '<div class="mfoot'+(v.has?' done':'')+'">'+
+             (v.has ? '試合終了' : 'MN'+esc(r[C.no]))+'</div>'+
+         '</div>';
+}
+
+function koBox(title, inner){
+  return '<div class="kolabel">'+esc(title)+'</div><div class="kobox">'+inner+'</div>';
+}
+
 function renderBracket(rows){
   var box=document.getElementById('live-bracket');
   if(!box) return;
@@ -2008,43 +2113,22 @@ function renderBracket(rows){
     var m=map[b];
     var html='<div class="bgroup"><h4>'+esc(bracketLabel(b))+'</h4>';
 
-    if(m.qf.length===4 && m.sf.length===2 && m.final.length===1){
-      /* 8チームのトーナメント表 */
-      html+='<div class="bwrap">'+
-              '<div class="bhead"><span>準々決勝</span><span>準決勝</span><span>'+esc(finalLabel(b))+'</span></div>'+
-              '<div class="bracket">'+
-                '<div class="bcol">'+
-                  '<div class="bpair">'+bMatch(m.qf[0])+bMatch(m.qf[1])+'</div>'+
-                  '<div class="bpair">'+bMatch(m.qf[2])+bMatch(m.qf[3])+'</div>'+
-                '</div>'+
-                '<div class="bcol">'+
-                  '<div class="bpair">'+bMatch(m.sf[0])+bMatch(m.sf[1])+'</div>'+
-                '</div>'+
-                '<div class="bcol">'+bMatch(m.final[0],' champ')+'</div>'+
-              '</div>'+
-            '</div>';
-    } else if(m.sf.length===2 && m.final.length===1){
-      /* 4チームのトーナメント表 */
-      html+='<div class="bwrap">'+
-              '<div class="bhead"><span>準決勝</span><span>'+esc(finalLabel(b))+'</span></div>'+
-              '<div class="bracket" style="min-width:250px">'+
-                '<div class="bcol"><div class="bpair">'+bMatch(m.sf[0])+bMatch(m.sf[1])+'</div></div>'+
-                '<div class="bcol">'+bMatch(m.final[0],' champ')+'</div>'+
-              '</div>'+
-            '</div>';
-    } else if(m.other.length===1 && !m.qf.length && !m.sf.length && !m.final.length && !m.third.length){
-      /* 13-14位決定戦のような1試合だけの順位決定戦（2026-08-21） */
-      html+='<div class="bwrap"><div class="bracket" style="min-width:200px">'+
-              '<div class="bcol">'+bMatch(m.other[0])+'</div>'+
-            '</div></div>';
+    if(m.final.length || m.sf.length || m.third.length){
+      /* ① 上位決定戦（＝そのトーナメントの決勝） */
+      if(m.final.length) html+=koBox(finalLabel(b), koRow(m.final[0]));
+      /* ② 準決勝（縦並びのカードを横に並べる） */
+      if(m.sf.length){
+        html+=koBox('準決勝',
+          '<div class="kosf">'+m.sf.map(function(r){ return '<div>'+koCell(r)+'</div>'; }).join('')+'</div>');
+      }
+      /* ③ 下位決定戦（＝3位決定戦） */
+      if(m.third.length) html+=koBox(thirdLabel(b), koRow(m.third[0]));
+      /* 準々決勝がある形（いまの大会では出ない）は念のため下に足す */
+      if(m.qf.length) html+=koBox('準々決勝',
+        '<div class="kosf">'+m.qf.map(function(r){ return '<div>'+koCell(r)+'</div>'; }).join('')+'</div>');
     } else {
-      /* 形が読み取れないときは、これまでどおりカードで並べる */
-      html+=[].concat(m.qf,m.sf,m.final,m.other).map(matchCard).join('');
-    }
-
-    if(m.third.length){
-      html+='<div class="bthird"><div class="lbl">'+esc(thirdLabel(b))+'</div>'+
-            m.third.map(function(r){ return bMatch(r); }).join('')+'</div>';
+      /* 13-14位決定戦のような1試合だけの順位決定戦 */
+      html+='<div class="kobox">'+m.other.map(koRow).join('')+'</div>';
     }
     return html+'</div>';
   }).join('');
@@ -2069,8 +2153,11 @@ function renderFinal(rows){
     list.map(function(r,i){
       var rv=(r[F.rank]!==undefined&&r[F.rank]!=='')?r[F.rank]:(i+1);
       var rc=rv==1?'rank-1':rv==2?'rank-2':rv==3?'rank-3':'';
+      /* 2026-08-27 最終順位だけは【正式名称】で出す（舟見さん指示）。
+         表彰式がないぶん、この一覧が実質の順位発表になるため。
+         対応表（FULLNAME）に無いチームは略称のまま出る。 */
       return '<tr><td><span class="rank-badge '+rc+'">'+esc(rv)+'</span></td>'+
-             '<td class="tname">'+esc(r[F.team])+'</td></tr>';
+             '<td class="tname">'+esc(fullName(r[F.team]))+'</td></tr>';
     }).join('')+'</tbody></table></div>';
   document.getElementById('upd-final').textContent=stamp();
 }
