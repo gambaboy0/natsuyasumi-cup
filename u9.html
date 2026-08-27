@@ -363,6 +363,12 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .mcard .sc.on{color:var(--edge);}
 .mcard .meta{color:rgba(23,41,26,.5);}
 
+/* ---- まだチームが決まっていない枠（2026-08-27）----
+   「A組1位」のように、どこの組の何位が入るのかを先に見せる。
+   本物のチーム名と見分けられるよう、細く薄い文字にしている。 */
+.tbd{color:rgba(23,41,26,.5);font-weight:400;font-size:.92em;
+  border-bottom:1px dotted rgba(23,41,26,.3);}
+
 /* ---- トーナメント表 ---- */
 .brow .bn{color:var(--edge);}
 .brow .bs{color:rgba(23,41,26,.4);}
@@ -1178,6 +1184,18 @@ function stamp(){
 function esc(s){ return String(s==null?'':s).replace(/[&<>]/g,function(c){
   return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
 
+/* まだチームが決まっていない枠か（スプレッドシートが【A組1位】の形で入れてくる）
+   2026-08-27 追加。空欄だと当日どこの組の何位が入るのか分からなかったため。 */
+function isTBD(s){ return /^【.*】$/.test(String(s==null?'':s)); }
+
+/* チーム名の表示。未定の枠は薄い文字にして、本物のチーム名と見分けられるようにする */
+function teamCell(v){
+  var s=String(v==null?'':v);
+  if(!s) return '—';
+  if(isTBD(s)) return '<span class="tbd">'+esc(s.replace(/^【|】$/g,''))+'</span>';
+  return esc(s);
+}
+
 /* --- 試合カード1枚分のHTML --- */
 function matchCard(r){
   if(!r) return '';
@@ -1187,9 +1205,9 @@ function matchCard(r){
   var meta = [r[C.time], r[C.court]].filter(function(v){return v;}).join('<br>');
   return '<div class="mcard">'+
            '<span class="no">'+esc(r[C.no]||'')+'</span>'+
-           '<span class="tm">'+esc(r[C.home]||'—')+'</span>'+
+           '<span class="tm">'+teamCell(r[C.home])+'</span>'+
            '<span class="sc'+(hasScore?' on':'')+'">'+sc+'</span>'+
-           '<span class="tm">'+esc(r[C.away]||'—')+'</span>'+
+           '<span class="tm">'+teamCell(r[C.away])+'</span>'+
            '<span class="meta">'+meta+'</span>'+
          '</div>';
 }
@@ -1361,7 +1379,7 @@ function oneStanding(label,rows){
     }).join('');
     var rv=(r[S.rank]!==undefined&&r[S.rank]!=='')?r[S.rank]:(i+1);
     var rc=rv==1?'rank-1':rv==2?'rank-2':rv==3?'rank-3':'';
-    return '<tr><td class="c-name tname"><b>'+H2H_NO[i]+'</b> '+esc(me)+'</td>'+
+    return '<tr><td class="c-name tname"><b>'+H2H_NO[i]+'</b> '+teamCell(me)+'</td>'+
            grid+stats+
            '<td><span class="rank-badge '+rc+'">'+esc(rv)+'</span></td></tr>';
   }).join('');
@@ -1710,7 +1728,7 @@ function bMatch(r,extra){
   }
   function row(name,sc,pk,win){
     return '<div class="brow'+(win?' win':'')+'">'+
-             '<span class="bn">'+esc(name||'—')+'</span>'+
+             '<span class="bn">'+teamCell(name)+'</span>'+
              '<span class="bs">'+esc(sc==='' ? '' : sc)+(pk!==''&&pk!==undefined?'<small>('+esc(pk)+')</small>':'')+'</span>'+
            '</div>';
   }

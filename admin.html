@@ -78,7 +78,8 @@ input[type=text],input[type=password],input[type=number],select{
   -webkit-appearance:none; appearance:none;
 }
 select{
-  font-size:.88rem; padding-right:36px;
+  /* 16px未満だと iPhone でタップしたとき画面が勝手に拡大する。16pxは下げないこと */
+  font-size:16px; padding-right:36px;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat:no-repeat; background-position:right 12px center;
 }
@@ -454,6 +455,11 @@ function isKnockout(name){
 }
 function done(r){ return r[5]!=='' && r[8]!==''; }
 
+/* まだチームが決まっていない枠（スプレッドシートが【A組1位】の形で入れてくる）。
+   2026-08-27 追加。名前は出すが、ここにスコアは入れられない。 */
+function isTBD(s){ return /^【.*】$/.test(String(s==null?'':s)); }
+function ready(r){ return r[4] && r[9] && !isTBD(r[4]) && !isTBD(r[9]); }
+
 function reload(manual){
   var c=cat;
   setStatus('読み込み中…');
@@ -483,26 +489,32 @@ function renderMatches(){
   sel.innerHTML='<option value="">-- 試合をえらぶ --</option>';
   rs.forEach(function(r,i){
     var home=r[4]||'？', away=r[9]||'？';
-    var vs=(r[4]&&r[9]) ? '　'+home+' vs '+away : '　（対戦相手はまだ決まっていません）';
     var o=document.createElement('option');
     o.value=i;
-    o.textContent=(done(r)?'✅ ':'') + '#'+r[0]+'  '+r[2]+' '+r[3]+'  '+r[1]+vs;
+    /* ✅=入力ずみ ／ ⌛=まだ対戦相手が決まっていない（枠の名前だけ出る） */
+    var mark = done(r) ? '✅ ' : (ready(r) ? '' : '⌛ ');
+    o.textContent=mark+'#'+r[0]+'  '+r[2]+' '+r[3]+'  '+r[1]+'　'+home+' vs '+away;
     sel.appendChild(o);
   });
   sel.value=keep;
   if(keep!=='' && rs[keep]) showMatch(parseInt(keep,10));
 }
 
+/* 次に入力できる試合へ飛ぶ。
+   対戦相手がまだ決まっていない枠（⌛）は飛ばす（そこには入力できないため） */
 function jumpNext(){
   var rs=rows[cat]||[];
   for(var i=0;i<rs.length;i++){
-    if(!done(rs[i])){
-      document.getElementById('matchSel').value=i;
-      onPickMatch();
-      return;
-    }
+    if(done(rs[i]) || !ready(rs[i])) continue;
+    document.getElementById('matchSel').value=i;
+    onPickMatch();
+    return;
   }
-  alert('未入力の試合はありません。');
+  var waiting=rs.filter(function(r){ return !done(r) && !ready(r); }).length;
+  alert(waiting ? ('いま入力できる試合はありません。\n\n' +
+                   '前の段階の結果を全部入れると、次の ' + waiting + ' 試合の\n' +
+                   '対戦相手が決まって入力できるようになります。')
+                : '未入力の試合はありません。');
 }
 
 function onPickMatch(){
@@ -537,9 +549,11 @@ function showMatch(i){
   document.getElementById('homePk').value    = r[6]||'';
   document.getElementById('awayPk').value    = r[7]||'';
 
-  document.getElementById('sendBtn').disabled = !(r[4] && r[9]);
-  if(!(r[4]&&r[9])){
-    show('ngMsg','この試合はまだ対戦相手が決まっていません。前の試合の結果を先に入れてください。');
+  document.getElementById('sendBtn').disabled = !ready(r);
+  if(!ready(r)){
+    show('ngMsg','この試合はまだ対戦相手が決まっていません。'+
+                 '（'+(r[4]||'？')+' と '+(r[9]||'？')+' が入る枠です）'+
+                 '　前の段階の結果がそろうと、自動でチーム名に変わります。');
   }
 }
 
