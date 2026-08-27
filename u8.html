@@ -1742,19 +1742,25 @@ function renderBracket(rows){
   document.getElementById('upd-bracket').textContent=stamp();
 }
 
-/* --- ④ 最終順位 --- */
+/* --- ④ 最終順位 ---
+   ★2026-08-27 修正
+   最終順位表シートだけ、列の並びがほかの順位表と違う。
+     最終順位表 … [0]順位 [1]チーム名
+     ほかの順位表 … [0]チーム名 …… [9]順位（＝S の並び）
+   ここで S を使っていたため、チーム名の欄に順位の数字が出ていた。 */
+var F = { rank:0, team:1 };
 function renderFinal(rows){
   var box=document.getElementById('live-final');
   if(!box||!rows||!rows.length) return;
-  var list=rows.filter(function(r){return r[S.team];});
+  var list=rows.filter(function(r){return r[F.team];});
   if(!list.length) return;
   box.innerHTML='<div class="tscroll"><table class="stbl">'+
     '<thead><tr><th>順位</th><th>チーム</th></tr></thead><tbody>'+
     list.map(function(r,i){
-      var rv=(r[S.rank]!==undefined&&r[S.rank]!=='')?r[S.rank]:(i+1);
+      var rv=(r[F.rank]!==undefined&&r[F.rank]!=='')?r[F.rank]:(i+1);
       var rc=rv==1?'rank-1':rv==2?'rank-2':rv==3?'rank-3':'';
       return '<tr><td><span class="rank-badge '+rc+'">'+esc(rv)+'</span></td>'+
-             '<td class="tname">'+esc(r[S.team])+'</td></tr>';
+             '<td class="tname">'+esc(r[F.team])+'</td></tr>';
     }).join('')+'</tbody></table></div>';
   document.getElementById('upd-final').textContent=stamp();
 }
