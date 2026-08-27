@@ -356,6 +356,30 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .cell .cs{color:rgba(23,41,26,.4);}
 .cell .cs.on{color:var(--edge);}
 
+/* ---- 表のマスの中身（2026-08-27）----
+   縦＝キックオフ時刻／横＝コート の表に戻し、マスの中を
+   　組名 → ホームの紋章 → ホーム名 → 時刻/スコア → アウェイ名 → アウェイの紋章 → MN番号
+   の順に縦に積む。コート番号は表の見出しにあるのでマスには入れない。
+   1列の幅は約113px（表全体 min-width:620px ÷ 5コート）。 */
+.cell .cg{font-size:9px;line-height:1.35;}
+.cell .ct{font-size:10.5px;}
+.cell .cs{font-size:12.5px;}
+.cell .cs.on{font-size:14px;}
+.cell .cs .dash{opacity:.4;margin:0 2px;}
+.mem.sm{width:44px;aspect-ratio:1 / 1;margin:2px auto;}
+.cell .cpk{font-size:8px;font-weight:700;color:var(--c-brk);}
+.cell .cfoot{font-size:8.5px;font-weight:700;text-align:center;margin-top:2px;
+  color:rgba(23,41,26,.42);}
+.cell .cfoot.done{color:var(--edge);}
+
+/* ---- 勝ったチーム（2026-08-27）----
+   スコアが入ったら、勝ったほうのエンブレムとチーム名の背景に色を敷く。
+   大会の色（ゴールド）を薄く敷き、文字を太くして目立たせる。
+   引き分け（リーグ戦）は、どちらにも色を付けない。 */
+.cell .mem.win{background:rgba(207,170,21,.30);border-radius:9px;}
+.cell .ct.win{background:rgba(207,170,21,.30);border-radius:5px;
+  padding:1px 2px;font-weight:900;}
+
 /* ---- 試合カード ---- */
 .mcard .no{color:rgba(23,41,26,.62);}
 .mcard .tm{color:var(--edge);}
@@ -368,6 +392,56 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
    本物のチーム名と見分けられるよう、細く薄い文字にしている。 */
 .tbd{color:rgba(23,41,26,.5);font-weight:400;font-size:.92em;
   border-bottom:1px dotted rgba(23,41,26,.3);}
+
+/* ---- 日程（スポナビのJリーグ速報と同じ形・2026-08-27）----
+   横スクロールする表をやめ、1試合1行のカードを縦に並べる。
+   　        第1コート
+   　     グループリーグA組
+   [紋章] ヴァリエンテ  8:00  JKキッズ [紋章]
+   　           M1
+   試合が終わると、中央が「1 - 2」に、下が「試合終了」に変わる。
+   チーム名は中央の欄から左右に同じだけ離れて並ぶ（flex:1 で対称になる）。 */
+.mlist{border-top:1px solid var(--hair);}
+.mlist + .mlist{margin-top:14px;}
+.mlist-head{font-size:11px;font-weight:900;letter-spacing:.1em;color:var(--edge);
+  background:var(--fill);padding:6px 10px;text-align:center;}
+.mrow{padding:11px 4px 9px;border-bottom:1px solid var(--hair);}
+.mrow:last-child{border-bottom:none;}
+.mtop{text-align:center;line-height:1.45;}
+.mtop .court{display:block;font-size:11px;font-weight:900;color:rgba(23,41,26,.75);}
+.mtop .stage{display:block;font-size:10.5px;color:rgba(23,41,26,.55);}
+.mmain{display:flex;align-items:center;justify-content:center;gap:6px;margin:7px 0 5px;}
+
+/* ---- エンブレムの大きさ（2026-08-27 舟見さん指示）----
+   「文字や線に触れない範囲で、できるだけ大きく・全チーム同じ倍率」。
+
+   1行の幅の内訳
+     エンブレム2つ ＋ チーム名2つ（78px×2）＋ 中央の欄（68px）＋ 隙間6px×4
+   チーム名の枠は【一番長い略称「ヴァリエンテ」＝約75px】が折り返さない
+   78pxで固定し、**余った幅をすべてエンブレムに回す**。
+     エンブレム1つ = （行の幅 − 78×2 − 68 − 24）÷ 2 = （100% − 248px）÷ 2
+
+   ・画面が広いほど大きくなるが、行が間延びしないよう 56px で頭打ちにしている
+   ・狭い端末では 28px を下限にする（それ以下にはしない）
+   ・正方形の枠に object-fit:contain で収めるので、
+     縦長・横長どのエンブレムでも【同じ大きさの枠】に同じ倍率で入る */
+.mem{flex:0 0 auto;
+  width:clamp(28px, calc((100% - 248px) / 2), 56px);
+  aspect-ratio:1 / 1;
+  display:flex;align-items:center;justify-content:center;}
+.mem img{max-width:100%;max-height:100%;object-fit:contain;}
+.mem.none{border:1px dashed rgba(23,41,26,.22);border-radius:50%;}
+.mname{flex:1 1 0;min-width:0;font-size:12.5px;font-weight:700;color:var(--edge);
+  line-height:1.3;overflow-wrap:anywhere;}
+.mname.l{text-align:right;}
+.mname.r{text-align:left;}
+.mcenter{flex:0 0 68px;text-align:center;font-size:15px;font-weight:900;
+  color:rgba(23,41,26,.55);}
+.mcenter.score{font-size:19px;color:var(--edge);}
+.mcenter .dash{opacity:.4;margin:0 3px;}
+.mpk{font-size:9.5px;font-weight:700;color:var(--c-brk);margin-top:1px;}
+.mfoot{text-align:center;font-size:10.5px;font-weight:700;color:rgba(23,41,26,.42);}
+.mfoot.done{color:var(--edge);}
 
 /* ---- トーナメント表 ---- */
 .brow .bn{color:var(--edge);}
@@ -656,6 +730,22 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .steps li:not(:last-child)::after{content:"›"; margin-left:5px; margin-right:-2px;
   color:rgba(23,41,26,.5); font-weight:900;}
 .rulebox{counter-reset:step;}
+
+/* ============================================================================
+   角はすべて直角に（2026-08-27 舟見さん指示）
+   ----------------------------------------------------------------------------
+   パネル・表・枠・マスの角丸をやめて 90度 にする。
+   個々の指定を書き換えるのではなく、ここで最後にまとめて打ち消している。
+   （元の角丸の値は各所に残してあるので、戻したくなればこの1ブロックを消すだけ）
+
+   ★丸いままにするのは「丸いことに意味がある部品」だけ
+     ・左上の戻るボタン／右上のメニューボタン（円）… .back-toggle / .idx-toggle
+     ・順位のバッジ（円）… .rank-badge
+     ・ハンバーガーの線（2pxの線なので見た目に影響なし）
+   ============================================================================ */
+.sec,.catbar,.rows,.ph,.pin,.tscroll,.schedwrap,.mcard,.bm,
+.mem,.mem.none,.cell .mem.win,.cell .ct.win,
+.stbl,.stbl th,.stbl td,.sched,.sched th,.sched td{border-radius:0;}
 </style>
 </head>
 <body class="day-u8">
@@ -1161,6 +1251,11 @@ function phaseOf(name){
   return 'FR';
 }
 
+/* 日程の見出しに出す段階の名前（2026-08-27） */
+var PHASE_TITLE = { GL:'GROUP LEAGUE　グループリーグ',
+                    CL:'CLASS LEAGUE　クラスリーグ',
+                    FR:'FINAL ROUND　決勝トーナメント・順位決定戦' };
+
 /* --- ① 試合スケジュール　横＝コート／縦＝時間の表（V CUPと同じ形） --- */
 function toMin(t){
   var m=String(t||'').match(/(\d{1,2})\s*[:：]\s*(\d{1,2})/);
@@ -1170,6 +1265,36 @@ function courtNo(c){
   var m=String(c||'').match(/(\d+)/);
   return m ? parseInt(m[1],10) : 0;
 }
+/* 参加チーム一覧のマスから「略称 → エンブレム画像」の対応を作る（2026-08-27）
+   一覧に画像がすでに置いてあるので、二重に書かずに拾って使う。
+   チームが増減しても一覧を直せば日程にも反映される。 */
+var EMBLEM=(function(){
+  var m={}, ps=document.querySelectorAll('.pin[data-team]');
+  for(var i=0;i<ps.length;i++){
+    var img=ps[i].querySelector('img');
+    if(img) m[ps[i].getAttribute('data-team')]=img.getAttribute('src');
+  }
+  return m;
+})();
+function emblemHtml(name,cls){
+  var src=EMBLEM[String(name==null?'':name)];
+  var c='mem'+(cls?' '+cls:'');
+  return src ? '<div class="'+c+'"><img src="'+esc(src)+'" alt=""></div>'
+             : '<div class="'+c+' none"></div>';
+}
+
+/* 試合名を読みやすい形に直す（予選A組 → グループリーグA組） */
+function stageName(name){
+  var s=String(name||'');
+  var m=s.match(/^予選(.+)組$/);
+  if(m) return 'グループリーグ'+m[1]+'組';
+  if(/^\d+組（(上位|下位)）$/.test(s)) return 'クラスリーグ　'+s;
+  return s;
+}
+
+/* --- ① 日程　縦＝キックオフ時刻／横＝コート（2026-08-27 舟見さん指示）--------
+   マスの中身はスポナビ方式のカード（エンブレム・チーム名・時刻/スコア・MN番号）。
+   コート番号は表の見出しにあるので、マスの中には入れていない。 */
 function renderSchedule(rows){
   var box=document.getElementById('live-schedule');
   if(!box) return;
@@ -1193,24 +1318,48 @@ function renderSchedule(rows){
   list.forEach(function(r){ at[toMin(r[C.time])+'_'+courtNo(r[C.court])]=r; });
 
   function hhmm(m){ return Math.floor(m/60)+':'+String(m%60).padStart(2,'0'); }
+
   function cellHtml(r){
     if(!r) return '';
     var has = r[C.hs]!=='' && r[C.as]!=='';
-    var sc  = has ? (r[C.hs]+' - '+r[C.as]) : 'vs';
+    /* 2026-08-27 試合前は時刻ではなく「試合前」と出す。
+       キックオフ時刻は表の左端の列に出ているので、マスの中では重複していた。 */
+    var sc  = has ? (esc(r[C.hs])+'<span class="dash">-</span>'+esc(r[C.as]))
+                  : '試合前';
+    var pk  = (has && r[C.hpk]!=='' && r[C.apk]!=='')
+      ? '<div class="cpk">PK '+esc(r[C.hpk])+'-'+esc(r[C.apk])+'</div>' : '';
+
+    /* 2026-08-27 勝ったチームのエンブレムと名前に色を敷く。
+       判定はトーナメント表（bMatch）とまったく同じ規則。
+       　・スコアが多いほうが勝ち
+       　・同点のときはPKの多いほう（PKが未入力なら、まだ勝者なし）
+       リーグ戦の引き分けは、どちらにも色を付けない。 */
+    var hw=false, aw=false;
+    if(has){
+      var h=parseFloat(r[C.hs]), a=parseFloat(r[C.as]);
+      if(h>a) hw=true;
+      else if(a>h) aw=true;
+      else if(r[C.hpk]!=='' && r[C.apk]!==''){
+        if(parseFloat(r[C.hpk])>parseFloat(r[C.apk])) hw=true; else aw=true;
+      }
+    }
     return '<div class="cell">'+
-             (r[C.name]?'<div class="cg">'+esc(r[C.name])+'</div>':'')+
-             '<div class="ct">'+teamCell(r[C.home])+'</div>'+
-             '<div class="cs'+(has?' on':'')+'">'+sc+'</div>'+
-             '<div class="ct">'+teamCell(r[C.away])+'</div>'+
+             (r[C.name]?'<div class="cg">'+esc(stageName(r[C.name]))+'</div>':'')+
+             emblemHtml(r[C.home],'sm'+(hw?' win':''))+
+             '<div class="ct'+(hw?' win':'')+'">'+teamCell(r[C.home])+'</div>'+
+             '<div class="cs'+(has?' on':'')+'">'+sc+pk+'</div>'+
+             '<div class="ct'+(aw?' win':'')+'">'+teamCell(r[C.away])+'</div>'+
+             emblemHtml(r[C.away],'sm'+(aw?' win':''))+
+             '<div class="cfoot'+(has?' done':'')+'">'+
+               (has ? '試合終了' : 'MN'+esc(r[C.no]))+
+             '</div>'+
            '</div>';
   }
 
-  /* 2026-08-21 段階（GL／CL／FR）ごとに【別々の表】に分ける。
-     1つの表を線で区切るのではなく、角丸の枠を3つ並べる形。 */
+  /* 段階（GL／CL／FR）ごとに別々の表に分ける */
   var groups=[];
   times.forEach(function(t){
     var ph=null;
-    /* その時間帯にある試合から段階を判定する（コート番号の小さいほうを見る） */
     for(var i=0;i<courts.length;i++){
       var rr=at[t+'_'+courts[i]];
       if(rr){ ph=phaseOf(rr[C.name]); break; }
