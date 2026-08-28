@@ -301,10 +301,13 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 /* ---- 見出しを黒帯・白文字にする（2026-08-27 舟見さん指示）----
    h2（英字）と h3（日本語）で1枚の黒帯になるようにする。
    .sec の左右の内余白（14px）を打ち消して、パネルの端から端まで届かせている。
-   ★ .sec の padding を変えたら、ここの margin も同じ値に直すこと。 */
-.sec h2{background:var(--edge); color:#fff;
+   ★ .sec の padding を変えたら、ここの margin も同じ値に直すこと。
+   2026-08-28 舟見さん指示：帯の色を、最上部のメニュー帯と同じ黒（#000）にそろえた。
+   　以前は縁取りと同じ濃い緑（--edge）で、メニュー帯だけが真っ黒で浮いていた。
+   　色は --band の1か所で決めている。変えるならそこだけ直せばよい。 */
+.sec h2{background:var(--band); color:#fff;
   margin:-16px -14px 0; padding:14px 14px 0;}   /* 上の -16px で帯をパネルの上端まで届かせる */
-.sec h3{background:var(--edge); color:rgba(255,255,255,.82);
+.sec h3{background:var(--band); color:rgba(255,255,255,.82);
   margin:0 -14px 16px; padding:2px 14px 12px;}
 .note,.updated,.live-wait,.scrollhint,
 .phase,.gblock h4,.bgroup h4,.bhead span,.bthird .lbl{color:rgba(23,41,26,.75);}
@@ -318,6 +321,7 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 :root{
   --panel:#fff;                    /* パネルの地 */
   --edge:#17291a;                  /* 縁取り＝濃い緑 */
+  --band:#000;                     /* 黒帯＝最上部のメニュー帯と同じ黒（2026-08-28） */
   --hair:rgba(23,41,26,.22);       /* パネルの中の細い罫線 */
   --fill:rgba(23,41,26,.07);       /* 表の見出し行などの薄い塗り */
 }
@@ -402,12 +406,21 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
    上から  上位決定戦（横並び1枚）→ 準決勝（縦並びを横に2つ）→ 下位決定戦（横並び1枚）
    線でつないだトーナメント図はやめた。スマホで線がずれやすく、
    横スクロールしないと決勝まで見えなかったため。 */
-.kolabel{font-size:10.5px;font-weight:900;letter-spacing:.1em;color:var(--edge);
-  background:var(--fill);text-align:center;padding:5px 8px;margin-top:10px;}
+/* 2026-08-29 舟見さん指示：順位が決まる試合の見出し（1-2位決定戦・3-4位決定戦 など）は
+   【黒帯・白文字】にする。準決勝（.sf）はそこで順位が決まらないので、薄い帯のまま。 */
+.kolabel{font-size:10.5px;font-weight:900;letter-spacing:.1em;
+  color:#fff;background:var(--band);text-align:center;padding:5px 8px;margin-top:10px;}
+.kolabel.sf{color:var(--edge);background:var(--fill);}
 .kobox{border:1px solid var(--hair);border-top:none;}
 .kosf{display:flex;}
 .kosf > div{flex:1 1 0;min-width:0;padding:8px 4px;}
 .kosf > div + div{border-left:1px solid var(--hair);}
+/* 準決勝の見出しを、まとめて1本ではなく【それぞれの試合の上】に置く
+   （2026-08-29 舟見さん指示。要項の図と同じ形にそろえた）。
+   負の margin で列の内余白（上8px・左右4px）を打ち消し、
+   帯を列の端から端まで届かせている。
+   ★ .kosf > div の padding を変えたら、ここの margin も同じ値に直すこと。 */
+.kosf > div > .kolabel.sf{margin:-8px -4px 6px;}
 .kobox .mrow{border-bottom:none;padding:10px 6px 8px;}
 
 /* ---- 準決勝と決勝・3位決定戦をつなぐ線（2026-08-27）----
@@ -751,6 +764,22 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
    ・グループリーグと上位リーグは黄色、下位リーグは濃い緑で塗り分け
    ============================================================================ */
 .fmt{margin-top:16px;}
+/* 大会方式の中の見出し（2026-08-28 舟見さん指示）
+   ① 大会進行方法 ② リーグ戦順位決定方法 ③ トーナメント・決定戦勝利チーム決定方法
+   2026-08-29 舟見さん指示：黒帯をやめ、【文字の下だけに黒い線】を引く形にした。
+   　display:table … 線が文字の幅にぴったり合う（幅いっぱいに伸びない）
+   　margin:… auto … その箱を中央に置く
+   項目の見出し（.sec h2/h3）が黒帯なので、その下の区切りは線だけにして重さを分けている。 */
+.fmt-h{display:table; margin:22px auto 12px; padding-bottom:5px;
+  border-bottom:3px solid var(--band); color:var(--band);
+  text-align:center; line-height:1.35;
+  font-size:clamp(10.5px, 3vw, 12.5px); font-weight:900; letter-spacing:.08em;}
+.fmt > .fmt-h:first-child{margin-top:0;}
+/* 見出しの下に置く説明文（2026-08-29 舟見さん指示）。
+   図の見出しは中央そろえだが、この文は【左詰め】。
+   text-indent … 文の1行目だけ一字ぶん下げる（日本語の書き出しの作法）。 */
+.fmt-lead{margin:0 0 14px; text-align:left; text-indent:1em; line-height:1.85;
+  font-size:clamp(10.5px, 2.9vw, 12px); font-weight:700; color:var(--edge);}
 .fmt-head{text-align:center; margin-bottom:7px; line-height:1.35;}
 .fmt-head b{display:block; font-size:11px; letter-spacing:.16em;
   color:var(--edge); font-weight:900;}
@@ -778,7 +807,10 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .chip{white-space:nowrap;}   /* 「（上位）」が「（上／位）」と割れるのを防ぐ */
 .chip.gl{background:#fff; color:var(--edge);}
 .chip.up{background:#facd10; color:var(--edge);}
-.chip.lo{background:#073E15; color:#fff; border-color:#073E15;}
+/* 2026-08-28 舟見さん指示：下位の四角にも黒い縁取りを出す。
+   以前は border-color を地の緑と同じにしていたため、縁が見えなかった
+   （四角の下のエンブレム欄には縁があるので、上下でつながって見えなかった）。 */
+.chip.lo{background:#073E15; color:#fff;}
 
 /* 組の四角の下に、その組のチームの紋章を縦に並べる枠（2026-08-27） */
 .fmt-grid .gcol{display:flex; flex-direction:column; min-width:0;}
@@ -788,6 +820,19 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
   padding:5px 2px;}
 .gemb .mem.fm{width:100%; max-width:34px; aspect-ratio:1 / 1;}
 .gemb .mem.none{border:1px dashed rgba(23,41,26,.25);}
+
+/* クラスリーグの組は、まだどのチームが入るか決まっていない（2026-08-28 舟見さん指示）
+   → グループリーグと同じ位置に枠を出し、紋章の代わりに
+   　「A組1位」など【どの組の何位が入るか】を並べる。
+   中身は fillFormat() が DEMO.upper / DEMO.lower から組み立てるので、
+   組の分け方を変えれば図もそのまま追随する。 */
+   2026-08-28 舟見さん指示：枠の点線は消して、文字だけを並べる。 */
+.gemb.qual{gap:3px; justify-content:center;}
+.qslot{display:flex; align-items:center; justify-content:center;
+  width:100%; min-height:26px; padding:2px 1px;
+  color:var(--edge);
+  font-size:clamp(7px, 2.2vw, 9.5px); font-weight:900; line-height:1.2;
+  text-align:center; white-space:nowrap;}
 
 .fmt-arrow{text-align:center; margin:10px 0; line-height:1.6;
   font-size:clamp(9px, 2.6vw, 11px); font-weight:700; color:rgba(23,41,26,.8);}
@@ -803,6 +848,52 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
   border-top:1px solid var(--hair); padding-top:5px;}
 .fcard.lo b{color:var(--edge);}
 .fcard.lo{background:rgba(23,41,26,.06);}
+
+/* ---- 「1-4位決定トーナメント」のマスの中に入れる進み方の図 ----
+   2026-08-28 は図をマスの下に置いていたが、
+   2026-08-29 舟見さん指示で【マスの中（「1〜4組（上位）の各1位」と書いてあった所）】へ移した。
+   マスが狭いので、名前は「1組1位」「①勝者」のように短くしている。
+   ★ つなぐ線は KNOCKOUT ROUND の .koarm をそのまま使い、高さだけ詰めている。
+   　 線の形を直すときは .koarm の1か所でよい（2か所に増やさないこと）。 */
+.mbkt{margin-top:5px; border-top:1px solid var(--hair); padding-top:5px;}
+/* 1試合だけの順位決定戦のマスは、上に見出しが無く、黒帯からはじまる。
+   margin-top の -7px は .fcard の内余白（padding:7px 4px）の打ち消し。
+   ★ .fcard の padding を変えたら、ここも同じ値に直すこと。 */
+.mbkt.top{margin-top:-7px; border-top:none; padding-top:0;}
+/* 2026-08-29 舟見さん指示：順位が決まる試合（1-2位決定戦 など）は黒帯・白文字。
+   文字の大きさはマスの見出し（.fcard b／.fcard i）と同じにそろえ、
+   「1-2位」と「決定戦」で改行する（<small> が2行目）。
+   左右の -4px は .fcard の内余白の打ち消しで、帯をマスの端から端まで届かせるため。 */
+.mbkt .mbl{background:var(--band); color:#fff; margin:0 -4px;
+  font-size:clamp(10px, 3vw, 13px); font-weight:900; letter-spacing:.02em;
+  line-height:1.25; padding:4px 3px;}
+.mbkt .mbl small{display:block; font-weight:700; opacity:.88;
+  font-size:clamp(8px, 2.2vw, 9.5px);}
+/* 準決勝はそこで順位が決まらないので、薄い帯のまま・小さいまま */
+.mbkt .mbl.sf{background:var(--fill); color:var(--edge); margin:0;
+  font-size:clamp(7px, 1.9vw, 8.5px); letter-spacing:.04em;
+  line-height:1.4; padding:2px 1px;}
+.mbkt .mbrow{margin:0; padding:4px 1px; white-space:nowrap;
+  font-size:clamp(7.5px, 2vw, 9px); font-weight:900; line-height:1.3;}
+.mbkt .mbrow i{display:inline; font-style:normal; font-weight:700;
+  font-size:.9em; color:rgba(23,41,26,.55); margin:0 3px;}
+.mbkt .mbsf{display:flex;}
+.mbkt .mbsf > div{flex:1 1 0; min-width:0; padding-bottom:4px;}
+.mbkt .mbsf > div + div{border-left:1px solid var(--hair);}
+.mbkt .mbsf .mbl{margin-bottom:3px;}
+.mbkt .mbsf span{display:block; padding:0 1px; white-space:nowrap;
+  font-size:clamp(7px, 1.9vw, 8.5px); font-weight:900; line-height:1.3;}
+.mbkt .mbsf i{display:block; margin:1px 0; font-style:normal; font-weight:700;
+  font-size:clamp(6.5px, 1.7vw, 8px); color:rgba(23,41,26,.55);}
+/* マスが小さいので、つなぐ線の高さを 22px → 12px に詰める。
+   縦線は横棒を突き抜けるまで伸ばす（角に隙間を出さないため）。 */
+.mbkt .koarm{height:12px;}
+.mbkt .koarm .bar{top:5px;}
+.mbkt .koarm.up   .stem{top:0; height:8px;}
+.mbkt .koarm.up   .leg {top:5px; height:7px;}
+.mbkt .koarm.down .leg {top:0; height:8px;}
+.mbkt .koarm.down .stem{top:5px; height:7px;}
+.fmtko-note{margin-top:7px;}
 
 /* 図版（会場配置図など）2026-08-21 */
 .figcap{font-size:11.5px; font-weight:900; letter-spacing:.06em;
@@ -856,6 +947,11 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .steps li:not(:last-child)::after{content:"›"; margin-left:5px; margin-right:-2px;
   color:rgba(23,41,26,.5); font-weight:900;}
 .rulebox{counter-reset:step;}
+/* 2026-08-29 舟見さん指示：この箱（勝点が同点の場合の順位決定方法）だけ中央そろえ。
+   .steps は横並び（flex）なので、text-align だけでは中央に寄らない。
+   並びの中央そろえには justify-content が要る。 */
+.rulebox.center{text-align:center;}
+.rulebox.center .steps{justify-content:center;}
 
 /* ============================================================================
    角はすべて直角に（2026-08-27 舟見さん指示）
@@ -1018,9 +1114,12 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
         <!-- 2026-08-22 具体的なメートル表示はやめ、U8・U9とも「スモールサイズ」に統一 -->
         <div class="row"><dt>競技のフィールド</dt><dd>スモールサイズ</dd></div>
         <div class="row"><dt>競技者数</dt><dd>6人制</dd></div>
-        <div class="row only-u8"><dt>試合時間</dt><dd>8分 − 1分 − 8分</dd></div>
-        <div class="row only-u9"><dt>試合時間</dt><dd>10分 − 2分 − 10分</dd></div>
-        <div class="row only-u8"><dt>大会方式</dt><dd>下記図のとおり</dd></div>
+        <!-- 2026-08-29 舟見さん指示：合計と内訳が分かる書き方に変更。
+             合計はプレー時間だけ（ハーフタイムは含めない）。 -->
+        <div class="row only-u8"><dt>試合時間</dt><dd>16分（前半8分-HT1分-後半8分）</dd></div>
+        <div class="row only-u9"><dt>試合時間</dt><dd>20分（前半10分-HT2分-後半10分）</dd></div>
+        <!-- 2026-08-29 舟見さん指示：U8の「大会方式／下記図のとおり」の行を削除。
+             すぐ下に「大会進行方法」の図があるので、案内するだけの行は要らない。 -->
         <div class="row only-u9"><dt>大会方式</dt><dd>4グループ × 4チームの総当たり<br>
           → 順位別に4つのトーナメント<br>
           （全チーム5試合／16位まで決定）</dd></div>
@@ -1031,6 +1130,16 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
            HPの配色・角ばった枠のテイストに合わせて作り直したもの。 -->
       <div class="fmt only-u8">
 
+        <!-- 2026-08-28 舟見さん指示：大会方式を3つの見出しで区切った。
+             ① 大会進行方法 … 進み方の図（GL → CL → KR）
+             ② リーグ戦順位決定方法 … 勝点と順位の決め方
+             ③ トーナメント・決定戦勝利チーム決定方法 … サドンデスPK
+             以前は①の図の途中に②が挟まっていて、どこまでが進み方の説明か分かりにくかった。 -->
+        <p class="fmt-h">大会進行方法</p>
+
+        <!-- 2026-08-29 舟見さん指示：図の前に置く説明文（左詰め） -->
+        <p class="fmt-lead">本大会は次の方法で参加全18チームの順位を1位から18位まで決定します。3チーム総当たりのグループリーグ、グループリーグの順位に応じて行うクラスリーグ、クラスリーグの順位に応じて行うトーナメント・順位決定戦です。下記図の通りに進行いたします。</p>
+
         <div class="fmt-stage">
           <!-- 2026-08-27 見出しを3行に。中身は fillFormat() が組み立てる -->
           <p class="fmt-head"><b>GROUP LEAGUE</b><span>グループリーグ</span><span>3チーム × 6組</span></p>
@@ -1040,36 +1149,124 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
           </div>
         </div>
 
-        <p class="fmt-arrow">▼<br>各組の<b>1・2位</b>が上位リーグ／<b>3位</b>が下位リーグへ</p>
+        <!-- 2026-08-28 舟見さん指示：説明を先、▼をあとに（読む順にそろえた） -->
+        <p class="fmt-arrow">各組の<b>1・2位</b>が上位リーグ／<b>3位</b>が下位リーグへ<br>▼</p>
 
         <div class="fmt-stage">
           <p class="fmt-head"><b>CLASS LEAGUE</b><span>クラスリーグ</span><span>3チーム × 6組</span></p>
-          <div class="fmt-grid g6">
+          <!-- 2026-08-28 舟見さん指示：「3チーム」の行をやめ、A〜F組と同じように
+               四角の下へ枠を足して「A組1位」など進出条件を並べる。
+               下の6つは【JavaScriptが動かなかったときの控え】で、
+               ふだんは fillFormat() が DEMO.upper / DEMO.lower から作り直す。 -->
+          <div class="fmt-grid g6" id="fmtCL">
             <!-- 2026-08-27 用語統一：日程・順位表・スプレッドシートと同じ
                  「1組（上位）」「5組（下位）」の表記にそろえた。
                  以前は「上位1組」「下位1組」と書いていて、下位は番号も食い違っていた。 -->
-            <span class="chip up">1組<br>（上位）<br><small>3チーム</small></span>
-            <span class="chip up">2組<br>（上位）<br><small>3チーム</small></span>
-            <span class="chip up">3組<br>（上位）<br><small>3チーム</small></span>
-            <span class="chip up">4組<br>（上位）<br><small>3チーム</small></span>
-            <span class="chip lo">5組<br>（下位）<br><small>3チーム</small></span>
-            <span class="chip lo">6組<br>（下位）<br><small>3チーム</small></span>
+            <span class="chip up">1組<br>（上位）</span>
+            <span class="chip up">2組<br>（上位）</span>
+            <span class="chip up">3組<br>（上位）</span>
+            <span class="chip up">4組<br>（上位）</span>
+            <span class="chip lo">5組<br>（下位）</span>
+            <span class="chip lo">6組<br>（下位）</span>
           </div>
         </div>
 
-        <!-- リーグ戦の決め方（グループリーグ・クラスリーグ 共通）2026-08-21 -->
-        <div class="rulebox">
-          <h4>リーグ戦の勝点</h4>
-          <div class="ptrow">
-            <span class="pt"><b>勝ち</b>勝点 3</span>
-            <span class="pt"><b>引き分け</b>勝点 1</span>
-            <span class="pt"><b>負け</b>勝点 0</span>
+        <!-- 2026-08-28 舟見さん指示：説明を先、▼をあとに／文言も用語にそろえた -->
+        <p class="fmt-arrow">クラスリーグの順位でトーナメント・順位決定戦へ<br>▼</p>
+
+        <div class="fmt-stage">
+          <p class="fmt-head"><b>KNOCKOUT ROUND</b><span>トーナメント・順位決定戦</span></p>
+          <div class="fmt-grid g3">
+            <!-- 2026-08-27 用語統一：組の呼び方を「1〜4組（上位）」「5・6組（下位）」に -->
+            <!-- 2026-08-29 舟見さん指示：このマスの説明文（1〜4組（上位）の各1位）を
+                 進み方の図に差し替えた。準決勝の顔ぶれは demoTourn() と同じ。 -->
+            <div class="fcard"><b>1-4位</b><i>決定トーナメント</i>
+              <div class="mbkt">
+                <p class="mbl">1-2位<small>決定戦</small></p>
+                <p class="mbrow">①勝者<i>VS</i>②勝者</p>
+                <div class="koarm up"><i class="stem"></i><i class="bar"></i><i class="leg l"></i><i class="leg r"></i></div>
+                <div class="mbsf">
+                  <div><p class="mbl sf">準決勝①</p><span>1組1位</span><i>VS</i><span>2組1位</span></div>
+                  <div><p class="mbl sf">準決勝②</p><span>3組1位</span><i>VS</i><span>4組1位</span></div>
+                </div>
+                <div class="koarm down"><i class="stem"></i><i class="bar"></i><i class="leg l"></i><i class="leg r"></i></div>
+                <p class="mbl">3-4位<small>決定戦</small></p>
+                <p class="mbrow">①敗者<i>VS</i>②敗者</p>
+              </div>
+            </div>
+            <!-- 2026-08-29 舟見さん指示：5-8位・9-12位も同じように図を入れる。
+                 準決勝の通し番号は 1-4位＝①② / 5-8位＝③④ / 9-12位＝⑤⑥。 -->
+            <div class="fcard"><b>5-8位</b><i>決定トーナメント</i>
+              <div class="mbkt">
+                <p class="mbl">5-6位<small>決定戦</small></p>
+                <p class="mbrow">③勝者<i>VS</i>④勝者</p>
+                <div class="koarm up"><i class="stem"></i><i class="bar"></i><i class="leg l"></i><i class="leg r"></i></div>
+                <div class="mbsf">
+                  <div><p class="mbl sf">準決勝③</p><span>1組2位</span><i>VS</i><span>2組2位</span></div>
+                  <div><p class="mbl sf">準決勝④</p><span>3組2位</span><i>VS</i><span>4組2位</span></div>
+                </div>
+                <div class="koarm down"><i class="stem"></i><i class="bar"></i><i class="leg l"></i><i class="leg r"></i></div>
+                <p class="mbl">7-8位<small>決定戦</small></p>
+                <p class="mbrow">③敗者<i>VS</i>④敗者</p>
+              </div>
+            </div>
+            <div class="fcard"><b>9-12位</b><i>決定トーナメント</i>
+              <div class="mbkt">
+                <p class="mbl">9-10位<small>決定戦</small></p>
+                <p class="mbrow">⑤勝者<i>VS</i>⑥勝者</p>
+                <div class="koarm up"><i class="stem"></i><i class="bar"></i><i class="leg l"></i><i class="leg r"></i></div>
+                <div class="mbsf">
+                  <div><p class="mbl sf">準決勝⑤</p><span>1組3位</span><i>VS</i><span>2組3位</span></div>
+                  <div><p class="mbl sf">準決勝⑥</p><span>3組3位</span><i>VS</i><span>4組3位</span></div>
+                </div>
+                <div class="koarm down"><i class="stem"></i><i class="bar"></i><i class="leg l"></i><i class="leg r"></i></div>
+                <p class="mbl">11-12位<small>決定戦</small></p>
+                <p class="mbrow">⑤敗者<i>VS</i>⑥敗者</p>
+              </div>
+            </div>
+            <!-- 2026-08-29 舟見さん指示：1試合だけの順位決定戦は
+                 【黒帯の見出し＋対戦の行】だけにする。地は上の3つと同じ白（.lo をやめた）。
+                 上の3つの中の黒帯と、文字の大きさ・改行のしかたがそろう。 -->
+            <div class="fcard">
+              <div class="mbkt top">
+                <p class="mbl">13-14位<small>決定戦</small></p>
+                <p class="mbrow">5組1位<i>VS</i>6組1位</p>
+              </div>
+            </div>
+            <div class="fcard">
+              <div class="mbkt top">
+                <p class="mbl">15-16位<small>決定戦</small></p>
+                <p class="mbrow">5組2位<i>VS</i>6組2位</p>
+              </div>
+            </div>
+            <div class="fcard">
+              <div class="mbkt top">
+                <p class="mbl">17-18位<small>決定戦</small></p>
+                <p class="mbrow">5組3位<i>VS</i>6組3位</p>
+              </div>
+            </div>
           </div>
 
-          <h4>リーグ戦の順位の決め方</h4>
-          <p>上から順に見ていき、決まった時点でその順位になります。</p>
+          <!-- 2026-08-29 舟見さん指示：ここに置いていた図は各マスの中へ移した。
+               「5-8位・9-12位も同じ形です」の一文は、3つとも図が入ったので削除。 -->
+          <p class="note fmtko-note">※ 13-14位・15-16位・17-18位は1試合だけの順位決定戦です。</p>
+        </div>
+
+        <!-- ② リーグ戦の決め方（グループリーグ・クラスリーグ 共通）2026-08-21
+             2026-08-28 図の途中から、独立した見出しの下へ移した。
+             見出しに「リーグ戦」と入ったので、中の小見出しからは外している。 -->
+        <p class="fmt-h">リーグ戦順位決定方法</p>
+
+        <!-- 2026-08-29 舟見さん指示：勝点の図（勝ち3／引分1／負け0の3マス）は
+             この文に書いてあるので削除した。 -->
+        <p class="fmt-lead">勝利チームには勝点3、引分の場合は両チームに勝点1、敗北チームは勝点0で、その合計で順位を決定します。勝点が同点の場合には次の方法で順位を決定します。</p>
+
+        <div class="rulebox center">
+          <!-- 2026-08-29 舟見さん指示：①の「勝点」を外し、②以降を1つずつ繰り上げた。
+               勝点そのものは上の説明文で述べているため。
+               同日：この箱だけ中央そろえに（class に center を追加）。 -->
+          <h4>勝点が同点の場合の順位決定方法</h4>
           <ol class="steps">
-            <li>勝点</li>
             <li>直接対決の結果</li>
             <li>得失点差</li>
             <li>総得点</li>
@@ -1077,26 +1274,13 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
           </ol>
         </div>
 
-        <p class="fmt-arrow">▼<br>クラスリーグの順位で進み先が決まります</p>
+        <!-- ③ トーナメントの勝者の決め方（2026-08-21 主催者より受領）
+             2026-08-28 見出しを立てたので、中の小見出しは重複するため外した。 -->
+        <p class="fmt-h">トーナメント・決定戦勝利チーム決定方法</p>
 
-        <div class="fmt-stage">
-          <p class="fmt-head"><b>KNOCKOUT ROUND</b><span>決勝トーナメント・順位決定戦</span></p>
-          <div class="fmt-grid g3">
-            <!-- 2026-08-27 用語統一：組の呼び方を「1〜4組（上位）」「5・6組（下位）」に -->
-            <div class="fcard"><b>1-4位</b><i>決定トーナメント</i><em>1〜4組（上位）の<br>各1位</em></div>
-            <div class="fcard"><b>5-8位</b><i>決定トーナメント</i><em>1〜4組（上位）の<br>各2位</em></div>
-            <div class="fcard"><b>9-12位</b><i>決定トーナメント</i><em>1〜4組（上位）の<br>各3位</em></div>
-            <div class="fcard lo"><b>13-14位</b><i>決定戦</i><em>5・6組（下位）の<br>各1位</em></div>
-            <div class="fcard lo"><b>15-16位</b><i>決定戦</i><em>5・6組（下位）の<br>各2位</em></div>
-            <div class="fcard lo"><b>17-18位</b><i>決定戦</i><em>5・6組（下位）の<br>各3位</em></div>
-          </div>
-        </div>
-
-        <!-- トーナメントの勝者の決め方（2026-08-21 主催者より受領） -->
-        <div class="rulebox">
-          <h4>トーナメント・順位決定戦の勝者の決め方</h4>
-          <p>引き分けの場合は<b>サドンデスPK</b>で勝者を決めます。</p>
-        </div>
+        <!-- 2026-08-29 舟見さん指示：四角の説明文（引き分けの場合はサドンデスPK…）を削除し、
+             ②と同じ左詰め・一字下がりの説明文に置き換えた。 -->
+        <p class="fmt-lead">勝敗を決定します。16分の試合時間を終えて同点の場合はサドンデス方式のPK戦を行います。両チーム交互に行い点差が付いた時点で勝敗を決します。</p>
 
       </div>
     </section>
@@ -1132,11 +1316,11 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
       <p class="note">※ グループリーグの成績で2つのクラスに分かれます。<br>
         <b>上位リーグ</b>（3チーム × 4組＝1〜4組（上位））… 各組の1・2位＝12チーム<br>
         <b>下位リーグ</b>（3チーム × 2組＝5・6組（下位））… 各組の3位＝6チーム<br>
-        ここでの順位が、決勝トーナメント・順位決定戦の組み合わせになります。</p>
+        ここでの順位が、トーナメント・順位決定戦の組み合わせになります。</p>
     </section>
 
     <section class="sec" id="bracket">
-      <h2>KNOCKOUT ROUND</h2><h3>決勝トーナメント・順位決定戦</h3>
+      <h2>KNOCKOUT ROUND</h2><h3>トーナメント・順位決定戦</h3>
       <div id="live-bracket">
         <p class="live-wait">トーナメントの読み込み中…<br>（グループリーグの結果に連動して対戦カードが埋まります）</p>
       </div>
@@ -1155,7 +1339,7 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
     <section class="sec" id="result">
       <h2>RESULT</h2><h3>最終順位</h3>
       <div id="live-final">
-        <p class="live-wait">最終順位の読み込み中…<br>（決勝トーナメント終了後に確定します）</p>
+        <p class="live-wait">最終順位の読み込み中…<br>（トーナメント・順位決定戦の終了後に確定します）</p>
       </div>
       <p class="updated" id="upd-final"></p>
     </section>
@@ -1274,7 +1458,7 @@ var LIVE = {
   sheetId: "1cx1Iw1zQ7yLKoZ6aFJKoif0V5nteYMLLOq3TPT6buKY",   /* 2026-08-27 本番シートに接続 */
 
   /* シート名（GASが作る名前に合わせる） */
-  resultSheet: "U8試合結果",          // 全試合。上からグループリーグ→決勝トーナメント
+  resultSheet: "U8試合結果",          // 全試合。上からグループリーグ→トーナメント・順位決定戦
 
   /* 順位表は「段階」ごとにまとめる。U8は 予選 → 上位／下位リーグ の2段階 */
   /* label … 順位表の中の見出し（CLの欄で上位／下位を分けるのに使う）
@@ -1355,11 +1539,26 @@ function matchNo(no){
   return 'Match No.'+(s.length<2 ? '0'+s : s);
 }
 
+/* 未定の枠の「2位T準決勝①の勝者」を、通し番号にそろえて
+   「準決勝③の勝者」と出す（2026-08-29 舟見さん指示）。
+   これをしないと、日程では「準決勝③」と出ている試合の勝者が
+   「2位T準決勝①の勝者」と書かれ、番号が食い違って当日まぎらわしい。
+
+   ★ 表示だけの置き換え。スプレッドシートの文字も、順位の計算もさわっていない。
+   　 判定（isTBD）は元の文字に対して行っている。 */
+function sfLabel(s){
+  return String(s).replace(/^([0-9])位T準決勝([①②])の(勝者|敗者)$/,
+    function(all, n, mark, wl){
+      var i=(parseInt(n,10)-1)*2 + (mark==='①' ? 0 : 1);
+      return '準決勝'+(CIRCLE[i]||mark)+'の'+wl;
+    });
+}
+
 /* チーム名の表示。未定の枠は薄い文字にして、本物のチーム名と見分けられるようにする */
 function teamCell(v){
   var s=String(v==null?'':v);
   if(!s) return '—';
-  if(isTBD(s)) return '<span class="tbd">'+esc(s)+'</span>';
+  if(isTBD(s)) return '<span class="tbd">'+esc(sfLabel(s))+'</span>';
   return esc(s);
 }
 
@@ -1382,7 +1581,7 @@ function matchCard(r){
 /* 試合名から、どの段階の試合かを判定する（2026-08-21）
      GL … 予選リーグ
      CL … クラスリーグ（上位1〜4組・下位1〜2組）
-     KR … 決勝トーナメント・順位決定戦（下位リーグの13-14位決定戦などもここ） */
+     KR … トーナメント・順位決定戦（下位リーグの13-14位決定戦などもここ） */
 function phaseOf(name){
   var s=String(name||'');
   if(s.indexOf('予選')===0) return 'GL';
@@ -1399,7 +1598,7 @@ function phaseOf(name){
 /* 日程の見出しに出す段階の名前（2026-08-27） */
 var PHASE_TITLE = { GL:'GROUP LEAGUE　グループリーグ',
                     CL:'CLASS LEAGUE　クラスリーグ',
-                    KR:'KNOCKOUT ROUND　決勝トーナメント・順位決定戦' };
+                    KR:'KNOCKOUT ROUND　トーナメント・順位決定戦' };
 
 /* --- ① 試合スケジュール　横＝コート／縦＝時間の表（V CUPと同じ形） --- */
 function toMin(t){
@@ -1438,7 +1637,7 @@ function emblemHtml(name,cls){
    　下位リーグ　15-16位決定戦 → 15-16位決定戦
 
    ★この関数はHTML（<br>を含む）を返す。呼ぶ側で esc() をかけないこと。 */
-function stageName(name){
+function stageName(name, no){
   var s=String(name||'');
   var m=s.match(/^予選(.+)$/);
   if(m) return esc(m[1]);
@@ -1447,10 +1646,39 @@ function stageName(name){
     if(p[0]==='下位リーグ') return lowerName(p[1]);
     /* 2026-08-27 「決勝」「3位決定戦」という語は出さず、
        その試合で決まる順位（1-2位決定戦 など）に置き換える。
-       準決勝はそのまま「準決勝」と出す。 */
-    return esc(tourName(p[0]))+'<br>'+esc(placeText(p[0],p[1]) || p[1]);
+       2026-08-29 準決勝には通し番号（①〜⑥）を付ける。要項の図と同じ番号。 */
+    return esc(tourName(p[0]))+'<br>'+
+           esc(placeText(p[0],p[1]) || (p[1]+(SF_NO[String(no)]||'')));
   }
   return esc(s);
+}
+
+/* 準決勝の通し番号（2026-08-29 舟見さん指示）
+   要項の図と同じ番号を日程にも出す。
+   　1-4位決定トーナメント … ①②
+   　5-8位決定トーナメント … ③④
+   　9-12位決定トーナメント … ⑤⑥
+
+   3つとも試合名は「準決勝」で同じなので、名前だけでは①か②か分からない。
+   【試合番号の小さいほうを①】として、トーナメントごとに数え、
+   そこへトーナメントの基準（1位T=0／2位T=2／3位T=4）を足している。
+
+   ★ 表示だけの処理。スプレッドシートの試合名にはいっさい手を入れていない。 */
+var CIRCLE=['①','②','③','④','⑤','⑥','⑦','⑧'];
+var SF_NO={};                                   /* 試合番号 → 丸数字 */
+function buildSfNo(rows){
+  SF_NO={};
+  var cnt={};
+  rows.slice().sort(function(a,b){
+    return (parseInt(a[C.no],10)||0)-(parseInt(b[C.no],10)||0);
+  }).forEach(function(r){
+    var s=String(r[C.name]||'');
+    if(s.indexOf('準決勝')<0) return;
+    var n=tourNo(s.split('　')[0]);
+    if(!n) return;
+    cnt[n]=(cnt[n]||0)+1;
+    SF_NO[String(r[C.no])]=CIRCLE[(n-1)*2+cnt[n]-1]||'';
+  });
 }
 
 /* 下位リーグの順位決定戦の呼び方（2026-08-27 舟見さん指示）
@@ -1518,6 +1746,10 @@ function renderSchedule(rows){
   if(!box) return;
   if(!rows||!rows.length) return;      // 読めなければ待機表示のまま
 
+  /* 2026-08-29 準決勝の通し番号（①〜⑥）を先に決めておく。
+     絞り込む前の全試合で数える（時刻が未入力の試合があっても番号がずれないように） */
+  buildSfNo(rows);
+
   /* 時刻とコートが入っている試合だけを表に載せる */
   var list=rows.filter(function(r){ return toMin(r[C.time])>=0 && courtNo(r[C.court])>0; });
   if(!list.length) return;
@@ -1567,7 +1799,7 @@ function renderSchedule(rows){
        試合番号はスコアの前後どちらでも一番上に出したままにする。 */
     return '<div class="cell">'+
              '<div class="cmn">'+esc(matchNo(r[C.no]))+'</div>'+
-             (r[C.name]?'<div class="cg">'+stageName(r[C.name])+'</div>':'')+
+             (r[C.name]?'<div class="cg">'+stageName(r[C.name], r[C.no])+'</div>':'')+
              emblemHtml(r[C.home],'sm')+
              '<div class="ct'+(hw?' win':'')+'">'+teamCell(r[C.home])+'</div>'+
              '<div class="cs'+(has?' on':'')+'">'+sc+pk+'</div>'+
@@ -2006,7 +2238,7 @@ document.addEventListener('click',function(e){
   }
 });
 
-/* --- ③ 決勝トーナメント　線でつないだトーナメント表 --- */
+/* --- ③ トーナメント・順位決定戦　線でつないだトーナメント表 --- */
 
 /* 試合名から「どのトーナメントの・どの回戦か」を読み取る
    例）「1位トーナメント　準決勝」「3位トーナメント　3位決定戦」
@@ -2022,7 +2254,7 @@ function bracketOf(name){
   if(d) return d[1];
   var m=s.match(BRE);
   if(m) return m[1];
-  return s.split(/[　\s]/)[0] || '決勝トーナメント';
+  return s.split(/[　\s]/)[0] || 'トーナメント';   /* 2026-08-28 用語統一 */
 }
 /* 表示の順番と見出しの文言（2026-08-21 ご指定）
    上から 1-4位 → 5-8位 → 9-12位 → 13-14位 → 15-16位 → 17-18位 */
@@ -2197,6 +2429,9 @@ function renderBracket(rows){
   var box=document.getElementById('live-bracket');
   if(!box) return;
   if(!rows||rows.length<=LIVE.glCount) return;
+  /* 2026-08-29 準決勝の通し番号を用意する。
+     日程が描かれなかったときでも番号が出るよう、ここでも数え直す */
+  buildSfNo(rows);
   var t=rows.slice(LIVE.glCount);
 
   /* トーナメントごとに、回戦別に仕分ける */
@@ -2216,16 +2451,28 @@ function renderBracket(rows){
 
   box.innerHTML = order.map(function(b){
     var m=map[b];
-    var html='<div class="bgroup"><h4>'+esc(bracketLabel(b))+'</h4>';
+    /* 2026-08-29 舟見さん指示：13-14位決定戦のような1試合だけの順位決定戦も、
+       11-12位決定戦などと【同じ見た目】にする。
+       　以前 … 見出しが薄い文字の h4 で、その下に箱
+       　いま … 見出しを黒帯・白文字（.kolabel）にし、その下に同じ箱
+       トーナメント（複数試合）のほうは、いままでどおり h4 が全体の名前になる。 */
+    var many = (m.final.length || m.sf.length || m.third.length);
+    var html='<div class="bgroup">'+(many ? '<h4>'+esc(bracketLabel(b))+'</h4>' : '');
 
-    if(m.final.length || m.sf.length || m.third.length){
+    if(many){
       /* ① 上位決定戦（＝そのトーナメントの決勝） */
       if(m.final.length) html+=koBox(finalLabel(b), koRow(m.final[0]));
-      /* ② 準決勝（縦並びのカードを横に並べる）。上下を太い線でつなぐ */
+      /* ② 準決勝（縦並びのカードを横に並べる）。上下を太い線でつなぐ
+         2026-08-29 舟見さん指示：見出しを要項の図と同じ形にした。
+         　以前 … 2試合をまとめて1本の「準決勝」の帯
+         　いま … 「準決勝⑤」「準決勝⑥」を、それぞれの試合の真上に置く */
       if(m.sf.length){
         if(m.final.length) html+=koArm('up');
-        html+=koBox('準決勝',
-          '<div class="kosf">'+m.sf.map(function(r){ return '<div>'+koCell(r)+'</div>'; }).join('')+'</div>');
+        html+='<div class="kobox"><div class="kosf">'+
+              m.sf.map(function(r){
+                return '<div><div class="kolabel sf">準決勝'+
+                       esc(SF_NO[String(r[C.no])]||'')+'</div>'+koCell(r)+'</div>';
+              }).join('')+'</div></div>';
         if(m.third.length) html+=koArm('down');
       }
       /* ③ 下位決定戦（＝3位決定戦） */
@@ -2235,7 +2482,7 @@ function renderBracket(rows){
         '<div class="kosf">'+m.qf.map(function(r){ return '<div>'+koCell(r)+'</div>'; }).join('')+'</div>');
     } else {
       /* 13-14位決定戦のような1試合だけの順位決定戦 */
-      html+='<div class="kobox">'+m.other.map(koRow).join('')+'</div>';
+      html+=koBox(bracketLabel(b), m.other.map(koRow).join(''));
     }
     return html+'</div>';
   }).join('');
@@ -2530,17 +2777,39 @@ function showDemo(){
    組み合わせは DEMO.groups から取るので、組み替えても図が自動で追随する。
    ※ クラスリーグは結果で決まるため、ここには紋章を入れない。 */
 function fillFormat(){
+  if(!window.DEMO) return;
+
   var box=document.getElementById('fmtGL');
-  if(!box || !window.DEMO || !DEMO.groups) return;
-  var L='ABCDEFGH';
-  box.innerHTML = DEMO.groups.map(function(teams,i){
-    return '<div class="gcol">'+
-             '<span class="chip gl">'+L.charAt(i)+'組</span>'+
-             '<div class="gemb">'+
-               teams.map(function(t){ return emblemHtml(t,'fm'); }).join('')+
-             '</div>'+
-           '</div>';
-  }).join('');
+  if(box && DEMO.groups){
+    var L='ABCDEFGH';
+    box.innerHTML = DEMO.groups.map(function(teams,i){
+      return '<div class="gcol">'+
+               '<span class="chip gl">'+L.charAt(i)+'組</span>'+
+               '<div class="gemb">'+
+                 teams.map(function(t){ return emblemHtml(t,'fm'); }).join('')+
+               '</div>'+
+             '</div>';
+    }).join('');
+  }
+
+  /* クラスリーグ（2026-08-28 舟見さん指示）
+     まだチームが決まっていないので、紋章の代わりに
+     「A組1位」など【どの組の何位が入るか】を同じ位置に並べる。
+     DEMO.upper / DEMO.lower がそのまま進出条件なので、組を組み替えても図が追随する。 */
+  var cl=document.getElementById('fmtCL');
+  if(cl && DEMO.upper && DEMO.lower){
+    cl.innerHTML = DEMO.upper.concat(DEMO.lower).map(function(b){
+      var lo   = b.label.indexOf('下位')>=0;
+      /* 「1組（上位）」→ 四角の中では2行に折る */
+      var name = String(b.label).replace('（','<br>（');
+      return '<div class="gcol">'+
+               '<span class="chip '+(lo?'lo':'up')+'">'+name+'</span>'+
+               '<div class="gemb qual">'+
+                 b.teams.map(function(t){ return '<span class="qslot">'+t+'</span>'; }).join('')+
+               '</div>'+
+             '</div>';
+    }).join('');
+  }
 }
 fillFormat();
 
