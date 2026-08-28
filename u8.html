@@ -447,8 +447,25 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .koarm.down .leg {top:0;height:13px;}
 .koarm.down .stem{top:10px;height:12px;}
 /* 順位決定戦カードの中央（2026-08-27）
-   上から Match No.01 → 第1コート → 9:00 → VS/スコア を縦に積む */
-.kobox .mcenter{flex:0 0 96px;line-height:1.35;}
+   上から Match No.01 → 第1コート → 9:00 → VS/スコア を縦に積む
+   2026-08-29 96px → 86px。空いた10pxをチーム名の幅に回す（下のコメント参照） */
+.kobox .mcenter{flex:0 0 86px;line-height:1.35;}
+/* ---- 横1枚の行のチーム名（2026-08-29 舟見さん指示）----
+   1-2位決定戦・3-4位決定戦・13-14位決定戦などの行で、
+   「ヴァリエンテ」だけが2行に折り返していた。
+
+   　① 折り返さない（white-space:nowrap）
+   　② 字を少し小さくする。長い名前だけでなく【全チーム同じ大きさ】にする
+   　③ 中央の欄を 96px → 86px にして、その10pxをチーム名に回す
+
+   一番長いのは U9 の「FC CAVALLO」で、11px・太字900 でも 61.9px。
+   画面幅360pxの端末でもチーム名の枠は約64px あるので収まる（実測ずみ）。
+   ★ チーム名を増やす・長くするときは、ここに収まるか確かめること。 */
+.kobox .mrow .mname{white-space:nowrap;font-size:11px;}
+/* まだチームが決まっていない枠（「準決勝①の勝者」「5組（下位）1位」）は
+   本物のチーム名より長く、1行には収まらない（実測 69〜72px ＞ 枠64px）。
+   ここだけは今までどおり折り返してよい。本物のチーム名は必ず1行。 */
+.kobox .mrow .mname .tbd{white-space:normal;}
 .kobox .mcenter .mmn{display:block;font-size:8.5px;font-weight:900;
   color:rgba(23,41,26,.55);}
 .kobox .mcenter .msub{display:block;font-size:9px;font-weight:700;
@@ -765,7 +782,7 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
    ============================================================================ */
 .fmt{margin-top:16px;}
 /* 大会方式の中の見出し（2026-08-28 舟見さん指示）
-   ① 大会進行方法 ② リーグ戦順位決定方法 ③ トーナメント・決定戦勝利チーム決定方法
+   ① 大会進行方式 ② リーグ戦順位決定方式 ③ トーナメント・決定戦勝利チーム決定方式
    2026-08-29 舟見さん指示：黒帯をやめ、【文字の下だけに黒い線】を引く形にした。
    　display:table … 線が文字の幅にぴったり合う（幅いっぱいに伸びない）
    　margin:… auto … その箱を中央に置く
@@ -947,7 +964,7 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .steps li:not(:last-child)::after{content:"›"; margin-left:5px; margin-right:-2px;
   color:rgba(23,41,26,.5); font-weight:900;}
 .rulebox{counter-reset:step;}
-/* 2026-08-29 舟見さん指示：この箱（勝点が同点の場合の順位決定方法）だけ中央そろえ。
+/* 2026-08-29 舟見さん指示：この箱（勝点が同点の場合の順位決定方式）だけ中央そろえ。
    .steps は横並び（flex）なので、text-align だけでは中央に寄らない。
    並びの中央そろえには justify-content が要る。 */
 .rulebox.center{text-align:center;}
@@ -1119,7 +1136,7 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
         <div class="row only-u8"><dt>試合時間</dt><dd>16分（前半8分-HT1分-後半8分）</dd></div>
         <div class="row only-u9"><dt>試合時間</dt><dd>20分（前半10分-HT2分-後半10分）</dd></div>
         <!-- 2026-08-29 舟見さん指示：U8の「大会方式／下記図のとおり」の行を削除。
-             すぐ下に「大会進行方法」の図があるので、案内するだけの行は要らない。 -->
+             すぐ下に「大会進行方式」の図があるので、案内するだけの行は要らない。 -->
         <div class="row only-u9"><dt>大会方式</dt><dd>4グループ × 4チームの総当たり<br>
           → 順位別に4つのトーナメント<br>
           （全チーム5試合／16位まで決定）</dd></div>
@@ -1131,14 +1148,14 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
       <div class="fmt only-u8">
 
         <!-- 2026-08-28 舟見さん指示：大会方式を3つの見出しで区切った。
-             ① 大会進行方法 … 進み方の図（GL → CL → KR）
-             ② リーグ戦順位決定方法 … 勝点と順位の決め方
-             ③ トーナメント・決定戦勝利チーム決定方法 … サドンデスPK
+             ① 大会進行方式 … 進み方の図（GL → CL → KR）
+             ② リーグ戦順位決定方式 … 勝点と順位の決め方
+             ③ トーナメント・決定戦勝利チーム決定方式 … サドンデスPK
              以前は①の図の途中に②が挟まっていて、どこまでが進み方の説明か分かりにくかった。 -->
-        <p class="fmt-h">大会進行方法</p>
+        <p class="fmt-h">大会進行方式</p>
 
         <!-- 2026-08-29 舟見さん指示：図の前に置く説明文（左詰め） -->
-        <p class="fmt-lead">本大会は次の方法で参加全18チームの順位を1位から18位まで決定します。3チーム総当たりのグループリーグ、グループリーグの順位に応じて行うクラスリーグ、クラスリーグの順位に応じて行うトーナメント・順位決定戦です。下記図の通りに進行いたします。</p>
+        <p class="fmt-lead">本大会は次の方式で参加全18チームの順位を1位から18位まで決定します。3チーム総当たりのグループリーグ、グループリーグの順位に応じて行うクラスリーグ、クラスリーグの順位に応じて行うトーナメント・順位決定戦です。下記図の通りに進行いたします。</p>
 
         <div class="fmt-stage">
           <!-- 2026-08-27 見出しを3行に。中身は fillFormat() が組み立てる -->
@@ -1255,17 +1272,17 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
         <!-- ② リーグ戦の決め方（グループリーグ・クラスリーグ 共通）2026-08-21
              2026-08-28 図の途中から、独立した見出しの下へ移した。
              見出しに「リーグ戦」と入ったので、中の小見出しからは外している。 -->
-        <p class="fmt-h">リーグ戦順位決定方法</p>
+        <p class="fmt-h">リーグ戦順位決定方式</p>
 
         <!-- 2026-08-29 舟見さん指示：勝点の図（勝ち3／引分1／負け0の3マス）は
              この文に書いてあるので削除した。 -->
-        <p class="fmt-lead">勝利チームには勝点3、引分の場合は両チームに勝点1、敗北チームは勝点0で、その合計で順位を決定します。勝点が同点の場合には次の方法で順位を決定します。</p>
+        <p class="fmt-lead">勝利チームには勝点3、引分の場合は両チームに勝点1、敗北チームは勝点0で、その合計で順位を決定します。勝点が同点の場合には次の方式で順位を決定します。</p>
 
         <div class="rulebox center">
           <!-- 2026-08-29 舟見さん指示：①の「勝点」を外し、②以降を1つずつ繰り上げた。
                勝点そのものは上の説明文で述べているため。
                同日：この箱だけ中央そろえに（class に center を追加）。 -->
-          <h4>勝点が同点の場合の順位決定方法</h4>
+          <h4>勝点が同点の場合の順位決定方式</h4>
           <ol class="steps">
             <li>直接対決の結果</li>
             <li>得失点差</li>
@@ -1276,7 +1293,7 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 
         <!-- ③ トーナメントの勝者の決め方（2026-08-21 主催者より受領）
              2026-08-28 見出しを立てたので、中の小見出しは重複するため外した。 -->
-        <p class="fmt-h">トーナメント・決定戦勝利チーム決定方法</p>
+        <p class="fmt-h">トーナメント・決定戦勝利チーム決定方式</p>
 
         <!-- 2026-08-29 舟見さん指示：四角の説明文（引き分けの場合はサドンデスPK…）を削除し、
              ②と同じ左詰め・一字下がりの説明文に置き換えた。 -->
