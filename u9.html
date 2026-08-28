@@ -298,8 +298,14 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .idx-toggle:hover,.back-toggle:hover{background:#000; border-color:#fff;}
 
 /* ---- 黄色の地に直接のる文字 ---- */
-.sec h2{color:var(--ink);}
-.sec h3{color:rgba(23,41,26,.78);}
+/* ---- 見出しを黒帯・白文字にする（2026-08-27 舟見さん指示）----
+   h2（英字）と h3（日本語）で1枚の黒帯になるようにする。
+   .sec の左右の内余白（14px）を打ち消して、パネルの端から端まで届かせている。
+   ★ .sec の padding を変えたら、ここの margin も同じ値に直すこと。 */
+.sec h2{background:var(--edge); color:#fff;
+  margin:-16px -14px 0; padding:14px 14px 0;}   /* 上の -16px で帯をパネルの上端まで届かせる */
+.sec h3{background:var(--edge); color:rgba(255,255,255,.82);
+  margin:0 -14px 16px; padding:2px 14px 12px;}
 .note,.updated,.live-wait,.scrollhint,
 .phase,.gblock h4,.bgroup h4,.bhead span,.bthird .lbl{color:rgba(23,41,26,.75);}
 .bgroup h4 i{color:rgba(23,41,26,.62);}
@@ -317,12 +323,15 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 }
 
 /* ---- 項目（セクション）そのものを白い角丸パネルにする ---- */
+/* 2026-08-27 黒い縁取りをやめた（舟見さん指示）。
+   見出しが黒帯になったので、枠が無くても項目の区切りは分かる。 */
 .sec{background:var(--panel);
-  border:2px solid var(--edge);
+  border:none;
   border-radius:14px;
   margin:14px 12px;
-  padding:18px 14px 16px;
-  box-shadow:0 2px 0 rgba(23,41,26,.18);}
+  padding:16px 14px 16px;   /* 上下の余白を同じにする */
+  box-shadow:0 2px 0 rgba(23,41,26,.18);
+  overflow:hidden;}
 .detail{padding-bottom:40px;}
 .detail > .sec:first-child{padding-top:18px;}
 
@@ -360,6 +369,12 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
    縦＝キックオフ時刻／横＝コート の表に戻し、マスの中を
    　組名 → ホームの紋章 → ホーム名 → 時刻/スコア → アウェイ名 → アウェイの紋章 → MN番号
    の順に縦に積む。詳しい考え方は u8.html の同じ場所を参照。 */
+/* 試合番号（2026-08-27）。日程・準決勝カードの一番上に出す。
+   スコアの前後どちらでも同じ位置に出したままにする */
+/* text-align:center を必ず書くこと。日程の表では表の設定で中央になるが、
+   トーナメントのカードでは受け継がれず左に寄ってしまう（2026-08-27 修正） */
+.cell .cmn{font-size:8.5px;font-weight:900;letter-spacing:.02em;
+  color:rgba(23,41,26,.55);line-height:1.3;text-align:center;}
 .cell .cg{font-size:9px;line-height:1.35;}
 /* 「（5位決定戦）」の行（2026-08-27）。トーナメントの決勝・3位決定戦にだけ付く */
 .cell .cg2{display:block;font-size:8.5px;opacity:.85;}
@@ -368,7 +383,8 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .cell .cs.on{font-size:14px;}
 .cell .cs .dash{opacity:.4;margin:0 2px;}
 .mem.sm{width:44px;aspect-ratio:1 / 1;margin:2px auto;}
-.cell .cpk{font-size:8px;font-weight:700;color:var(--c-brk);}
+/* PK戦の行も中央揃えを明記（トーナメントのカードでは受け継がれないため） */
+.cell .cpk{font-size:8px;font-weight:700;color:var(--c-brk);text-align:center;}
 .cell .cfoot{font-size:8.5px;font-weight:700;text-align:center;margin-top:2px;
   color:rgba(23,41,26,.42);}
 .cell .cfoot.done{color:var(--edge);}
@@ -391,6 +407,37 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .kosf > div{flex:1 1 0;min-width:0;padding:8px 4px;}
 .kosf > div + div{border-left:1px solid var(--hair);}
 .kobox .mrow{border-bottom:none;padding:10px 6px 8px;}
+
+/* ---- 準決勝と決勝・3位決定戦をつなぐ線（2026-08-27）----
+   紙のトーナメント表と同じ形。左右の脚は準決勝カード2つの中心（25%と75%）、
+   まとめる線は中央（50%）。太さは3px。詳細は u8.html の同じ場所。 */
+.koarm{position:relative;height:22px;}
+/* 線のすぐ下に来る見出し（準決勝／3-4位決定戦）の上余白を消す。
+   これが残っていると、線と次の箱が離れて見える（2026-08-27 修正） */
+.koarm + .kolabel{margin-top:0;}
+.koarm i{position:absolute;background:var(--edge);}
+.koarm .bar{left:25%;right:25%;top:10px;height:3px;}
+.koarm .leg{width:3px;}
+.koarm .leg.l{left:calc(25% - 1.5px);}
+.koarm .leg.r{right:calc(25% - 1.5px);}
+.koarm .stem{width:3px;left:calc(50% - 1.5px);}
+/* ★ 角をきれいに繋げるコツ（2026-08-27）
+   縦線は横棒の「手前で止める」のではなく【横棒を突き抜けるまで伸ばす】。
+   接するだけだと、画面の拡大率によって角に細い隙間が見える。 */
+.koarm.up   .stem{top:0;height:13px;}
+.koarm.up   .leg {top:10px;height:12px;}
+.koarm.down .leg {top:0;height:13px;}
+.koarm.down .stem{top:10px;height:12px;}
+/* 順位決定戦カードの中央（2026-08-27）
+   上から Match No.01 → 第1コート → 9:00 → VS/スコア を縦に積む */
+.kobox .mcenter{flex:0 0 96px;line-height:1.35;}
+.kobox .mcenter .mmn{display:block;font-size:8.5px;font-weight:900;
+  color:rgba(23,41,26,.55);}
+.kobox .mcenter .msub{display:block;font-size:9px;font-weight:700;
+  color:rgba(23,41,26,.6);}
+.kobox .mcenter .mvs{display:block;font-size:15px;font-weight:900;
+  color:rgba(23,41,26,.55);margin-top:2px;}
+.kobox .mcenter .mvs.score{font-size:19px;color:var(--edge);}
 
 /* ---- 試合カード ---- */
 .mcard .no{color:rgba(23,41,26,.62);}
@@ -544,8 +591,11 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 /* 「第1コート」が入るので46px→58pxに広げ、
    さらにエンブレムを2倍にしたのに合わせて66pxにした（2026-08-27） */
 .xtbl .c-h2h{min-width:66px; padding:6px 4px; border-left:1px solid var(--hair);}
-/* 上の行（.mk）＝ 試合前はキックオフ時刻／試合後はスコア
-   下の行（.sc）＝ 試合前はコート名／試合後は勝敗記号（.mark が付く） */
+/* 対戦表のマスの一番上に出す試合番号（2026-08-27）。前後どちらでも同じ位置 */
+.xtbl .c-h2h .hmn{display:block; font-size:8px; font-weight:900;
+  color:rgba(23,41,26,.5); line-height:1.3; letter-spacing:0;}
+/* 上の行（.mk）＝ 試合前はコート名／試合後はスコア
+   下の行（.sc）＝ 試合前は時刻／試合後は勝敗記号（.mark が付く） */
 .xtbl .c-h2h .mk{display:block; font-size:13px; font-weight:900; line-height:1.15;}
 .xtbl .c-h2h .sc{display:block; font-size:9.5px; line-height:1.25; opacity:.7;}
 /* 勝敗記号は下の行に出るが、小さすぎると読めないので大きさと濃さを戻す */
@@ -705,12 +755,35 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 .fmt-grid.g4{grid-template-columns:repeat(4, 1fr);}
 .fmt-grid.g2{grid-template-columns:repeat(2, 1fr);}
 
-.chip{display:flex; align-items:center; justify-content:center; min-width:0;
+/* 2026-08-27 flex-direction:column を追加。
+   これが無いと「1組」「（上位）」「3チーム」が【横に並んで】しまい、
+   マスの中で不自然に折り返す（<small> が別の要素として横に置かれるため）。 */
+.chip{display:flex; flex-direction:column;
+  align-items:center; justify-content:center; min-width:0;
   padding:8px 2px; border:2px solid var(--edge); border-radius:0;
   font-size:clamp(8.5px, 2.5vw, 10.5px); font-weight:900;
   text-align:center; line-height:1.25;}
-.chip.gl,.chip.up{background:#facd10; color:var(--edge);}
-.chip.lo{background:var(--edge); color:#fff;}
+/* 2026-08-27 舟見さん指示
+   　A〜F組（グループリーグ）… 白
+   　1〜4組（上位）          … U8ページの地色と同じ黄色
+   　5・6組（下位）          … ヴァリエンテ富山のエンブレムの緑（実測 #073E15）
+   ※ クラスリーグの図はU8用（このページでは非表示）だが、作りはそろえてある */
+/* マスの中の「3チーム」は、組の名前より一段小さく控えめに（2026-08-27）
+   white-space:nowrap … 「3チー／ム」のように途中で切れるのを防ぐ */
+.chip small{font-size:.82em; font-weight:700; opacity:.75; white-space:nowrap;}
+.chip{white-space:nowrap;}   /* 「（上位）」が「（上／位）」と割れるのを防ぐ */
+.chip.gl{background:#fff; color:var(--edge);}
+.chip.up{background:#facd10; color:var(--edge);}
+.chip.lo{background:#073E15; color:#fff; border-color:#073E15;}
+
+/* 組の四角の下に、その組のチームの紋章を縦に並べる枠（2026-08-27） */
+.fmt-grid .gcol{display:flex; flex-direction:column; min-width:0;}
+.fmt-grid .gcol .chip{width:100%;}
+.gemb{border:2px solid var(--edge); border-top:none;
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  padding:5px 2px;}
+.gemb .mem.fm{width:100%; max-width:34px; aspect-ratio:1 / 1;}
+.gemb .mem.none{border:1px dashed rgba(23,41,26,.25);}
 
 .fmt-arrow{text-align:center; margin:10px 0; line-height:1.6;
   font-size:clamp(9px, 2.6vw, 11px); font-weight:700; color:rgba(23,41,26,.8);}
@@ -974,7 +1047,7 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
       <div class="fmt only-u8">
 
         <div class="fmt-stage">
-          <p class="fmt-head"><b>GROUP LEAGUE</b><span>グループリーグ　3チーム × 6組</span></p>
+          <p class="fmt-head"><b>GROUP LEAGUE</b><span>グループリーグ</span><span>3チーム × 6組</span></p>
           <div class="fmt-grid g6">
             <span class="chip gl">A組</span><span class="chip gl">B組</span><span class="chip gl">C組</span>
             <span class="chip gl">D組</span><span class="chip gl">E組</span><span class="chip gl">F組</span>
@@ -984,12 +1057,15 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
         <p class="fmt-arrow">▼<br>各組の<b>1・2位</b>が上位リーグ／<b>3位</b>が下位リーグへ</p>
 
         <div class="fmt-stage">
-          <p class="fmt-head"><b>CLASS LEAGUE</b><span>クラスリーグ　3チーム × 6組</span></p>
+          <p class="fmt-head"><b>CLASS LEAGUE</b><span>クラスリーグ</span><span>3チーム × 6組</span></p>
           <div class="fmt-grid g6">
             <!-- 2026-08-27 用語統一（u8.html と同じ。U8用の図なのでU9では非表示） -->
-            <span class="chip up">1組<br>（上位）</span><span class="chip up">2組<br>（上位）</span>
-            <span class="chip up">3組<br>（上位）</span><span class="chip up">4組<br>（上位）</span>
-            <span class="chip lo">5組<br>（下位）</span><span class="chip lo">6組<br>（下位）</span>
+            <span class="chip up">1組<br>（上位）<br><small>3チーム</small></span>
+            <span class="chip up">2組<br>（上位）<br><small>3チーム</small></span>
+            <span class="chip up">3組<br>（上位）<br><small>3チーム</small></span>
+            <span class="chip up">4組<br>（上位）<br><small>3チーム</small></span>
+            <span class="chip lo">5組<br>（下位）<br><small>3チーム</small></span>
+            <span class="chip lo">6組<br>（下位）<br><small>3チーム</small></span>
           </div>
         </div>
 
@@ -1041,8 +1117,9 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
       <div class="fmt only-u9">
 
         <div class="fmt-stage">
-          <p class="fmt-head"><b>GROUP LEAGUE</b><span>グループリーグ　4チーム × 4組</span></p>
-          <div class="fmt-grid g4">
+          <p class="fmt-head"><b>GROUP LEAGUE</b><span>グループリーグ</span><span>4チーム × 4組</span></p>
+          <!-- 2026-08-27 中身は fillFormat() が組み立てる（組の四角＋所属3〜4チームの紋章） -->
+          <div class="fmt-grid g4" id="fmtGL">
             <span class="chip gl">A組</span><span class="chip gl">B組</span>
             <span class="chip gl">C組</span><span class="chip gl">D組</span>
           </div>
@@ -1326,6 +1403,14 @@ function isTBD(s){
       || /の(勝者|敗者)$/.test(s);                   /* 1位T準決勝①の勝者 */
 }
 
+/* 試合番号の表示（2026-08-27 舟見さん指示）
+   「Match No.01」の形にそろえ、日程・対戦表・トーナメントの3か所すべてに出す。
+   スコアを入れる前も後も【同じ位置】に出したままにする（当日の照合に使うため）。 */
+function matchNo(no){
+  var s=String(no==null?'':no);
+  return 'Match No.'+(s.length<2 ? '0'+s : s);
+}
+
 /* チーム名の表示。未定の枠は薄い文字にして、本物のチーム名と見分けられるようにする */
 function teamCell(v){
   var s=String(v==null?'':v);
@@ -1512,16 +1597,16 @@ function renderSchedule(rows){
         if(parseFloat(r[C.hpk])>parseFloat(r[C.apk])) hw=true; else aw=true;
       }
     }
+    /* 2026-08-27 並び順（舟見さん指示）
+       Match No.01 → 組名 → 紋章 → チーム名 → VS/スコア → チーム名 → 紋章 */
     return '<div class="cell">'+
+             '<div class="cmn">'+esc(matchNo(r[C.no]))+'</div>'+
              (r[C.name]?'<div class="cg">'+stageName(r[C.name])+'</div>':'')+
              emblemHtml(r[C.home],'sm')+
              '<div class="ct'+(hw?' win':'')+'">'+teamCell(r[C.home])+'</div>'+
              '<div class="cs'+(has?' on':'')+'">'+sc+pk+'</div>'+
              '<div class="ct'+(aw?' win':'')+'">'+teamCell(r[C.away])+'</div>'+
              emblemHtml(r[C.away],'sm')+
-             '<div class="cfoot'+(has?' done':'')+'">'+
-               (has ? '試合終了' : 'MN'+esc(r[C.no]))+
-             '</div>'+
            '</div>';
   }
 
@@ -1572,13 +1657,13 @@ function headToHead(label,x,y){
     if(r[C.home]===x && r[C.away]===y){ mine=r[C.hs]; theirs=r[C.as]; mpk=r[C.hpk]; tpk=r[C.apk]; }
     else if(r[C.home]===y && r[C.away]===x){ mine=r[C.as]; theirs=r[C.hs]; mpk=r[C.apk]; tpk=r[C.hpk]; }
     else continue;
-    /* 2026-08-27 まだ試合前でも、キックオフ時刻とコートを返す（マスに出すため） */
+    /* 2026-08-27 まだ試合前でも、試合番号・キックオフ時刻・コートを返す（マスに出すため） */
     if(mine===''||theirs===''||mine===undefined||theirs===undefined)
-      return { played:false, time:r[C.time], court:r[C.court] };
+      return { played:false, no:r[C.no], time:r[C.time], court:r[C.court] };
     var m=parseFloat(mine), t=parseFloat(theirs);
     var pk='';
     if(mpk!==''&&tpk!==''&&mpk!==undefined&&tpk!==undefined) pk='PK '+mpk+'-'+tpk;
-    return { played:true,
+    return { played:true, no:r[C.no], time:r[C.time], court:r[C.court],
              /* 2026-08-27 負けの記号を × から ● に変更（舟見さん指示）
                 勝ち=○（白丸）／負け=●（黒丸）／引き分け=△ */
              mark:(m>t?'○':(m<t?'●':'△')),
@@ -1642,9 +1727,11 @@ function oneStanding(label,rows){
          　試合後 … 上＝スコア／下＝勝敗記号（○●△）
          上の行が .mk（大きい字）、下の行が .sc（小さい字）。 */
       if(!h)          return '<td class="c-h2h"><span class="mk">—</span></td>';
-      if(!h.played)   return '<td class="c-h2h"><span class="mk yet">'+esc(h.time||'')+'</span>'+
-                             '<span class="sc">'+esc(h.court||'')+'</span></td>';
-      return '<td class="c-h2h"><span class="mk">'+esc(h.score)+'</span>'+
+      if(!h.played)   return '<td class="c-h2h"><span class="hmn">'+esc(matchNo(h.no))+'</span>'+
+                             '<span class="sc">'+esc(h.court||'')+'</span>'+
+                             '<span class="sc">'+esc(h.time||'')+'</span></td>';
+      return '<td class="c-h2h"><span class="hmn">'+esc(matchNo(h.no))+'</span>'+
+             '<span class="mk">'+esc(h.score)+'</span>'+
              '<span class="sc mark '+h.cls+'">'+h.mark+'</span>'+
              (h.pk?'<span class="pk">'+esc(h.pk)+'</span>':'')+'</td>';
     }).join('');
@@ -2058,46 +2145,58 @@ function pkHtml(r,cls){
     ? '<div class="'+cls+'">PK '+esc(r[C.hpk])+'-'+esc(r[C.apk])+'</div>' : '';
 }
 
-/* 縦並びのカード（日程のマスと同じ形） */
+/* 準決勝の縦並びカード（2026-08-27 舟見さん指示）
+   上から Match No.01 → 第1コート → 9:00 → 紋章 → チーム名 → VS/スコア → チーム名 → 紋章 */
 function koCell(r){
   if(!r) return '<div class="cell"><div class="cs">—</div></div>';
   var v=resultOf(r);
   var sc=v.has ? (esc(r[C.hs])+'<span class="dash">-</span>'+esc(r[C.as])) : 'VS';
   return '<div class="cell">'+
-           '<div class="cg">'+esc(r[C.time]||'')+'　'+esc(r[C.court]||'')+'</div>'+
+           '<div class="cmn">'+esc(matchNo(r[C.no]))+'</div>'+
+           '<div class="cg">'+esc(r[C.court]||'')+'</div>'+
+           '<div class="cg">'+esc(r[C.time]||'')+'</div>'+
            emblemHtml(r[C.home],'sm')+
            '<div class="ct'+(v.hw?' win':'')+'">'+teamCell(r[C.home])+'</div>'+
            '<div class="cs'+(v.has?' on':'')+'">'+sc+pkHtml(r,'cpk')+'</div>'+
            '<div class="ct'+(v.aw?' win':'')+'">'+teamCell(r[C.away])+'</div>'+
            emblemHtml(r[C.away],'sm')+
-           '<div class="cfoot'+(v.has?' done':'')+'">'+
-             (v.has ? '試合終了' : 'MN'+esc(r[C.no]))+'</div>'+
          '</div>';
 }
 
-/* 横並びのカード（スポナビ式） */
+/* 順位決定戦の横並びカード（2026-08-27 舟見さん指示）
+   中央の欄に 上から Match No.01 → 第1コート → 9:00 → VS/スコア を積む */
 function koRow(r){
   if(!r) return '';
   var v=resultOf(r);
   var center=v.has ? (esc(r[C.hs])+'<span class="dash">-</span>'+esc(r[C.as])) : 'VS';
   return '<div class="mrow">'+
-           '<div class="mtop">'+
-             '<span class="court">'+esc(r[C.time]||'')+'　'+esc(r[C.court]||'')+'</span>'+
-           '</div>'+
            '<div class="mmain">'+
              emblemHtml(r[C.home])+
              '<div class="mname l'+(v.hw?' win':'')+'">'+teamCell(r[C.home])+'</div>'+
-             '<div class="mcenter'+(v.has?' score':'')+'">'+center+pkHtml(r,'mpk')+'</div>'+
+             '<div class="mcenter">'+
+               '<span class="mmn">'+esc(matchNo(r[C.no]))+'</span>'+
+               '<span class="msub">'+esc(r[C.court]||'')+'</span>'+
+               '<span class="msub">'+esc(r[C.time]||'')+'</span>'+
+               '<span class="mvs'+(v.has?' score':'')+'">'+center+'</span>'+
+               pkHtml(r,'mpk')+
+             '</div>'+
              '<div class="mname r'+(v.aw?' win':'')+'">'+teamCell(r[C.away])+'</div>'+
              emblemHtml(r[C.away])+
            '</div>'+
-           '<div class="mfoot'+(v.has?' done':'')+'">'+
-             (v.has ? '試合終了' : 'MN'+esc(r[C.no]))+'</div>'+
          '</div>';
 }
 
 function koBox(title, inner){
   return '<div class="kolabel">'+esc(title)+'</div><div class="kobox">'+inner+'</div>';
+}
+
+/* 準決勝と、その上（決勝）・下（3位決定戦）をつなぐ太い線（2026-08-27 舟見さん指示）
+   詳しい考え方は u8.html の同じ場所を参照。 */
+function koArm(dir){
+  return '<div class="koarm '+dir+'">'+
+           '<i class="stem"></i><i class="bar"></i>'+
+           '<i class="leg l"></i><i class="leg r"></i>'+
+         '</div>';
 }
 
 function renderBracket(rows){
@@ -2128,10 +2227,12 @@ function renderBracket(rows){
     if(m.final.length || m.sf.length || m.third.length){
       /* ① 上位決定戦（＝そのトーナメントの決勝） */
       if(m.final.length) html+=koBox(finalLabel(b), koRow(m.final[0]));
-      /* ② 準決勝（縦並びのカードを横に並べる） */
+      /* ② 準決勝（縦並びのカードを横に並べる）。上下を太い線でつなぐ */
       if(m.sf.length){
+        if(m.final.length) html+=koArm('up');
         html+=koBox('準決勝',
           '<div class="kosf">'+m.sf.map(function(r){ return '<div>'+koCell(r)+'</div>'; }).join('')+'</div>');
+        if(m.third.length) html+=koArm('down');
       }
       /* ③ 下位決定戦（＝3位決定戦） */
       if(m.third.length) html+=koBox(thirdLabel(b), koRow(m.third[0]));
@@ -2399,6 +2500,24 @@ function showDemo(){
   });
 }
 /* ▲▲▲ ここまでが U9 の確定した組み合わせ ▲▲▲ */
+
+/* 要項の図に、各組のエンブレムを入れる（2026-08-27 舟見さん指示）
+   組の四角の下に、縦長の枠でその組の4チームの紋章を並べる。
+   組み合わせは DEMO.groups から取るので、組み替えても図が自動で追随する。 */
+function fillFormat(){
+  var box=document.getElementById('fmtGL');
+  if(!box || !window.DEMO || !DEMO.groups) return;
+  var L='ABCDEFGH';
+  box.innerHTML = DEMO.groups.map(function(teams,i){
+    return '<div class="gcol">'+
+             '<span class="chip gl">'+L.charAt(i)+'組</span>'+
+             '<div class="gemb">'+
+               teams.map(function(t){ return emblemHtml(t,'fm'); }).join('')+
+             '</div>'+
+           '</div>';
+  }).join('');
+}
+fillFormat();
 
 if(!LIVE.sheetId){ showDemo(); }
 loadAll();
