@@ -42,7 +42,9 @@ img{max-width:100%;display:block;}
    HTML側の見出し（.cat-title）は廃止した。
    戻したい場合は _バックアップ_2026-08-21\ を参照。 */
 
-.cat-nav{position:absolute; left:0; right:0; bottom:4.5%; z-index:4;
+/* 2026-08-30 舟見さん指示：ボタンのかたまりをもっと下へ寄せる（4.5% → 2%）。
+   帯が2本になって縦に伸びたぶんを、下の余白を詰めて取り返している。 */
+.cat-nav{position:absolute; left:0; right:0; bottom:2%; z-index:4;
   padding:0 3.5%;}
 
 /* 上段：U8／U9 の2つ並び。大きさは 2026-08-21 の状態で固定 */
@@ -52,7 +54,12 @@ img{max-width:100%;display:block;}
 /* 下段：駐車場ボタン。行の全幅なので、左端がU8の左端・右端がU9の右端にそろう。
    margin-top の % は「親の“幅”」が基準になるため、上段の隙間(3.5%)と同じ間隔になる。
    この段が増えたぶん、上段のU8／U9は自動で上へ持ち上がる（下端ぞろえのため）。 */
-.cat-btn-wide{margin-top:3.5%;}
+/* 2026-08-30 舟見さん指示：ボタンどうしの間隔を詰める（3.5% → 1.6%）。
+   ★ 帯の画像（logo_parking.png / logo_water.png）は、
+   　 黒い帯の左右がU8ボタン・U9ボタンの黒枠とぴったりそろうように作ってある。
+   　 白い縁は画像幅の1.158%（＝U8ボタンの縁と同じ見た目の太さ）。
+   　 .cat-row の gap（3.5%）を変えると、この計算がずれるので注意。 */
+.cat-btn-wide{margin-top:1.6%;}
 
 /* 2026-08-21 角丸をやめて直角に。画像側は黒フチの外に白い余白を含めて切り抜いてある */
 .cat-btn{display:block; border-radius:0; overflow:hidden;
@@ -62,6 +69,10 @@ img{max-width:100%;display:block;}
 .cat-btn img{width:100%; height:auto;}
 .cat-btn:hover{transform:translateY(-2px); box-shadow:0 7px 18px rgba(0,0,0,.55);}
 .cat-btn:active{transform:translateY(1px); box-shadow:0 2px 6px rgba(0,0,0,.45);}
+
+/* お知らせの帯（2026-08-30 熱中症対策）。押せないので動きを付けない */
+.cat-note{cursor:default;}
+.cat-note:hover,.cat-note:active{transform:none; box-shadow:0 3px 10px rgba(0,0,0,.45);}
 </style>
 </head>
 <body>
@@ -75,7 +86,10 @@ img{max-width:100%;display:block;}
     </div>
 
     <!-- ボタン（素材: 素材\HP使用\夏休みカップロゴ.pptx
-         2枚目=U8 ／ 5枚目=U9 ／ 7枚目=駐車場） -->
+         2枚目=U8 ／ 5枚目=U9 ／ 9枚目=駐車場 ／ 10枚目=熱中症対策
+         2026-08-30 主催者がパワーポイントを更新（19枚に）。
+           ・駐車場の帯を新しい版に差し替え（以前は7枚目から作っていた）
+           ・その下に「熱中症対策 水販売 100円」の帯を追加 -->
     <nav class="cat-nav">
       <div class="cat-row">
         <a class="cat-btn" href="u8.html">
@@ -88,6 +102,11 @@ img{max-width:100%;display:block;}
       <a class="cat-btn cat-btn-wide" href="parking.html">
         <img src="assets/logo_parking.png" alt="駐車場の利用に関するお願い">
       </a>
+      <!-- 熱中症対策のお知らせ。専用ページは無いので【押せない帯】にしてある。
+           押せると思わせないよう、.cat-note で持ち上がりの動きを消している。 -->
+      <div class="cat-btn cat-btn-wide cat-note">
+        <img src="assets/logo_water.png" alt="熱中症対策　水販売　100円">
+      </div>
     </nav>
   </section>
 
