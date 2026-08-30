@@ -420,6 +420,12 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
    ★ .kosf > div の padding を変えたら、ここの margin も同じ値に直すこと。 */
 .kosf > div > .kolabel.sf{margin:-8px -4px 6px;}
 .kobox .mrow{border-bottom:none;padding:10px 6px 8px;}
+/* チーム専用ページの日程（2026-08-30 舟見さん指示）
+   KNOCKOUT ROUND では上に黒帯があるので枠の上辺が要らないが、
+   こちらは黒帯が無いので【4辺とも灰色の線】で囲む（対戦表と同じ見え方）。
+   試合が2つ以上あるときは、その間にも同じ灰色の線を引く。 */
+.kobox.tp{border:1px solid var(--hair);}
+.kobox.tp .mrow + .mrow{border-top:1px solid var(--hair);}
 
 /* ---- 準決勝と決勝・3位決定戦をつなぐ線（2026-08-27）----
    紙のトーナメント表と同じ形。左右の脚は準決勝カード2つの中心（25%と75%）、
@@ -734,7 +740,16 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
 
 .tp-head{text-align:center; margin-bottom:6px;}
 #tp-emblem img{width:84px; height:84px; object-fit:contain; margin:0 auto 6px;}
-#tp-name{font-size:16px; font-weight:900; letter-spacing:.02em; line-height:1.3;}
+/* チーム名は <h2> だが、項目の見出しではなく【チームの名前】なので、
+   .sec h2 の黒帯をここで打ち消す（2026-08-30 舟見さん指示）。
+   　・黒帯 → 背景なし・黒文字
+   　・下に黒い線（文字の幅にぴったり合わせるため display:table ＋ margin:auto）
+   ★ .sec h2 の margin/padding も打ち消しているので、
+   　 .sec の padding を変えたときはここも見直すこと。 */
+#tp-name{background:none; color:var(--band);
+  display:table; margin:0 auto; padding:0 0 6px;
+  border-bottom:3px solid var(--band);
+  font-size:16px; font-weight:900; letter-spacing:.02em; line-height:1.3;}
 
 .tp-sec{margin-top:18px;}
 .tp-sec h4{font-size:11.5px; font-weight:900; letter-spacing:.08em;
@@ -2147,40 +2162,38 @@ function tpResult(r,team){
            mark:(m>o?'○':(m<o?'●':'△')), cls:(m>o?'w':(m<o?'l':'d')) };
 }
 
-/* 試合を横並びの表で出す。キックオフ／コート／対戦相手／スコア の4列。
-   スコアはまだ入力されていなければ空欄にする。 */
+/* 試合の出し方（2026-08-30 舟見さん指示で作り直し）
+   　以前 … キックオフ／コート／対戦相手／スコア の4列の表
+   　いま … 順位決定戦とまったく同じ【横長・2チーム横並びのカード】
+
+   koRow() は KNOCKOUT ROUND で使っているものをそのまま呼んでいる。
+   ちがいは、順位決定戦に付いている【黒帯の見出し（.kolabel）を置かない】ことだけ。
+   ★ カードの形を直すときは koRow の1か所でよい（2か所に増やさないこと）。 */
 function tpTable(list,team){
-  return '<div class="tscroll"><table class="stbl tp-tbl">'+
-    '<thead><tr><th>キックオフ</th><th>コート</th><th>対戦相手</th><th>スコア</th></tr></thead>'+
-    '<tbody>'+
-    list.map(function(r){
-      var h=tpResult(r,team);
-      var sc = h.played
-        ? '<b class="tp-'+h.cls+'">'+esc(h.mine)+' - '+esc(h.opp_)+'</b>'+
-          (h.pk?'<small>PK '+esc(h.pk)+'</small>':'')
-        : '';
-      return '<tr>'+
-               '<td class="tp-time">'+esc(r[C.time]||'')+'</td>'+
-               '<td class="tp-court">'+esc(r[C.court]||'')+'</td>'+
-               '<td class="tp-opp">'+esc(h.opp||'—')+'</td>'+
-               '<td class="tp-score">'+sc+'</td>'+
-             '</tr>';
-    }).join('')+
-    '</tbody></table></div>';
+  return '<div class="kobox tp">'+list.map(koRow).join('')+'</div>';
 }
 
-/* まだ対戦相手が決まっていない試合を、空欄の行として出す（2026-08-24）
+/* まだ対戦相手が決まっていない試合を、空欄のカードとして出す（2026-08-24）
    項目を隠してしまうと「この先どうなるのか」が分からないので、
-   これから何試合あるのかだけ先に見せる。 */
+   これから何試合あるのかだけ先に見せる。
+   2026-08-30 表から、上と同じ横並びカードの形にそろえた。 */
 function tpBlankTable(n){
   var rows='';
   for(var i=0;i<n;i++){
-    rows+='<tr><td class="tp-time">—</td><td class="tp-court">—</td>'+
-          '<td class="tp-opp">—</td><td class="tp-score"></td></tr>';
+    rows+='<div class="mrow"><div class="mmain">'+
+            emblemHtml('')+
+            '<div class="mname l">—</div>'+
+            '<div class="mcenter">'+
+              '<span class="mmn">—</span>'+
+              '<span class="msub">—</span>'+
+              '<span class="msub">—</span>'+
+              '<span class="mvs">VS</span>'+
+            '</div>'+
+            '<div class="mname r">—</div>'+
+            emblemHtml('')+
+          '</div></div>';
   }
-  return '<div class="tscroll"><table class="stbl tp-tbl">'+
-    '<thead><tr><th>キックオフ</th><th>コート</th><th>対戦相手</th><th>スコア</th></tr></thead>'+
-    '<tbody>'+rows+'</tbody></table></div>';
+  return '<div class="kobox tp">'+rows+'</div>';
 }
 
 function buildTeamPage(team){
@@ -2235,8 +2248,10 @@ function buildTeamPage(team){
   var fs=findBlocks('GROUP LEAGUE');
   html+='<div class="tp-sec"><h4>GROUP LEAGUE</h4>';
   html+= gl.length ? tpTable(gl,team) : tpBlankTable(3);
+  /* 2026-08-30 舟見さん指示：日程と対戦表のあいだにあった【成績の8マス】を削除。
+     同じ数字が対戦表の右側にも並んでいて、二重に見えていたため。
+     statsHtml() は残してあるので、戻したくなったらここで呼び直せばよい。 */
   fs.forEach(function(f){
-    html+=statsHtml(f.row);
     html+=oneStanding(f.block.label, f.block.rows);
   });
   html+='</div>';
