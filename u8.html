@@ -789,6 +789,12 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
   color:rgba(23,41,26,.65);}
 .tp-note{font-size:11px; line-height:1.75; color:rgba(23,41,26,.7); margin-top:8px;}
 
+/* タップでチームのページへ行けるエンブレム・チーム名（2026-08-30 舟見さん指示）
+   見た目は変えず、指を乗せたとき・押したときだけ反応させる。
+   （下線などを足すと、未定の枠の点線と紛らわしくなるため） */
+.tlink{cursor:pointer; -webkit-tap-highlight-color:transparent;}
+.tlink:active{opacity:.5;}
+
 /* ============================================================================
    ★ 2026-08-21 大会方式の図
    主催者作成の図（夏休みカップロゴ.pptx 11枚目）をHPの見た目に合わせて作り直し。
@@ -1151,10 +1157,8 @@ body{background:var(--yellow); color:var(--ink); background-attachment:scroll;}
         <div class="row only-u8"><dt>試合時間</dt><dd>16分（前半8分-HT1分-後半8分）</dd></div>
         <div class="row only-u9"><dt>試合時間</dt><dd>20分（前半10分-HT2分-後半10分）</dd></div>
         <!-- 2026-08-29 舟見さん指示：U8の「大会方式／下記図のとおり」の行を削除。
-             すぐ下に「大会進行方式」の図があるので、案内するだけの行は要らない。 -->
-        <div class="row only-u9"><dt>大会方式</dt><dd>4グループ × 4チームの総当たり<br>
-          → 順位別に4つのトーナメント<br>
-          （全チーム5試合／16位まで決定）</dd></div>
+             2026-08-30 舟見さん指示：U9の「大会方式」の行も削除。
+             どちらも、すぐ下の「大会進行方式」の図と説明文に書いてあり重複していた。 -->
       </div>
 
       <!-- 大会方式の図（2026-08-21）
@@ -1596,6 +1600,8 @@ function teamCell(v){
   var s=String(v==null?'':v);
   if(!s) return '—';
   if(isTBD(s)) return '<span class="tbd">'+esc(sfLabel(s))+'</span>';
+  /* 2026-08-30 本物のチーム名はタップでそのチームのページへ */
+  if(isTeam(s)) return '<span class="tlink"'+tlinkAttr(s)+'>'+esc(s)+'</span>';
   return esc(s);
 }
 
@@ -1657,11 +1663,29 @@ var EMBLEM=(function(){
   }
   return m;
 })();
+/* ページのどこにあるエンブレム・チーム名でも、タップでそのチームのページへ
+   飛べるようにする（2026-08-30 舟見さん指示）。
+
+   やり方 … 出すときに `data-tlink="略称"` を付けておき、
+   　　　　　クリックはページ全体で1回だけ拾う（下の click の中）。
+   こうすると、日程・順位表・トーナメント表・最終順位のどこに出ていても
+   同じ1か所の処理で済み、追加した表示にも自動でついてくる。
+
+   ★付けるのは【本物のチーム名だけ】。「A組1位」のような未定の枠には付けない。 */
+var TEAM_SET=(function(){
+  var s={}, ps=document.querySelectorAll('.pin[data-team]');
+  for(var i=0;i<ps.length;i++){ s[ps[i].getAttribute('data-team')]=1; }
+  return s;
+})();
+function isTeam(n){ return !!TEAM_SET[String(n==null?'':n)]; }
+function tlinkAttr(name){ return isTeam(name) ? ' data-tlink="'+esc(name)+'"' : ''; }
+
 function emblemHtml(name,cls){
   var src=EMBLEM[String(name==null?'':name)];
-  var c='mem'+(cls?' '+cls:'');
-  return src ? '<div class="'+c+'"><img src="'+esc(src)+'" alt=""></div>'
-             : '<div class="'+c+' none"></div>';
+  var c='mem'+(cls?' '+cls:'')+(isTeam(name)?' tlink':'');
+  var a=tlinkAttr(name);
+  return src ? '<div class="'+c+'"'+a+'><img src="'+esc(src)+'" alt=""></div>'
+             : '<div class="'+c+' none"'+a+'></div>';
 }
 
 /* 試合名をマスに収まる短さに直す（2026-08-27 舟見さん指示）
@@ -2241,7 +2265,7 @@ function buildTeamPage(team){
 
   /* ③ KNOCKOUT ROUND
      U8は進む先によって試合数が変わるので、そこをはっきり書いておく。
-       上位リーグ（1〜4組）→ 1位／2位／3位トーナメント … 準決勝＋決勝または3位決定戦 ＝ 2試合
+       上位リーグ（1〜4組）→ 1位／2位／3位トーナメント … 準決勝＋上位決定戦または下位決定戦 ＝ 2試合
        下位リーグ（5・6組）→ 13-14位／15-16位／17-18位決定戦 　　　　　　 ＝ 1試合 */
   var tourn=mine.filter(function(r){ return phaseOf(r[C.name])==='KR'; });
   html+='<div class="tp-sec"><h4>KNOCKOUT ROUND</h4>';
@@ -2252,16 +2276,32 @@ function buildTeamPage(team){
     html+='<p class="tp-note">'+
           '<b>試合数はクラスリーグの結果で変わります。</b><br>'+
           '・<b>上位リーグ</b>（1組〜4組）に進んだ場合 … <b>2試合</b>'+
-          '（準決勝と、決勝または3位決定戦）<br>'+
+          '（準決勝と、上位決定戦または下位決定戦）<br>'+
           '・<b>下位リーグ</b>（5組・6組）の場合 … <b>1試合</b>（順位決定戦）<br>'+
           '対戦相手は、クラスリーグの順位が決まってから入ります。</p>';
   }
   html+='</div>';
 
+  /* トーナメント表（2026-08-30 舟見さん指示）
+     U8は下位リーグへ進むと1試合だけの順位決定戦になることがあるので、
+     どの山に入るかが決まるまでは出さない。 */
+  html+=tpBracket(tourn);
+
   document.getElementById('tp-body').innerHTML=html;
 }
 
+/* もどる先の記録（2026-08-30 舟見さん指示）
+   「もどる」は【直前に見ていた場所】へ返す。
+   　・日程からチームのページを開いた → もどると日程の同じ位置
+   　・チームのページから相手チームのページを開いた → もどると元のチームのページ
+   1つずつ積み上げて、もどるたびに1つ取り出す。 */
+var TP_STACK=[];
+var TP_TEAM=null;
+
 function openTeamPage(team){
+  /* いまいる場所を控えてから移る（チームのページの中からでも同じ） */
+  TP_STACK.push({ team: teamPageOpen() ? TP_TEAM : null, y: window.pageYOffset });
+  TP_TEAM=team;
   buildTeamPage(team);
   var lg=document.querySelector('.pagelogo'); if(lg) lg.hidden=true;
   document.querySelectorAll('.detail > .sec').forEach(function(s){
@@ -2270,12 +2310,28 @@ function openTeamPage(team){
   window.scrollTo(0,0);
 }
 function closeTeamPage(){
+  var prev=TP_STACK.pop();
+
+  /* 直前もチームのページだったら、そのチームへ戻るだけ */
+  if(prev && prev.team){
+    TP_TEAM=prev.team;
+    buildTeamPage(prev.team);
+    window.scrollTo(0, prev.y||0);
+    return;
+  }
+
+  /* ふつうの画面に戻す */
+  TP_TEAM=null;
   var lg=document.querySelector('.pagelogo'); if(lg) lg.hidden=false;
   document.querySelectorAll('.detail > .sec').forEach(function(s){
     s.hidden = (s.id==='teampage');
   });
-  var t=document.getElementById('teams');
-  if(t) window.scrollTo(0, Math.max(0, t.offsetTop-60));
+  if(prev){
+    window.scrollTo(0, prev.y||0);        /* 見ていた場所へ戻る */
+  }else{
+    var t=document.getElementById('teams');   /* 記録が無いときは参加チーム一覧へ */
+    if(t) window.scrollTo(0, Math.max(0, t.offsetTop-60));
+  }
 }
 
 /* マスをタップ → チーム専用ページへ */
@@ -2302,9 +2358,16 @@ document.addEventListener('click',function(e){
   /* ページ内の「もどる」ボタン */
   if(e.target.closest('#tp-back')){ closeTeamPage(); return; }
 
-  /* 上のタブ／INDEXの項目を押したときは、チーム専用ページを閉じてから移動する */
+  /* エンブレム・チーム名 → そのチームのページへ（2026-08-30 舟見さん指示）
+     日程・順位表・トーナメント表・最終順位・チームのページ、どこにあっても効く。
+     出すときに data-tlink を付けてあるものだけが対象。 */
+  var tl=e.target.closest('[data-tlink]');
+  if(tl){ openTeamPage(tl.getAttribute('data-tlink')); return; }
+
+  /* 上のタブ／INDEXの項目を押したときは、チーム専用ページを閉じてから移動する。
+     別の場所へ移るので、もどる先の記録は捨てる（2026-08-30） */
   if(e.target.closest('.cattab') || e.target.closest('.idx-list a')){
-    if(teamPageOpen()) closeTeamPage();
+    if(teamPageOpen()){ TP_STACK=[]; closeTeamPage(); }
   }
 });
 
@@ -2519,8 +2582,17 @@ function renderBracket(rows){
     return ia-ib;
   });
 
-  box.innerHTML = order.map(function(b){
-    var m=map[b];
+  box.innerHTML = order.map(function(b){ return bracketBlock(b, map[b]); }).join('');
+
+  document.getElementById('upd-bracket').textContent=stamp();
+}
+
+/* トーナメント1つぶんの表を組み立てる（2026-08-30 切り出し）
+   　b … トーナメントの名前（「1位トーナメント」など）
+   　m … 回戦ごとに仕分けた試合 {qf,sf,final,third,other}
+   ★ KNOCKOUT ROUND の欄と、チーム専用ページの両方から呼んでいる。
+   　 見た目を直すときはここ1か所でよい（2か所に増やさないこと）。 */
+function bracketBlock(b, m){
     /* 2026-08-29 舟見さん指示：13-14位決定戦のような1試合だけの順位決定戦も、
        11-12位決定戦などと【同じ見た目】にする。
        　以前 … 見出しが薄い文字の h4 で、その下に箱
@@ -2555,9 +2627,24 @@ function renderBracket(rows){
       html+=koBox(bracketLabel(b), m.other.map(koRow).join(''));
     }
     return html+'</div>';
-  }).join('');
+}
 
-  document.getElementById('upd-bracket').textContent=stamp();
+/* チーム専用ページに出すトーナメント表（2026-08-30 舟見さん指示）
+   そのチームが入る【山だけ】を、KNOCKOUT ROUND の欄とまったく同じ形で出す。
+
+   ★U8は、下位リーグへ進むと1試合だけの順位決定戦になることがある。
+   　どの山に入るかはクラスリーグが終わるまで分からないので、
+   　チームの試合に名前が入るまでは何も出さない（＝この関数が空文字を返す）。 */
+function tpBracket(tourn){
+  if(!tourn || !tourn.length) return '';
+  var b=bracketOf(tourn[0][C.name]);
+  var all=(LAST_MATCHES||[]).filter(function(r){
+    return r && phaseOf(r[C.name])==='KR' && bracketOf(r[C.name])===b;
+  });
+  if(!all.length) return '';
+  var m={qf:[],sf:[],final:[],third:[],other:[]};
+  all.forEach(function(r){ m[roundOf(r[C.name])].push(r); });
+  return '<div class="tp-sec"><h4>トーナメント表</h4>'+bracketBlock(b,m)+'</div>';
 }
 
 /* --- ④ 最終順位 ---
@@ -2580,8 +2667,10 @@ function renderFinal(rows){
       /* 2026-08-27 最終順位だけは【正式名称】で出す（舟見さん指示）。
          表彰式がないぶん、この一覧が実質の順位発表になるため。
          対応表（FULLNAME）に無いチームは略称のまま出る。 */
+      /* 2026-08-30 ここの正式名称もタップでチームのページへ */
       return '<tr><td><span class="rank-badge '+rc+'">'+esc(rv)+'</span></td>'+
-             '<td class="tname">'+esc(fullName(r[F.team]))+'</td></tr>';
+             '<td class="tname"><span class="tlink"'+tlinkAttr(r[F.team])+'>'+
+             esc(fullName(r[F.team]))+'</span></td></tr>';
     }).join('')+'</tbody></table></div>';
   document.getElementById('upd-final').textContent=stamp();
 }
