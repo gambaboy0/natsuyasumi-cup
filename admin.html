@@ -178,6 +178,54 @@ input:focus,select:focus{outline:none; border-color:var(--dg);}
 .confirm b{color:var(--warn);}
 
 .status{font-size:.72rem; color:var(--muted); text-align:center; margin-top:10px;}
+
+/* ===== ④ 確認する（2026-08-30 舟見さん指示）=====
+   HPの日程とまったく同じ構成にする。
+     縦＝キックオフ時刻 ／ 横＝コート ／ 左上＝段階（GL・CL・KR）
+   1つのマスの中身も日程と同じ並び。
+     Match No. → 段階・組名 → 紋章 → チーム名 → スコア（VS）→ チーム名 → 紋章
+   ★CSSは u8.html の日程の指定を写したもの。向こうを直したらここも合わせること。 */
+.btn-ghost.on{border-color:var(--dg); background:#EDF2EC; color:var(--dg);}
+.schedwrap{overflow-x:auto; border:1px solid var(--border); border-radius:12px;
+  background:#fff; -webkit-overflow-scrolling:touch;}
+.schedwrap + .schedwrap{margin-top:14px;}
+.sched{border-collapse:collapse; min-width:620px; width:100%; table-layout:fixed;}
+.sched th{background:#EDF0EC; color:var(--dg); font-weight:900; font-size:10.5px;
+  padding:7px 3px; border-bottom:1px solid var(--border); letter-spacing:.04em;}
+.sched thead th.tcol{font-size:13px; letter-spacing:.06em;}
+.sched th.tcol,.sched td.tcol{width:54px;}
+.sched th.tcol{position:sticky; left:0; z-index:2;}
+.sched td{border-top:1px solid var(--border); border-left:1px solid var(--border);
+  padding:5px 3px; vertical-align:middle;}
+/* 左端の時刻列は横スクロール中も貼り付いたままなので、透けないよう不透明にする */
+.sched td.tcol{position:sticky; left:0; z-index:1; background:#EFF0EF; color:var(--dg);
+  text-align:center; font-weight:900; font-size:11px; white-space:nowrap;}
+.sched td.empty{background:rgba(23,41,26,.05);}
+
+/* 2026-08-30 舟見さん指示：まだ入力していない試合のマスに灰色を敷く。
+   入力ずみのマスは白のままなので、残りがひと目で分かる。 */
+.sched td.todo{background:#E7E9E6;}
+
+.cell .cmn{font-size:8.5px; font-weight:900; letter-spacing:.02em;
+  color:var(--muted); line-height:1.3; text-align:center;}
+.cell .cg{font-size:9px; line-height:1.35; font-weight:900; text-align:center;
+  color:var(--dg); letter-spacing:.04em;}
+.cell .ct{font-size:10.5px; color:var(--text); text-align:center;
+  line-height:1.3; font-weight:700;}
+.cell .cs{font-size:12.5px; font-weight:900; color:rgba(26,26,46,.4);
+  text-align:center; margin:1px 0;}
+.cell .cs.on{font-size:14px; color:var(--dg);}
+.cell .cs .dash{opacity:.4; margin:0 2px;}
+.cell .cpk{font-size:8px; font-weight:700; color:var(--warn); text-align:center;}
+.cell .cemb{width:44px; height:44px; object-fit:contain; margin:2px auto; display:block;}
+.cell .cemb.none{border:1px dashed var(--border); border-radius:50%;}
+.scrollhint{font-size:10px; color:var(--muted); text-align:center; margin-top:6px;}
+
+/* ===== 同着の順位の下に出す「リーグ戦の順位表」（2026-08-30 舟見さん指示）===== */
+.stand-block{margin-bottom:16px;}
+.stand-block:last-child{margin-bottom:0;}
+.stand-label{font-size:.8rem; font-weight:900; color:var(--dg);
+  padding:6px 8px; background:#EDF0EC; border-radius:8px 8px 0 0;}
 .hide{display:none !important;}
 </style>
 </head>
@@ -280,6 +328,18 @@ input:focus,select:focus{outline:none; border-color:var(--dg);}
         <button class="btn btn-main" id="sendBtn" style="margin-top:18px;" onclick="sendScore()" disabled>送信する</button>
         <button class="btn btn-ghost" onclick="clearScore()">入力をけす</button>
       </div>
+
+      <!-- ===== ④ 確認する（2026-08-30 舟見さん指示）=====
+           えらんでいるカテゴリの全試合を、HPの日程と同じ中身で並べる。
+           入れたスコアがその場で確かめられるようにするため。 -->
+      <div class="card">
+        <div class="card-title"><span class="step">4</span>確認する</div>
+        <p class="sub" style="margin:-4px 0 12px;">
+          いま選んでいるカテゴリの全試合です。HPの日程と同じ並び（縦＝時刻／横＝コート）。<br>
+          <b>灰色のマスがまだ入力していない試合</b>です。スコアを送ると、ここもすぐ新しくなります。
+        </p>
+        <div id="checkList"></div>
+      </div>
     </div>
 
     <!-- ============================================================
@@ -324,6 +384,17 @@ input:focus,select:focus{outline:none; border-color:var(--dg);}
         以降の組分け・トーナメントは、この数字にしたがって進みます。<br>
         もとの自動計算に戻したいときは、スプレッドシートのメニュー
         <b>「大会セットアップ」→「順位の手動指定を取り消す」</b>を使ってください（スコアは消えません）。
+      </div>
+
+      <!-- ===== リーグ戦の順位表（2026-08-30 舟見さん指示）=====
+           同着かどうかを確かめられるよう、いまの順位表を全部この下に出す。 -->
+      <div class="card">
+        <div class="card-title"><span class="step warn">📊</span>リーグ戦の順位表</div>
+        <p class="sub" style="margin:-4px 0 12px;">
+          いま選んでいるカテゴリの順位表です。<b>色が付いた行が同着</b>で、抽選が要るところです。
+        </p>
+        <button class="btn btn-ghost" style="margin:0 0 12px;" onclick="loadAllStandings()">🔄 最新にする</button>
+        <div id="allStand"><p class="sub">読み込み中…</p></div>
       </div>
     </div>
 
@@ -381,9 +452,31 @@ function start(){
   reload(false);
   timer = setInterval(autoReload, 30000);
 }
+/* 開いたらすぐ入力画面にする（2026-08-30 舟見さん指示）
+
+   ① URLの末尾に ?k=合言葉 が付いていれば、それを使ってそのまま始める
+      → 当日の担当者に渡すのは、この形のリンク1本だけでよい
+         .../admin.html?k=（ここに合言葉）
+      ★ ここに本物の合言葉を書かないこと。書くとソースを見た人に分かってしまう。
+         合言葉は案件メモ（手元のPC）にだけ控えてある。
+   ② 付いていなければ、これまでどおり端末に記憶した合言葉を使う
+   ③ どちらも無ければ合言葉をたずねる
+
+   ★ 合言葉はHTMLの中に書いていない。
+   　 リンクを知らない人が admin.html だけを開いても、合言葉なしでは書き込めない。
+   ★ このリンクは【当日の担当者だけ】に送ること。
+   　 リンクそのものに合言葉が入っているので、転送されると誰でも入力できてしまう。 */
 (function(){
   var v = null;
-  try{ v = localStorage.getItem('natsu_pw'); }catch(e){}
+  var m = String(location.search||'').match(/[?&]k=([^&]+)/);
+  if(m){
+    try{ v = decodeURIComponent(m[1]); }catch(e){ v = m[1]; }
+    /* 次からはリンクに付いていなくても使えるよう、端末にも覚えておく */
+    try{ localStorage.setItem('natsu_pw', v); }catch(e){}
+  }
+  if(!v){
+    try{ v = localStorage.getItem('natsu_pw'); }catch(e){}
+  }
   if(v){ PW = v; start(); }
 })();
 
@@ -434,6 +527,7 @@ function setCat(c){
   document.getElementById('matchBox').classList.remove('show');
   document.getElementById('sendBtn').disabled=true;
   buildStandSel(); resetTie();
+  if(mode==='tie') loadAllStandings();   /* 2026-08-30 カテゴリを変えたら順位表も入れ替える */
   reload(false);
 }
 function setMode(m){
@@ -442,6 +536,8 @@ function setMode(m){
   document.getElementById('btnTie').className   = (m==='tie'?'on-warn':'');
   document.getElementById('scoreMode').classList.toggle('hide', m!=='score');
   document.getElementById('tieMode').classList.toggle('hide', m!=='tie');
+  /* 2026-08-30 同着の順位に切り替えたら、順位表を読み直して下に出す */
+  if(m==='tie') loadAllStandings();
 }
 
 /* ============================================================================
@@ -521,6 +617,157 @@ function renderMatches(){
   });
   sel.value=keep;
   if(keep!=='' && rs[keep]) showMatch(parseInt(keep,10));
+  renderCheck();
+}
+
+/* ============================================================================
+   ④ 確認する（2026-08-30 舟見さん指示）
+   えらんでいるカテゴリの全試合を、HPの日程と同じ中身で並べる。
+
+   1試合ぶんの中身（HPの日程のマスと同じ）
+     Match No. → 段階・組名 → 時刻・コート
+     → 紋章・チーム名 → スコア（または VS）→ チーム名・紋章
+
+   ※HPの日程は「縦＝時刻／横＝コート」の表だが、この画面はスマホで
+     上から順に見ていくほうが確かめやすいので、時刻順の縦並びにしている。
+     出している中身は同じ（時刻とコートは各マスの中に入れた）。
+   ============================================================================ */
+
+/* チーム名 → 紋章の画像。u8.html / u9.html の参加チーム一覧から写したもの。
+   ★チーム名や画像を変えたときは、向こうと合わせてここも直すこと。 */
+var EMB = {
+  'ALVA':'assets/emblem_alva.png',
+  'FC CAVALLO':'assets/emblem_cavallo.png',
+  'FC滑川':'assets/emblem_namerikawa.png',
+  'FC南星':'assets/emblem_nansei.png',
+  'JKキッズ':'assets/emblem_jkkids.png',
+  'TOLL':'assets/emblem_toll.png',
+  'ヴァリエンテ':'assets/emblem_valiente.png',
+  'エスポ':'assets/emblem_espoir.png',
+  'カンピ':'assets/emblem_campione.png',
+  'スフィーダ':'assets/emblem_sfida.png',
+  'テイヘンズ':'assets/emblem_teihens.png',
+  'デランテロ':'assets/emblem_delantero.png',
+  'プリマ':'assets/emblem_primavera.png',
+  'ブルソ':'assets/emblem_bluesox.png',
+  'ベゼ':'assets/emblem_bezerro.png',
+  'みなみ':'assets/emblem_minami.png',
+  '旭丘':'assets/emblem_asahi.png',
+  '鵜坂':'assets/emblem_usaka.png',
+  '小杉EST':'assets/emblem_kosugi.png',
+  '成美':'assets/emblem_seibi.png',
+  '石動大谷':'assets/emblem_isurugi.png',
+  '大久保':'assets/emblem_okubo.png',
+  '氷見':'assets/emblem_himi.png',
+  '婦中西部':'assets/emblem_fuchu.png',
+  '富山中央':'assets/emblem_chuo.png',
+  '富山中央A':'assets/emblem_chuo.png',
+  '富山中央B':'assets/emblem_chuo.png',
+  '蜷川':'assets/emblem_ninagawa.png'
+};
+function esc(s){
+  return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+  });
+}
+function embImg(name){
+  var src=EMB[String(name==null?'':name)];
+  return src ? '<img class="cemb" src="'+esc(src)+'" alt="">'
+             : '<span class="cemb none"></span>';
+}
+
+/* 「9:00」→ 分に直す／「第3コート」→ 3 に直す（HPの日程と同じ処理） */
+function toMin(t){
+  var m=String(t||'').match(/(\d{1,2})\s*[:：]\s*(\d{1,2})/);
+  return m ? (parseInt(m[1],10)*60+parseInt(m[2],10)) : -1;
+}
+function courtNo(c){
+  var m=String(c||'').match(/(\d+)/);
+  return m ? parseInt(m[1],10) : 0;
+}
+/* 試合名から段階を読み取る（HPの日程と同じ規則）
+     GL … 予選リーグ ／ CL … クラスリーグ ／ KR … トーナメント・順位決定戦 */
+function phaseOf(name){
+  var s=String(name||'');
+  if(s.indexOf('予選')===0) return 'GL';
+  if(/^[0-9０-９]+組（(上位|下位)）/.test(s)) return 'CL';
+  if(/^(上位|下位)[0-9０-９]+組/.test(s))     return 'CL';
+  return 'KR';
+}
+
+function renderCheck(){
+  var box=document.getElementById('checkList');
+  if(!box) return;
+  var rs=rows[cat]||[];
+  if(!rs.length){ box.innerHTML='<p class="sub">読み込み中です…</p>'; return; }
+
+  /* 時刻とコートが入っている試合だけを表に載せる（HPの日程と同じ） */
+  var list=rs.filter(function(r){ return toMin(r[2])>=0 && courtNo(r[3])>0; });
+  if(!list.length){ box.innerHTML='<p class="sub">表に出せる試合がありません。</p>'; return; }
+
+  var times=[], courts=[];
+  list.forEach(function(r){
+    var t=toMin(r[2]), c=courtNo(r[3]);
+    if(times.indexOf(t)<0) times.push(t);
+    if(courts.indexOf(c)<0) courts.push(c);
+  });
+  times.sort(function(a,b){return a-b;});
+  courts.sort(function(a,b){return a-b;});
+
+  var at={};
+  list.forEach(function(r){ at[toMin(r[2])+'_'+courtNo(r[3])]=r; });
+
+  function hhmm(m){ return Math.floor(m/60)+':'+('0'+(m%60)).slice(-2); }
+
+  /* マス1つの中身。HPの日程のマスと同じ並び。 */
+  function cellHtml(r){
+    var has=done(r);
+    var sc = has ? (esc(r[5])+'<span class="dash">-</span>'+esc(r[8])) : 'VS';
+    var pk = (has && r[6]!=='' && r[7]!=='')
+      ? '<div class="cpk">PK '+esc(r[6])+'-'+esc(r[7])+'</div>' : '';
+    return '<div class="cell">'+
+             '<div class="cmn">Match No.'+esc(r[0])+'</div>'+
+             '<div class="cg">'+esc(stageLabel(r[1]))+'</div>'+
+             embImg(r[4])+
+             '<div class="ct">'+esc(r[4]||'—')+'</div>'+
+             '<div class="cs'+(has?' on':'')+'">'+sc+pk+'</div>'+
+             '<div class="ct">'+esc(r[9]||'—')+'</div>'+
+             embImg(r[9])+
+           '</div>';
+  }
+
+  /* 段階（GL／CL／KR）ごとに別々の表に分ける（HPの日程と同じ） */
+  var PH={GL:'GL',CL:'CL',KR:'KR'};
+  var groups=[];
+  times.forEach(function(t){
+    var ph=null;
+    for(var i=0;i<courts.length;i++){
+      var rr=at[t+'_'+courts[i]];
+      if(rr){ ph=PH[phaseOf(rr[1])]; break; }
+    }
+    if(!ph) ph='時刻';
+    if(!groups.length || groups[groups.length-1].ph!==ph) groups.push({ ph:ph, times:[] });
+    groups[groups.length-1].times.push(t);
+  });
+
+  var html=groups.map(function(g){
+    return '<div class="schedwrap"><table class="sched">'+
+      '<thead><tr><th class="tcol">'+esc(g.ph)+'</th>'+
+      courts.map(function(c){ return '<th>第'+c+'<br>コート</th>'; }).join('')+
+      '</tr></thead><tbody>'+
+      g.times.map(function(t){
+        return '<tr><td class="tcol">'+hhmm(t)+'</td>'+
+          courts.map(function(c){
+            var r=at[t+'_'+c];
+            if(!r) return '<td class="empty"></td>';
+            /* 2026-08-30 まだ入力していない試合は灰色にする */
+            return '<td'+(done(r)?'':' class="todo"')+'>'+cellHtml(r)+'</td>';
+          }).join('')+'</tr>';
+      }).join('')+
+      '</tbody></table></div>';
+  }).join('');
+  html+='<p class="scrollhint">← 横にスクロールできます →</p>';
+  box.innerHTML=html;
 }
 
 /* 次に入力できる試合へ飛ぶ。
@@ -653,6 +900,53 @@ function buildStandSel(){
     var o=document.createElement('option');
     o.value=i; o.textContent=s.label;
     sel.appendChild(o);
+  });
+}
+
+/* いま選んでいるカテゴリの順位表を、全部まとめて出す（2026-08-30 舟見さん指示）
+   同着（同じ順位が2つ以上）の行に色を付けるので、
+   どこで抽選が要るのかをこの一覧だけで見つけられる。
+   1枚ずつの表の作りは renderStanding と同じにそろえてある。 */
+function loadAllStandings(){
+  var box=document.getElementById('allStand');
+  if(!box) return;
+  var list=STANDINGS[cat]||[];
+  box.innerHTML='<p class="sub">読み込み中…</p>';
+
+  var got=[], need=list.length, done_=0, failed=0;
+  if(!need){ box.innerHTML='<p class="sub">順位表がありません。</p>'; return; }
+
+  list.forEach(function(s,i){
+    fetchSheet(s.sheet).then(function(t){
+      got[i]={ label:s.label, body:t.slice(1).filter(function(r){ return r[0]!==''; }) };
+    }).catch(function(){
+      got[i]={ label:s.label, body:null }; failed++;
+    }).then(function(){
+      done_++;
+      if(done_!==need) return;
+      var h='';
+      got.forEach(function(g){
+        if(!g) return;
+        h+='<div class="stand-block"><div class="stand-label">'+esc(g.label)+'</div>';
+        if(!g.body){
+          h+='<p class="sub">⚠ 読み込めませんでした</p></div>';
+          return;
+        }
+        /* 同じ順位が2つ以上あれば色を付ける（renderStanding と同じ規則） */
+        var count={};
+        g.body.forEach(function(r){ if(r[9]) count[r[9]]=(count[r[9]]||0)+1; });
+        h+='<table class="stand-table"><tr><th>チーム</th><th>勝点</th><th>得失</th><th>順位</th></tr>';
+        g.body.forEach(function(r){
+          var tied=r[9] && count[r[9]]>1;
+          h+='<tr class="'+(tied?'tied':'')+'">'+
+             '<td class="tm">'+esc(r[0])+'</td><td>'+esc(r[8]||'0')+'</td>'+
+             '<td>'+esc(r[7]||'0')+'</td><td class="rk">'+esc(r[9]||'—')+'</td></tr>';
+        });
+        h+='</table></div>';
+      });
+      h+='<p class="status">'+stamp()+' 時点'+(failed?'（'+failed+'枚が読み込めませんでした）':'')+'</p>';
+      box.innerHTML=h;
+    });
   });
 }
 
