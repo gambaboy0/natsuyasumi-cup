@@ -8,19 +8,23 @@
 <style>
 :root{
   --edge:#17291a;     /* 濃い緑（白いパネルの枠線・文字） */
+  --band:#000;        /* 黒帯（u8/u9 と同じ黒） */
   --hair:rgba(23,41,26,.22);
+  --ng:#b3261e;       /* 禁止事項の赤 */
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html{overflow-x:hidden; background:#000;}
-/* 2026-08-21 このページの地色は黒。
-   文字はすべて白いパネルの中にあるので、読みにくくなる箇所はない。 */
+html{overflow-x:hidden; background:#fff;
+  /* 2026-08-31 ボタンから飛んだとき、見出しが上に隠れないよう余白をとる */
+  scroll-behavior:smooth; scroll-padding-top:16px;}
+/* 2026-08-31 舟見さん指示：地色を黒から白に変えた。
+   （以前は黒地に白いパネルだったが、図が見やすいよう全体を白にそろえた） */
 body{font-family:"Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;
-  background:#000; color:var(--edge); overflow-x:hidden; width:100%;}
+  background:#fff; color:var(--edge); overflow-x:hidden; width:100%;}
 img{max-width:100%;display:block;}
 .wrap{max-width:480px;margin:0 auto;position:relative;width:100%;min-height:100svh;
   padding:0 0 40px;}
 
-/* 見出しは素材のバナーをそのまま使う（U8ページのボタンと同じ画像） */
+/* 見出しは素材のバナーをそのまま使う（オープニングのボタンと同じ画像） */
 .head{padding:4.6rem 12px 0;}
 .head img{width:100%;}
 
@@ -38,20 +42,74 @@ img{max-width:100%;display:block;}
 /* 白い角丸パネル（U8ページの各項目と同じ作り） */
 .panel{background:#fff;border:2px solid var(--edge);border-radius:14px;
   margin:14px 12px;padding:14px;box-shadow:0 2px 0 rgba(23,41,26,.18);}
-.panel h2{font-size:13px;letter-spacing:.04em;margin-bottom:9px;}
 .panel p{font-size:12.5px;line-height:1.8;}
 
-/* 駐車場マップ。タップすると別のタブで大きく開く */
-.mapbox{display:block;border:1px solid var(--hair);border-radius:10px;overflow:hidden;}
+/* 見出しの黒帯（u8/u9 の項目の見出しと同じ見た目）
+   パネルの左右の内余白（14px）を打ち消して、端から端まで届かせている。
+   ★ .panel の padding を変えたら、ここの margin も同じ値に直すこと。 */
+.panel h2{background:var(--band); color:#fff;
+  margin:-14px -14px 12px; padding:9px 14px;
+  font-size:13px; letter-spacing:.06em; line-height:1.4; text-align:center;}
+
+/* 図。タップすると別のタブで大きく開く
+   2026-08-31 舟見さん指示：横幅いっぱいに出す。
+   パネルの左右の内余白（14px）を打ち消して、パネルの端から端まで届かせている。
+   ★ .panel の padding を変えたら、ここの margin も同じ値に直すこと。 */
+.mapbox{display:block;overflow:hidden;
+  margin-left:-14px; margin-right:-14px;
+  border-top:1px solid var(--hair); border-bottom:1px solid var(--hair);}
+/* 見出しが無いパネル（一番上の案内図）は、上の余白も打ち消して上端から出す */
+.panel > .mapbox:first-child{margin-top:-14px; border-top:none;}
 .mapbox img{width:100%;height:auto;}
 .maphint{font-size:11px;line-height:1.7;color:rgba(23,41,26,.7);
   text-align:center;margin-top:8px;}
+/* 図の下に添える一言（2026-08-31） */
+.figname{font-size:12.5px;font-weight:900;text-align:center;margin-top:10px;}
+
+/* ---- 詳細ボタン（2026-08-31 舟見さん指示）----
+   押すと、そのまま下の該当箇所へすべるように移動する（scroll-behavior:smooth）。 */
+/* 2026-08-31 舟見さん指示：3つを横並びにする */
+.jump{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+.jump a{display:flex;align-items:center;justify-content:center;
+  min-height:52px;text-align:center;text-decoration:none;
+  border:2px solid var(--edge);background:#fff;color:var(--edge);
+  padding:10px 3px;font-size:clamp(10px,2.9vw,12px);font-weight:900;
+  letter-spacing:.02em;line-height:1.35;
+  box-shadow:0 2px 0 rgba(23,41,26,.18);
+  -webkit-tap-highlight-color:transparent;}
+.jump a:active{transform:translateY(1px);box-shadow:none;}
+
+/* ---- 禁止事項（2026-08-31 舟見さん指示）---- */
+.ng h2{background:var(--ng);}
+.ng ul{list-style:none;}
+.ng li{font-size:13px;font-weight:900;line-height:1.6;
+  padding:11px 10px 11px 34px;position:relative;
+  border:2px solid var(--ng);border-radius:10px;margin-bottom:8px;}
+.ng li:last-child{margin-bottom:0;}
+.ng li::before{content:"✕";position:absolute;left:11px;top:11px;
+  color:var(--ng);font-size:14px;font-weight:900;}
+.ng li small{display:block;font-size:11px;font-weight:700;
+  color:rgba(23,41,26,.7);margin-top:3px;}
+
+/* 詳細の項目。ボタンから飛んでくる目印 */
+.detail{scroll-margin-top:16px;}
+.detail ol{margin:10px 0 0 18px;}
+.detail li{font-size:12.5px;line-height:1.8;font-weight:700;margin-bottom:6px;}
+.detail li:last-child{margin-bottom:0;}
 
 .home{display:block;text-align:center;margin:18px 12px 0;
   padding:13px 10px;border:2px solid var(--edge);border-radius:12px;
   background:#fff;color:var(--edge);text-decoration:none;font-weight:900;font-size:13px;
   letter-spacing:.06em;box-shadow:0 2px 0 rgba(23,41,26,.18);}
 .home:active{transform:translateY(1px);box-shadow:none;}
+
+/* ============================================================================
+   角はすべて直角に（2026-08-31 舟見さん指示。u8/u9 と同じ考え方）
+   個々の指定を書き換えず、最後にまとめて打ち消している。
+   丸に意味がある部品（左上の戻るボタン）だけは円のまま残す。
+   ★ 戻したくなったら、このブロックを消すだけでよい。
+   ============================================================================ */
+.panel,.panel h2,.mapbox,.jump a,.ng li,.home{border-radius:0;}
 </style>
 </head>
 <body>
@@ -64,39 +122,71 @@ img{max-width:100%;display:block;}
     <img src="assets/logo_parking.png" alt="駐車場の利用に関するお願い">
   </div>
 
-  <!-- 主催者作成の駐車場案内（素材: 夏休みカップロゴ.pptx の12枚目） -->
+  <!-- 全体の案内図（素材: 夏休みカップロゴ.pptx の16枚目・2026-08-31 差し替え）
+       A・B・C駐車場の位置、駐車禁止の場所、それぞれの使い分けが1枚に入っている。 -->
   <div class="panel">
     <a class="mapbox" href="assets/parking_map.jpg" target="_blank" rel="noopener">
-      <img src="assets/parking_map.jpg" alt="駐車場の案内図。駐車場A・B・C、チームテント設置場所、荷物車の一方通行・外周走行の経路">
+      <img src="assets/parking_map.jpg" alt="駐車場の案内図。A駐車場・B駐車場・C駐車場の位置と、歌の森運動公園駐車場が駐車禁止であること">
     </a>
     <p class="maphint">画像をタップすると大きく表示できます<br>
       （指でひろげても拡大できます）</p>
   </div>
 
+  <!-- 詳細へ飛ぶボタン（2026-08-31 舟見さん指示）
+       押すと下の該当する項目まですべるように移動する。 -->
   <div class="panel">
-    <h2>お守りいただきたいこと</h2>
-    <p>
-      ○　指定場所以外での駐車は禁止<br>
-      ○　県外チームと指導者は<b>駐車場B</b><br>
-      ○　県内チームは<b>駐車場A</b>と<b>駐車場C</b><br>
-      ○　駐車場Aが満車の場合は<b>駐車場C</b><br>
-      ○　白線外での駐車は禁止<br>
-      ○　テント搬入などの荷物車は各チーム1台、<b>駐車場B</b>をご利用ください
-    </p>
+    <h2>くわしく見る</h2>
+    <!-- 2026-08-31 舟見さん指示：横並び3つ・名称を短く -->
+    <nav class="jump">
+      <a href="#ab">A・B<br>駐車場</a>
+      <a href="#c">C<br>駐車場</a>
+      <a href="#ground">荷物車<br>乗り入れ</a>
+    </nav>
   </div>
 
-  <div class="panel">
-    <h2>荷物車のグラウンド内進入</h2>
-    <p>
-      次の2点を必ずお守りください。<br>
-      <b>①　一方通行</b><br>
-      <b>②　外周走行</b>
-    </p>
+  <!-- 禁止事項（2026-08-31 舟見さん指示） -->
+  <div class="panel ng">
+    <h2>禁止事項</h2>
+    <ul>
+      <li>指定場所以外での駐車禁止
+        <small>歌の森運動公園等の他施設は駐車禁止</small></li>
+      <li>白線以外での駐車禁止</li>
+      <li>路上駐車での乗降り禁止</li>
+    </ul>
   </div>
 
-  <div class="panel">
-    <h2>駐車禁止</h2>
-    <p><b>歌の森運動公園駐車場</b>には駐車できません。</p>
+  <!-- Ａ・Ｂ駐車場（素材: 18枚目） -->
+  <div class="panel detail" id="ab">
+    <h2>Ａ・Ｂ駐車場</h2>
+    <a class="mapbox" href="assets/parking_ab.jpg" target="_blank" rel="noopener">
+      <img src="assets/parking_ab.jpg" alt="A駐車場とB駐車場の位置。富山県立大学テニスコートをはさんで両側にある">
+    </a>
+    <p class="figname">富山県立大学テニスコート駐車場</p>
+    <p class="maphint">画像をタップすると大きく表示できます</p>
+  </div>
+
+  <!-- Ｃ駐車場（素材: 19枚目） -->
+  <div class="panel detail" id="c">
+    <h2>Ｃ駐車場</h2>
+    <a class="mapbox" href="assets/parking_c.jpg" target="_blank" rel="noopener">
+      <img src="assets/parking_c.jpg" alt="C駐車場の位置。富山県立大学の東駐車場">
+    </a>
+    <p class="figname">東駐車場</p>
+    <p class="maphint">画像をタップすると大きく表示できます</p>
+  </div>
+
+  <!-- グラウンド内車両乗り入れ（素材: 20枚目） -->
+  <div class="panel detail" id="ground">
+    <h2>グラウンド内車両乗り入れ</h2>
+    <a class="mapbox" href="assets/parking_ground.jpg" target="_blank" rel="noopener">
+      <img src="assets/parking_ground.jpg" alt="グラウンド内の車両経路。荷物車出入口から入り、外周を時計回りの一方通行で進む">
+    </a>
+    <p class="maphint">画像をタップすると大きく表示できます</p>
+    <ol>
+      <li>荷物車出入口から出入りすること</li>
+      <li>グラウンド内は外周を時計回りで一方通行</li>
+      <li>荷物積降し後は速やかに駐車場へ車両を移動</li>
+    </ol>
   </div>
 
   <a class="home" href="index.html">トップへもどる</a>
